@@ -16,7 +16,7 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
+     * Рендер страницы регистрации
      */
     public function create(): Response
     {
@@ -24,16 +24,28 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Обробатываем запрос регистрации
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:40',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'name.required' => 'Укажите ваше имя',
+            'name.string' => 'Поля имя должно быть строкой',
+            'name.max' => 'Максимальная длина - 40 символов',
+            'email.required' => 'Укажите вашу почту',
+            'email.string' => 'Поля Email должно быть строкой',
+            'email.lowercase' => 'Поля Email не должно иметь заглавных символов',
+            'email.email' => 'Поля Email должно быть почтой',
+            'email.max' => 'Максимальная длина - 255 символов',
+            'email.unique' => 'Эта почта уже занята',
+            'password.required' => 'Укажите ваш пароль',
+            'password.confirmed' => 'Подтвердите ваш пароль',
         ]);
 
         $user = User::create([
@@ -46,6 +58,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('profile.index', absolute: false));
     }
 }

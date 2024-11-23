@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 class PasswordController extends Controller
 {
     /**
-     * Update the user's password.
+     * Обновление пароля пользователя
      */
     public function update(Request $request): RedirectResponse
     {

@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 
-export default function ThemeButton({}: PageProps<{}>) {
+export function useDarkMode() {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
@@ -13,19 +13,25 @@ export default function ThemeButton({}: PageProps<{}>) {
         document.documentElement.classList.toggle("dark", storedDarkMode);
     }, []);
 
-    const handleToggleDarkMode = () => {
+    const toggleDarkMode = () => {
         const newDarkMode = !isDarkMode;
         setIsDarkMode(newDarkMode);
         document.documentElement.classList.toggle("dark", newDarkMode);
         localStorage.setItem("darkMode", newDarkMode.toString());
     };
 
+    return { isDarkMode, toggleDarkMode };
+}
+
+export default function ThemeButton({}: PageProps<{}>) {
+    const { isDarkMode, toggleDarkMode } = useDarkMode();
+
     return (
         <>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" asChild>
-                        <a href="#" onClick={handleToggleDarkMode}>
+                        <a href="#" onClick={toggleDarkMode}>
                             <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-muted-foreground">
                                 {isDarkMode ? (
                                     <SunMedium className="size-4" />

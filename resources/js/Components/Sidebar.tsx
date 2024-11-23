@@ -1,53 +1,23 @@
 "use client";
 
 import * as React from "react";
-import {
-    BadgeCheck,
-    Bell,
-    ChevronRight,
-    ChevronsUpDown,
-    CreditCard,
-    Files,
-    GalleryVerticalEnd,
-    Home,
-    LogOut,
-    MoonStar,
-    Sparkles,
-    SquareTerminal,
-    SunMedium,
-    Terminal,
-} from "lucide-react";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { Separator } from "@/Components/ui/separator";
+import { ChevronRight, Files, GalleryVerticalEnd } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarHeader,
-    SidebarInset,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-    SidebarProvider,
-    SidebarTrigger,
-    SidebarRail,
     useSidebar,
 } from "@/Components/ui/sidebar";
-import { Link, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import UserDropDownMenu from "./UserDropDowrnMenu";
-import { User } from "@/types";
 import ThemeButton from "./ThemeButton";
 import {
     Collapsible,
@@ -57,6 +27,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Progress } from "@/Components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const iframeHeight = "800px";
 
@@ -95,24 +66,14 @@ const data = {
 
 export default function SideBarComponent({
     children,
-}: // open,
-{
+}: {
     children: React.ReactNode;
-    // open: boolean;
 }) {
-    // const { open } = useSidebar();
-
+    const { open } = useSidebar();
     const user = usePage().props.auth;
 
     return (
-        <SidebarProvider
-            style={
-                {
-                    "--sidebar-width": "19rem",
-                } as React.CSSProperties
-            }
-            defaultOpen={false}
-        >
+        <>
             <Sidebar variant="floating" collapsible="icon">
                 <SidebarHeader>
                     <SidebarMenu>
@@ -188,49 +149,33 @@ export default function SideBarComponent({
 
                 <SidebarFooter>
                     <ThemeButton auth={user}></ThemeButton>
-                    {/* {open == true ? (
-                        <Alert>
-                            <Progress value={50} />
-                            <AlertTitle className="pt-2 text-center">
-                                Занято 2.5 ГБ из 5ГБ
-                            </AlertTitle>
-                            <AlertDescription className="pt-2 flex justify-center">
-                                <Button className="w-full">Увеличить</Button>
-                            </AlertDescription>
-                        </Alert>
-                    ) : null} */}
+                    <AnimatePresence>
+                        {open && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -100 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -100 }}
+                                transition={{ duration: 0.1 }}
+                            >
+                                <Alert>
+                                    <Progress value={50} />
+                                    <AlertTitle className="pt-2 text-center">
+                                        <p className="text-nowrap">
+                                            Занято 2.5 ГБ из 5ГБ
+                                        </p>
+                                    </AlertTitle>
+                                    <AlertDescription className="pt-2 flex justify-center">
+                                        <Button className="w-full">
+                                            Увеличить
+                                        </Button>
+                                    </AlertDescription>
+                                </Alert>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <UserDropDownMenu auth={user}></UserDropDownMenu>
                 </SidebarFooter>
             </Sidebar>
-
-            <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 px-4">
-                    <SidebarTrigger className="-ml-1" />
-                    <Separator orientation="vertical" className="mr-2 h-4" />
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem className="hidden md:block">
-                                <BreadcrumbLink href={route("index")}>
-                                    Файловое хранилище
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator className="hidden md:block" />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </header>
-                {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                    </div>
-                    <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-                </div> */}
-                {children}
-            </SidebarInset>
-        </SidebarProvider>
+        </>
     );
 }
