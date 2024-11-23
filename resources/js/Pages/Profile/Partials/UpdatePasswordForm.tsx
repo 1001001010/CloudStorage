@@ -1,9 +1,8 @@
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Transition } from '@headlessui/react'
 import { useForm } from '@inertiajs/react'
+import { Label } from '@radix-ui/react-label'
 import { FormEventHandler, useRef } from 'react'
 
 export default function UpdatePasswordForm({
@@ -62,13 +61,11 @@ export default function UpdatePasswordForm({
             </header>
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel
-                        htmlFor="current_password"
-                        value="Current Password"
-                    />
-
-                    <TextInput
+                <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="current_password">
+                        Действительный пароль
+                    </Label>
+                    <Input
                         id="current_password"
                         ref={currentPasswordInput}
                         value={data.current_password}
@@ -79,17 +76,16 @@ export default function UpdatePasswordForm({
                         className="mt-1 block w-full"
                         autoComplete="current-password"
                     />
-
-                    <InputError
-                        message={errors.current_password}
-                        className="mt-2"
-                    />
+                    {errors.current_password && (
+                        <p className="text-sm text-red-500">
+                            {errors.current_password}
+                        </p>
+                    )}
                 </div>
 
-                <div>
-                    <InputLabel htmlFor="password" value="New Password" />
-
-                    <TextInput
+                <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="password">Новый пароль</Label>
+                    <Input
                         id="password"
                         ref={passwordInput}
                         value={data.password}
@@ -98,17 +94,18 @@ export default function UpdatePasswordForm({
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
+                    {errors.password && (
+                        <p className="text-sm text-red-500">
+                            {errors.password}
+                        </p>
+                    )}
                 </div>
 
-                <div>
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
+                <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="password_confirmation">
+                        Подтверждение пароля
+                    </Label>
+                    <Input
                         id="password_confirmation"
                         value={data.password_confirmation}
                         onChange={(e) =>
@@ -118,15 +115,15 @@ export default function UpdatePasswordForm({
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                     />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
+                    {errors.password_confirmation && (
+                        <p className="text-sm text-red-500">
+                            {errors.password_confirmation}
+                        </p>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <Button disabled={processing}>Сохранить</Button>
 
                     <Transition
                         show={recentlySuccessful}
@@ -134,7 +131,7 @@ export default function UpdatePasswordForm({
                         enterFrom="opacity-0"
                         leave="transition ease-in-out"
                         leaveTo="opacity-0">
-                        <p className="text-sm text-gray-600">Saved.</p>
+                        <p className="text-sm text-gray-600">Сохранено</p>
                     </Transition>
                 </div>
             </form>

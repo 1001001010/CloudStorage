@@ -1,17 +1,13 @@
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
-import { Transition } from '@headlessui/react'
+import { Input } from '@/components/ui/input'
+import { Button, Transition } from '@headlessui/react'
 import { Link, useForm, usePage } from '@inertiajs/react'
+import { Label } from '@radix-ui/react-label'
 import { FormEventHandler } from 'react'
 
 export default function UpdateProfileInformation({
-    mustVerifyEmail,
     status,
     className = '',
 }: {
-    mustVerifyEmail: boolean
     status?: string
     className?: string
 }) {
@@ -42,62 +38,45 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
+                <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="name">Имя</Label>
+                    <Input
                         id="name"
                         className="mt-1 block w-full"
                         value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={(e: any) => setData('name', e.target.value)}
                         required
-                        isFocused
                         autoComplete="name"
                     />
-
-                    <InputError className="mt-2" message={errors.name} />
+                    {errors.email && (
+                        <p className="text-sm text-red-500">{errors.name}</p>
+                    )}
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
-
-                {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="mt-2 text-sm text-gray-800">
-                            Your email address is unverified.
-                            <Link
-                                href={route('verification.send')}
-                                method="post"
-                                as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === 'verification-link-sent' && (
-                            <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your
-                                email address.
-                            </div>
+                    <div className="flex flex-col space-y-1.5">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            className="mt-1 block w-full"
+                            value={data.email}
+                            onChange={(e: any) =>
+                                setData('email', e.target.value)
+                            }
+                            required
+                            autoComplete="username"
+                        />
+                        {errors.email && (
+                            <p className="text-sm text-red-500">
+                                {errors.email}
+                            </p>
                         )}
                     </div>
-                )}
+                </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <Button disabled={processing}>Сохранить</Button>
 
                     <Transition
                         show={recentlySuccessful}

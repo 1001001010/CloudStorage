@@ -1,7 +1,10 @@
 import AuthenticatedLayout from '@/Layouts/Layout'
+import { PageProps } from '@/types'
+import UpdatePasswordForm from './Partials/UpdatePasswordForm'
+import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
 import { Head } from '@inertiajs/react'
 
-export default function Dashboard() {
+export default function Dashboard({ status }: PageProps<{ status?: string }>) {
     return (
         <AuthenticatedLayout
             header={
@@ -12,11 +15,16 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
+                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                        <UpdateProfileInformationForm
+                            status={status}
+                            className="max-w-xl"
+                        />
+                    </div>
+
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                        <UpdatePasswordForm className="max-w-xl" />
                     </div>
                 </div>
             </div>

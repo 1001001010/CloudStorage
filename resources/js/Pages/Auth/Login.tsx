@@ -66,6 +66,11 @@ export default function Login({
                                     placeholder="Введите вашу почту"
                                     required
                                 />
+                                {errors.email && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.email}
+                                    </p>
+                                )}
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="name">Пароль</Label>
@@ -81,6 +86,11 @@ export default function Login({
                                     }
                                     required
                                 />
+                                {errors.password && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.password}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </CardContent>
