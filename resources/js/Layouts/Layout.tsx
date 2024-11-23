@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
     Breadcrumb,
@@ -7,36 +7,35 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+} from '@/Components/ui/breadcrumb'
+import { Separator } from '@/components/ui/separator'
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
-} from "@/Components/ui/sidebar";
-import SideBarComponent from "@/Components/Sidebar";
-import { PropsWithChildren, ReactNode, useEffect } from "react";
-import { useDarkMode } from "@/Components/ThemeButton";
+} from '@/Components/ui/sidebar'
+import SideBarComponent from '@/Components/Sidebar'
+import { PropsWithChildren, ReactNode, useEffect } from 'react'
+import { useDarkMode } from '@/Components/ThemeButton'
 
 export default function Layout({
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const { isDarkMode, toggleDarkMode } = useDarkMode();
+    const { isDarkMode, toggleDarkMode } = useDarkMode()
 
     useEffect(() => {
-        document.documentElement.classList.toggle("dark", isDarkMode);
-    }, [isDarkMode]);
+        document.documentElement.classList.toggle('dark', isDarkMode)
+    }, [isDarkMode])
 
     return (
         <>
             <SidebarProvider
                 style={
                     {
-                        "--sidebar-width": "19rem",
+                        '--sidebar-width': '19rem',
                     } as React.CSSProperties
                 }
-                defaultOpen={false}
-            >
+                defaultOpen={false}>
                 <SideBarComponent children={children} />
                 <SidebarInset>
                     <header className="flex h-16 shrink-0 items-center gap-2 px-4">
@@ -48,7 +47,7 @@ export default function Layout({
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={route("index")}>
+                                    <BreadcrumbLink href={route('index')}>
                                         Файловое хранилище
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
@@ -65,5 +64,5 @@ export default function Layout({
                 </SidebarInset>
             </SidebarProvider>
         </>
-    );
+    )
 }

@@ -1,14 +1,14 @@
-import { PageProps } from "@/types";
-import Layout from "@/Layouts/Layout";
-import { Button } from "@/components/ui/button";
+import { PageProps } from '@/types'
+import Layout from '@/Layouts/Layout'
+import { Button } from '@/components/ui/button'
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-} from "@/Components/ui/dialog";
-import { Link } from "@inertiajs/react";
+} from '@/Components/ui/dialog'
+import { Link } from '@inertiajs/react'
 
 export default function Welcome({ auth }: PageProps<{}>) {
     return (
@@ -30,13 +30,13 @@ export default function Welcome({ auth }: PageProps<{}>) {
                                 <DialogDescription>
                                     Для использования файлового хранилища
                                     необходимо авторизоваться
-                                    <Link href={route("login")}>
-                                        <Button className="w-full my-3">
+                                    <Link href={route('login')}>
+                                        <Button className="my-3 w-full">
                                             Вход
                                         </Button>
                                     </Link>
-                                    <Link href={route("register")}>
-                                        <p className="text-sm text-center text-muted-foreground">
+                                    <Link href={route('register')}>
+                                        <p className="text-center text-sm text-muted-foreground">
                                             Регистрация
                                         </p>
                                     </Link>
@@ -47,5 +47,5 @@ export default function Welcome({ auth }: PageProps<{}>) {
                 )}
             </Layout>
         </>
-    );
+    )
 }

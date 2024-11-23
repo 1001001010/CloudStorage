@@ -1,9 +1,9 @@
-import AuthenticatedLayout from "@/Layouts/Layout";
-import { PageProps } from "@/types";
-import { Head } from "@inertiajs/react";
-import DeleteUserForm from "./Partials/DeleteUserForm";
-import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
-import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
+import AuthenticatedLayout from '@/Layouts/Layout'
+import { PageProps } from '@/types'
+import { Head } from '@inertiajs/react'
+import DeleteUserForm from './Partials/DeleteUserForm'
+import UpdatePasswordForm from './Partials/UpdatePasswordForm'
+import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
 
 export default function Edit({
     mustVerifyEmail,
@@ -15,8 +15,7 @@ export default function Edit({
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Profile
                 </h2>
-            }
-        >
+            }>
             <Head title="Profile" />
 
             <div className="py-12">
@@ -39,5 +38,5 @@ export default function Edit({
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }

@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { ChevronRight, Files, GalleryVerticalEnd } from "lucide-react";
+import * as React from 'react'
+import { ChevronRight, Files, GalleryVerticalEnd } from 'lucide-react'
 import {
     Sidebar,
     SidebarContent,
@@ -15,62 +15,62 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     useSidebar,
-} from "@/Components/ui/sidebar";
-import { usePage } from "@inertiajs/react";
-import UserDropDownMenu from "./UserDropDowrnMenu";
-import ThemeButton from "./ThemeButton";
+} from '@/Components/ui/sidebar'
+import { usePage } from '@inertiajs/react'
+import UserDropDownMenu from './UserDropDowrnMenu'
+import ThemeButton from './ThemeButton'
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "./ui/collapsible";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { Progress } from "@/Components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
+} from './ui/collapsible'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+import { Progress } from '@/Components/ui/progress'
+import { Button } from '@/components/ui/button'
+import { motion, AnimatePresence } from 'framer-motion'
 
-export const iframeHeight = "800px";
+export const iframeHeight = '800px'
 
 const data = {
     navMain: [
         {
-            title: "Все файлы",
-            url: "#",
+            title: 'Все файлы',
+            url: '#',
             icon: Files,
             isActive: true,
             items: [
                 {
-                    title: "Недавнее",
-                    url: "#",
+                    title: 'Недавнее',
+                    url: '#',
                 },
                 {
-                    title: "Фото",
-                    url: "#",
+                    title: 'Фото',
+                    url: '#',
                 },
                 {
-                    title: "Видео",
-                    url: "#",
+                    title: 'Видео',
+                    url: '#',
                 },
                 {
-                    title: "Архивы",
-                    url: "#",
+                    title: 'Архивы',
+                    url: '#',
                 },
                 {
-                    title: "Документы",
-                    url: "#",
+                    title: 'Документы',
+                    url: '#',
                 },
             ],
         },
     ],
-};
+}
 
 export default function SideBarComponent({
     children,
 }: {
-    children: React.ReactNode;
+    children: React.ReactNode
 }) {
-    const { open } = useSidebar();
-    const user = usePage().props.auth;
+    const { open } = useSidebar()
+    const user = usePage().props.auth
 
     return (
         <>
@@ -103,13 +103,11 @@ export default function SideBarComponent({
                                     key={item.title}
                                     asChild
                                     defaultOpen={item.isActive}
-                                    className="group/collapsible"
-                                >
+                                    className="group/collapsible">
                                     <SidebarMenuItem>
                                         <CollapsibleTrigger asChild>
                                             <SidebarMenuButton
-                                                tooltip={item.title}
-                                            >
+                                                tooltip={item.title}>
                                                 {item.icon && <item.icon />}
                                                 <span>{item.title}</span>
                                                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -119,16 +117,13 @@ export default function SideBarComponent({
                                             <SidebarMenuSub>
                                                 {item.items?.map((subItem) => (
                                                     <SidebarMenuSubItem
-                                                        key={subItem.title}
-                                                    >
+                                                        key={subItem.title}>
                                                         <SidebarMenuSubButton
-                                                            asChild
-                                                        >
+                                                            asChild>
                                                             <a
                                                                 href={
                                                                     subItem.url
-                                                                }
-                                                            >
+                                                                }>
                                                                 <span>
                                                                     {
                                                                         subItem.title
@@ -155,8 +150,7 @@ export default function SideBarComponent({
                                 initial={{ opacity: 0, x: -100 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -100 }}
-                                transition={{ duration: 0.1 }}
-                            >
+                                transition={{ duration: 0.1 }}>
                                 <Alert>
                                     <Progress value={50} />
                                     <AlertTitle className="pt-2 text-center">
@@ -164,7 +158,7 @@ export default function SideBarComponent({
                                             Занято 2.5 ГБ из 5ГБ
                                         </p>
                                     </AlertTitle>
-                                    <AlertDescription className="pt-2 flex justify-center">
+                                    <AlertDescription className="flex justify-center pt-2">
                                         <Button className="w-full">
                                             Увеличить
                                         </Button>
@@ -177,5 +171,5 @@ export default function SideBarComponent({
                 </SidebarFooter>
             </Sidebar>
         </>
-    );
+    )
 }

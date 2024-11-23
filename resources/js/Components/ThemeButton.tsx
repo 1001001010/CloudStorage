@@ -1,30 +1,30 @@
-import { PageProps } from "@/types";
-import { MoonStar, SunMedium } from "lucide-react";
-import { Link } from "@inertiajs/react";
-import { useEffect, useState } from "react";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { PageProps } from '@/types'
+import { MoonStar, SunMedium } from 'lucide-react'
+import { Link } from '@inertiajs/react'
+import { useEffect, useState } from 'react'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar'
 
 export function useDarkMode() {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false)
 
     useEffect(() => {
-        const storedDarkMode = localStorage.getItem("darkMode") === "true";
-        setIsDarkMode(storedDarkMode);
-        document.documentElement.classList.toggle("dark", storedDarkMode);
-    }, []);
+        const storedDarkMode = localStorage.getItem('darkMode') === 'true'
+        setIsDarkMode(storedDarkMode)
+        document.documentElement.classList.toggle('dark', storedDarkMode)
+    }, [])
 
     const toggleDarkMode = () => {
-        const newDarkMode = !isDarkMode;
-        setIsDarkMode(newDarkMode);
-        document.documentElement.classList.toggle("dark", newDarkMode);
-        localStorage.setItem("darkMode", newDarkMode.toString());
-    };
+        const newDarkMode = !isDarkMode
+        setIsDarkMode(newDarkMode)
+        document.documentElement.classList.toggle('dark', newDarkMode)
+        localStorage.setItem('darkMode', newDarkMode.toString())
+    }
 
-    return { isDarkMode, toggleDarkMode };
+    return { isDarkMode, toggleDarkMode }
 }
 
 export default function ThemeButton({}: PageProps<{}>) {
-    const { isDarkMode, toggleDarkMode } = useDarkMode();
+    const { isDarkMode, toggleDarkMode } = useDarkMode()
 
     return (
         <>
@@ -49,5 +49,5 @@ export default function ThemeButton({}: PageProps<{}>) {
                 </SidebarMenuItem>
             </SidebarMenu>
         </>
-    );
+    )
 }
