@@ -15,7 +15,7 @@ export default function Dashboard({
     userAgent: string
 }>) {
     return (
-        <Layout BreadLvl1={BreadLvl1}>
+        <Layout BreadLvl1={BreadLvl1} auth={auth}>
             <div className="">
                 <div className="m-4 flex flex-wrap rounded-lg border shadow max-sm:m-1 max-sm:p-1 md:flex-nowrap">
                     <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-2/3">

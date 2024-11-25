@@ -14,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { PropsWithChildren, ReactNode, useEffect } from 'react'
-import { useDarkMode } from '@/Components/ThemeButton'
 
 export default function Login({
     status,
@@ -23,12 +22,6 @@ export default function Login({
     status?: string
     canResetPassword: boolean
 }) {
-    const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-    useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDarkMode)
-    }, [isDarkMode])
-
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',

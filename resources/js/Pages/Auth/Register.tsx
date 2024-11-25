@@ -12,15 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Button } from '@/components/ui/button'
 import { PropsWithChildren, ReactNode, useEffect } from 'react'
-import { useDarkMode } from '@/Components/ThemeButton'
 
 export default function Register() {
-    const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-    useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDarkMode)
-    }, [isDarkMode])
-
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',

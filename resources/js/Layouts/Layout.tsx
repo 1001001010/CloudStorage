@@ -16,25 +16,20 @@ import {
 } from '@/Components/ui/sidebar'
 import SideBarComponent from '@/Components/Sidebar'
 import { PropsWithChildren, ReactNode, useEffect } from 'react'
-import { useDarkMode } from '@/Components/ThemeButton'
 
 export default function Layout({
     children,
     BreadLvl1,
     BreadLvl2,
     BreadLvl3,
+    auth,
 }: PropsWithChildren<{
     header?: ReactNode
     BreadLvl1?: string
     BreadLvl2?: string
     BreadLvl3?: string
+    auth: any
 }>) {
-    const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-    useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDarkMode)
-    }, [isDarkMode])
-
     return (
         <>
             <SidebarProvider
@@ -43,7 +38,7 @@ export default function Layout({
                         '--sidebar-width': '19rem',
                     } as React.CSSProperties
                 }
-                defaultOpen={false}>
+                defaultOpen={auth.user ? true : false}>
                 <SideBarComponent children={children} />
                 <SidebarInset>
                     <header className="flex h-16 shrink-0 items-center gap-2 px-4">

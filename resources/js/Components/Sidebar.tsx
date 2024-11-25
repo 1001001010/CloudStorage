@@ -1,7 +1,14 @@
 'use client'
 
 import * as React from 'react'
-import { ChevronRight, Files, GalleryVerticalEnd } from 'lucide-react'
+import {
+    ChevronRight,
+    Files,
+    Folder,
+    FolderPlus,
+    GalleryVerticalEnd,
+    Upload,
+} from 'lucide-react'
 import {
     Sidebar,
     SidebarContent,
@@ -16,7 +23,7 @@ import {
     SidebarMenuSubItem,
     useSidebar,
 } from '@/Components/ui/sidebar'
-import { usePage } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import UserDropDownMenu from './UserDropDowrnMenu'
 import ThemeButton from './ThemeButton'
 import {
@@ -37,7 +44,7 @@ const data = {
             title: 'Все файлы',
             url: '#',
             icon: Files,
-            isActive: true,
+            isActive: false,
             items: [
                 {
                     title: 'Недавнее',
@@ -61,6 +68,34 @@ const data = {
                 },
             ],
         },
+        {
+            title: 'Папки',
+            url: '#',
+            icon: Folder,
+            isActive: false,
+            items: [
+                {
+                    title: 'Папка 1',
+                    url: '#',
+                },
+                {
+                    title: 'Папка 2',
+                    url: '#',
+                },
+                {
+                    title: 'Папка 3',
+                    url: '#',
+                },
+                {
+                    title: 'Папка 4',
+                    url: '#',
+                },
+                {
+                    title: 'Папка 5',
+                    url: '#',
+                },
+            ],
+        },
     ],
 }
 
@@ -79,7 +114,7 @@ export default function SideBarComponent({
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton size="lg" asChild>
-                                <a href="#">
+                                <Link href={route('index')}>
                                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                         <GalleryVerticalEnd className="size-4" />
                                     </div>
@@ -89,8 +124,20 @@ export default function SideBarComponent({
                                         </span>
                                         <span className="">v1.0.0</span>
                                     </div>
-                                </a>
+                                </Link>
                             </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem className="pb-1">
+                            <Button className="flex w-full">
+                                <Upload></Upload>
+                                {open == false ? null : <p>Загрузить</p>}
+                            </Button>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <Button className="flex w-full" variant="outline">
+                                <FolderPlus></FolderPlus>
+                                {open == false ? null : <p>Создать папку</p>}
+                            </Button>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarHeader>
