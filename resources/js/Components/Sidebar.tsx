@@ -69,7 +69,7 @@ export default function SideBarComponent({
 }: {
     children: React.ReactNode
 }) {
-    const { open } = useSidebar()
+    const { open, isMobile } = useSidebar()
     const user = usePage().props.auth
 
     return (
@@ -167,7 +167,9 @@ export default function SideBarComponent({
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    <UserDropDownMenu auth={user}></UserDropDownMenu>
+                    <UserDropDownMenu
+                        auth={user}
+                        isMobile={isMobile}></UserDropDownMenu>
                 </SidebarFooter>
             </Sidebar>
         </>

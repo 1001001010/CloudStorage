@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Имеет ли пользователь сделать право на этот запрос
      */
     public function authorize(): bool
     {
@@ -20,7 +20,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Определяем правила валидации для запроса
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -33,7 +33,23 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Определяем сообщения при ошибках валидации
+     *
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Укажите ваш email',
+            'email.string' => 'Поле email должно быть строкой',
+            'email.email' => 'Поле email должно быть адресом электронной почты',
+            'password.required' => 'Укажите пароль',
+            'password.string' => 'Пароль должно быть строкой.',
+            'credentials' => 'Неправильный логин или пароль'
+        ];
+    }
+
+    /**
+     * Проверка подлености учетных данных запроса
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -53,7 +69,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Проверка скорости запроса на вход
      *
      * @throws \Illuminate\Validation\ValidationException
      */

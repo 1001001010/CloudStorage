@@ -1,33 +1,44 @@
-import AuthenticatedLayout from '@/Layouts/Layout'
-import { PageProps } from '@/types'
+import { PageProps, Session } from '@/types'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
-import { Head } from '@inertiajs/react'
+import Layout from '@/Layouts/Layout'
+import ActiveSession from './Partials/ActiveSession'
 
-export default function Dashboard({ status }: PageProps<{ status?: string }>) {
+export default function Dashboard({
+    auth,
+    activeSession,
+    BreadLvl1,
+    userAgent,
+}: PageProps<{
+    BreadLvl1: string
+    activeSession: Session[]
+    userAgent: string
+}>) {
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }>
-            <Head title="Dashboard" />
-
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <UpdateProfileInformationForm
-                            status={status}
-                            className="max-w-xl"
-                        />
+        <Layout BreadLvl1={BreadLvl1}>
+            <div className="">
+                <div className="m-4 flex flex-wrap rounded-lg border shadow max-sm:m-1 max-sm:p-1 md:flex-nowrap">
+                    <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-2/3">
+                        <div className="mb-4 w-full rounded-lg border p-4 shadow">
+                            <UpdateProfileInformationForm className="mb-4" />
+                        </div>
+                        <div className="mb-4 w-full rounded-lg border p-4 shadow">
+                            <UpdatePasswordForm className="mb-4" />
+                        </div>
                     </div>
-
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <UpdatePasswordForm className="max-w-xl" />
+                    <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-1/3">
+                        <div className="mb-4 w-full rounded-lg border p-4 shadow">
+                            <h2 className="mb-4 text-lg font-medium">
+                                Активные сессии
+                            </h2>
+                            <ActiveSession
+                                activeSessions={activeSession}
+                                userAgent={userAgent}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </Layout>
     )
 }

@@ -18,8 +18,19 @@ import {
     LogOut,
     Sparkles,
 } from 'lucide-react'
+import { assert } from 'console'
+import { FormEventHandler } from 'react'
+import { Link } from '@inertiajs/react'
 
-export default function UserDropDownMenu({ auth }: PageProps<{}>) {
+export default function UserDropDownMenu({
+    auth,
+    isMobile,
+}: PageProps<{ isMobile: boolean }>) {
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault()
+        route('logout')
+    }
+
     return (
         <>
             <DropdownMenu>
@@ -29,30 +40,34 @@ export default function UserDropDownMenu({ auth }: PageProps<{}>) {
                         className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                         <Avatar className="h-8 w-8 rounded-lg">
                             <AvatarImage
-                                src="https://i.pinimg.com/736x/6d/83/8b/6d838bf7e88a373814e014ac8f88f6ad.jpg"
+                                src="/img/defaul_avatar.jpg"
                                 alt="avatar"
                             />
                             <AvatarFallback className="rounded-lg">
-                                CN
+                                100
                             </AvatarFallback>
                         </Avatar>
                         <div className="grid flex-1 text-left text-sm leading-tight">
-                            <span className="truncate font-semibold">Имя</span>
-                            <span className="truncate text-xs">Email</span>
+                            <span className="truncate font-semibold">
+                                {auth.user ? auth.user.name : null}
+                            </span>
+                            <span className="truncate text-xs">
+                                {auth.user ? auth.user.email : null}
+                            </span>
                         </div>
                         <ChevronsUpDown className="ml-auto size-4" />
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                     className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                    // side={isMobile ? "bottom" : "right"}
+                    // side={isMobile ? 'bottom' : 'right'}
                     align="start"
                     sideOffset={4}>
                     <DropdownMenuLabel className="p-0 font-normal">
                         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                             <Avatar className="h-8 w-8 rounded-lg">
                                 <AvatarImage
-                                    src="https://i.pinimg.com/736x/6d/83/8b/6d838bf7e88a373814e014ac8f88f6ad.jpg"
+                                    src="/img/defaul_avatar.jpg"
                                     alt="avatar"
                                 />
                                 <AvatarFallback className="rounded-lg">
@@ -61,9 +76,11 @@ export default function UserDropDownMenu({ auth }: PageProps<{}>) {
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">
-                                    Имя
+                                    {auth.user ? auth.user.name : null}
                                 </span>
-                                <span className="truncate text-xs">Email</span>
+                                <span className="truncate text-xs">
+                                    {auth.user ? auth.user.email : null}
+                                </span>
                             </div>
                         </div>
                     </DropdownMenuLabel>
@@ -76,10 +93,12 @@ export default function UserDropDownMenu({ auth }: PageProps<{}>) {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                            <BadgeCheck />
-                            Account
-                        </DropdownMenuItem>
+                        <Link href={route('profile.index')} className="w-full">
+                            <DropdownMenuItem>
+                                <BadgeCheck />
+                                Профиль
+                            </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem>
                             <CreditCard />
                             Billing
@@ -90,10 +109,18 @@ export default function UserDropDownMenu({ auth }: PageProps<{}>) {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <LogOut />
-                        Log out
-                    </DropdownMenuItem>
+                    <form onSubmit={submit}>
+                        <Link
+                            href={route('logout')}
+                            method="post"
+                            as="button"
+                            className="w-full">
+                            <DropdownMenuItem>
+                                <LogOut />
+                                Выйти
+                            </DropdownMenuItem>
+                        </Link>
+                    </form>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

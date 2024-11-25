@@ -2,7 +2,15 @@ export interface User {
     id: number
     name: string
     email: string
-    email_verified_at?: string
+}
+
+export interface Session {
+    id: string
+    user_id: User
+    ip_address: string
+    user_agent: string
+    payload: string
+    last_activity: number
 }
 
 export type PageProps<

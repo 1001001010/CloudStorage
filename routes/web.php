@@ -9,9 +9,8 @@ Route::get('/', [MainController::class, 'index'])->name('index');
 Route::middleware('auth')->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
-        Route::get('/profile/edit', 'edit')->name('profile.edit');
         Route::patch('/profile/edit', 'update')->name('profile.update');
-        Route::delete('/profile/edit', 'destroy')->name('profile.destroy');
+        Route::delete('/profile/session/destroy','destroy')->name('session.destroy');
     });
 });
 

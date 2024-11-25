@@ -20,7 +20,15 @@ import { useDarkMode } from '@/Components/ThemeButton'
 
 export default function Layout({
     children,
-}: PropsWithChildren<{ header?: ReactNode }>) {
+    BreadLvl1,
+    BreadLvl2,
+    BreadLvl3,
+}: PropsWithChildren<{
+    header?: ReactNode
+    BreadLvl1?: string
+    BreadLvl2?: string
+    BreadLvl3?: string
+}>) {
     const { isDarkMode, toggleDarkMode } = useDarkMode()
 
     useEffect(() => {
@@ -51,12 +59,36 @@ export default function Layout({
                                         Файловое хранилище
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>
-                                        Data Fetching
-                                    </BreadcrumbPage>
-                                </BreadcrumbItem>
+                                {BreadLvl1 ? (
+                                    <>
+                                        <BreadcrumbItem>
+                                            <BreadcrumbSeparator className="hidden md:block" />
+                                            <BreadcrumbPage>
+                                                {BreadLvl1}
+                                            </BreadcrumbPage>
+                                        </BreadcrumbItem>
+                                    </>
+                                ) : null}
+                                {BreadLvl2 ? (
+                                    <>
+                                        <BreadcrumbSeparator className="hidden md:block" />
+                                        <BreadcrumbItem>
+                                            <BreadcrumbPage>
+                                                {BreadLvl2}
+                                            </BreadcrumbPage>
+                                        </BreadcrumbItem>
+                                    </>
+                                ) : null}
+                                {BreadLvl3 ? (
+                                    <>
+                                        <BreadcrumbSeparator className="hidden md:block" />
+                                        <BreadcrumbItem>
+                                            <BreadcrumbPage>
+                                                {BreadLvl3}
+                                            </BreadcrumbPage>
+                                        </BreadcrumbItem>
+                                    </>
+                                ) : null}
                             </BreadcrumbList>
                         </Breadcrumb>
                     </header>

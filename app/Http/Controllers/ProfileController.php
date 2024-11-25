@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\{User, Session};
 
 class ProfileController extends Controller
 {
@@ -17,7 +18,13 @@ class ProfileController extends Controller
      */
     public function index(Request $request): Response
     {
-        return Inertia::render('Profile/Index');
+        $userAgent = $request->header('User-Agent');
+
+        return Inertia::render('Profile/Index', [
+            'activeSession' => Session::with('user')->where('user_id', Auth::id())->get(),
+            'BreadLvl1' => 'Профиль',
+            'userAgent' => $userAgent,
+        ]);
     }
 
     /**
@@ -39,6 +46,15 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.index');
+    }
+
+    /**
+     * Удаление сессии пользователя
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        Session::where('payload', $request->payload)->delete();
+        return redirect()->back();
     }
 }

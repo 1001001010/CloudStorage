@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Transition } from '@headlessui/react'
+import { useRef, FormEventHandler } from 'react'
 import { useForm } from '@inertiajs/react'
-import { Label } from '@radix-ui/react-label'
-import { FormEventHandler, useRef } from 'react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/Components/ui/label'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export default function UpdatePasswordForm({
     className = '',
@@ -13,15 +13,7 @@ export default function UpdatePasswordForm({
     const passwordInput = useRef<HTMLInputElement>(null)
     const currentPasswordInput = useRef<HTMLInputElement>(null)
 
-    const {
-        data,
-        setData,
-        errors,
-        put,
-        reset,
-        processing,
-        recentlySuccessful,
-    } = useForm({
+    const { data, setData, errors, put, reset, processing } = useForm({
         current_password: '',
         password: '',
         password_confirmation: '',
@@ -32,8 +24,18 @@ export default function UpdatePasswordForm({
 
         put(route('password.update'), {
             preserveScroll: true,
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                toast('Успешно', {
+                    description: 'Пароль успешно изменен',
+                })
+                reset()
+            },
             onError: (errors) => {
+                toast('Ошибка', {
+                    description:
+                        'Ошибка при изменении пароля. Пожалуйста, попробуйте снова',
+                })
+
                 if (errors.password) {
                     reset('password', 'password_confirmation')
                     passwordInput.current?.focus()
@@ -50,18 +52,11 @@ export default function UpdatePasswordForm({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Update Password
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                    Ensure your account is using a long, random password to stay
-                    secure.
-                </p>
+                <h2 className="text-lg font-medium">Обновление пароля</h2>
             </header>
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div className="flex flex-col space-y-1.5">
+                <div>
                     <Label htmlFor="current_password">
                         Действительный пароль
                     </Label>
@@ -83,7 +78,7 @@ export default function UpdatePasswordForm({
                     )}
                 </div>
 
-                <div className="flex flex-col space-y-1.5">
+                <div>
                     <Label htmlFor="password">Новый пароль</Label>
                     <Input
                         id="password"
@@ -101,7 +96,7 @@ export default function UpdatePasswordForm({
                     )}
                 </div>
 
-                <div className="flex flex-col space-y-1.5">
+                <div>
                     <Label htmlFor="password_confirmation">
                         Подтверждение пароля
                     </Label>
@@ -123,16 +118,9 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Button disabled={processing}>Сохранить</Button>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0">
-                        <p className="text-sm text-gray-600">Сохранено</p>
-                    </Transition>
+                    <Button variant="outline" disabled={processing}>
+                        Сохранить
+                    </Button>
                 </div>
             </form>
         </section>
