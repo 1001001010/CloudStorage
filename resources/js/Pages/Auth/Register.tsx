@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Button } from '@/components/ui/button'
-import { PropsWithChildren, ReactNode, useEffect } from 'react'
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({

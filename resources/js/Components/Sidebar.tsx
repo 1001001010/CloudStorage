@@ -99,11 +99,7 @@ const data = {
     ],
 }
 
-export default function SideBarComponent({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default function SideBarComponent({}: {}) {
     const { open, isMobile } = useSidebar()
     const user = usePage().props.auth
 

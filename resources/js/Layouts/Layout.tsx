@@ -15,21 +15,39 @@ import {
     SidebarTrigger,
 } from '@/Components/ui/sidebar'
 import SideBarComponent from '@/Components/Sidebar'
-import { PropsWithChildren, ReactNode, useEffect } from 'react'
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
+import { Link } from '@inertiajs/react'
+// import { cookies } from 'next/headers'
+
+const getInitialSidebarState = () => {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('sidebar:state'))
+        ?.split('=')[1]
+    return cookieValue === 'true'
+}
 
 export default function Layout({
     children,
     BreadLvl1,
     BreadLvl2,
     BreadLvl3,
-    auth,
 }: PropsWithChildren<{
     header?: ReactNode
     BreadLvl1?: string
     BreadLvl2?: string
     BreadLvl3?: string
-    auth: any
 }>) {
+    const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
+
+    useEffect(() => {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('sidebar:state'))
+            ?.split('=')[1]
+        console.log('Cookie value:', cookieValue)
+        setDefaultOpen(cookieValue === 'true')
+    }, [])
     return (
         <>
             <SidebarProvider
@@ -38,8 +56,8 @@ export default function Layout({
                         '--sidebar-width': '19rem',
                     } as React.CSSProperties
                 }
-                defaultOpen={auth.user ? true : false}>
-                <SideBarComponent children={children} />
+                defaultOpen={defaultOpen}>
+                <SideBarComponent />
                 <SidebarInset>
                     <header className="flex h-16 shrink-0 items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />
@@ -50,9 +68,11 @@ export default function Layout({
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={route('index')}>
-                                        Файловое хранилище
-                                    </BreadcrumbLink>
+                                    <Link href={route('index')}>
+                                        <BreadcrumbLink>
+                                            Файловое хранилище
+                                        </BreadcrumbLink>
+                                    </Link>
                                 </BreadcrumbItem>
                                 {BreadLvl1 ? (
                                     <>
