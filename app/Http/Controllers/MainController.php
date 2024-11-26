@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HelperClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,30 +16,10 @@ class MainController extends Controller
      */
     public function index(): Response
     {
-        $userFolders = Folder::where('user_id', Auth::id())->get();
+        $helper = new HelperClass();
 
         return Inertia::render('Welcome', [
-            'forders' => $this->buildFolderTree($userFolders)
+            'forders' => $helper->buildFolderTree(Folder::where('user_id', Auth::id())->get())
         ]);
-    }
-
-    /**
-     * Преобразование список папок в древовидную структуру
-     */
-    private function buildFolderTree($folders, $parentId = null)
-    {
-        $branch = [];
-
-        foreach ($folders as $folder) {
-            if ($folder->parent_id == $parentId) {
-                $children = $this->buildFolderTree($folders, $folder->id);
-                if ($children) {
-                    $folder->children = $children;
-                }
-                $branch[] = $folder;
-            }
-        }
-
-        return $branch;
     }
 }

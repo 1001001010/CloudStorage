@@ -26,31 +26,36 @@ export default function NewFolder({
     open,
     forders,
 }: PageProps<{ open: boolean; forders: FolderTypes[] }>) {
+    const [isOpen, setIsOpen] = useState(false)
     const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([forders])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
+    const [currentFolderId, setCurrentFolderId] = useState<number>(0)
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
-        title: string
+        title: string,
+        folderId: number
     ) => {
         if (children) {
             setCurrentPath([...currentPath, children])
             setBreadcrumbPath([...breadcrumbPath, title])
+            setCurrentFolderId(folderId)
         } else {
-            // Если нет дочерних элементов, отображаем сообщение "Папка пуста"
             setCurrentPath([...currentPath, []])
             setBreadcrumbPath([...breadcrumbPath, title])
+            setCurrentFolderId(folderId)
         }
     }
 
     const handleBreadcrumbClick = (index: number) => {
         setCurrentPath(currentPath.slice(0, index + 1))
         setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
+        setCurrentFolderId(index === 0 ? 0 : currentPath[index][0].id)
     }
 
     return (
         <>
-            <Dialog>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <Button className="flex w-full" variant="outline">
                         <FolderPlus></FolderPlus>
@@ -64,59 +69,70 @@ export default function NewFolder({
                             Выберите, где создать папку
                         </DialogDescription>
                         <DialogDescription className="py-4 pr-4">
-                            <Breadcrumb>
-                                <BreadcrumbList>
-                                    {breadcrumbPath.map((title, index) => (
-                                        <BreadcrumbItem key={index}>
-                                            <BreadcrumbLink
-                                                className="cursor-pointer"
-                                                onClick={() =>
-                                                    handleBreadcrumbClick(index)
-                                                }>
-                                                {title}
-                                            </BreadcrumbLink>
-                                            {index <
-                                                breadcrumbPath.length - 1 && (
-                                                <BreadcrumbSeparator />
-                                            )}
-                                        </BreadcrumbItem>
-                                    ))}
-                                </BreadcrumbList>
-                            </Breadcrumb>
-                            <div className="grid min-h-[200px] grid-cols-5 items-center justify-center gap-5">
-                                {currentPath[currentPath.length - 1] &&
-                                currentPath[currentPath.length - 1].length >
-                                    0 ? (
-                                    currentPath[currentPath.length - 1].map(
-                                        (item, index) => (
-                                            <Button
-                                                key={index}
-                                                variant="ghost"
-                                                className="m-2 flex h-full w-full flex-col items-center"
-                                                onClick={() =>
-                                                    handleFolderClick(
-                                                        item.children,
-                                                        item.title
-                                                    )
-                                                }>
-                                                <Folder
-                                                    size={80}
-                                                    className="!h-20 !w-20"
-                                                />
-                                                {item.title}
-                                            </Button>
+                            <div>
+                                <Breadcrumb>
+                                    <BreadcrumbList>
+                                        {breadcrumbPath.map((title, index) => (
+                                            <BreadcrumbItem key={index}>
+                                                <BreadcrumbLink
+                                                    className="cursor-pointer"
+                                                    onClick={() =>
+                                                        handleBreadcrumbClick(
+                                                            index
+                                                        )
+                                                    }>
+                                                    {title}
+                                                </BreadcrumbLink>
+                                                {index <
+                                                    breadcrumbPath.length -
+                                                        1 && (
+                                                    <BreadcrumbSeparator />
+                                                )}
+                                            </BreadcrumbItem>
+                                        ))}
+                                    </BreadcrumbList>
+                                </Breadcrumb>
+                                <div className="grid min-h-[200px] grid-cols-5 items-center justify-center gap-5">
+                                    {currentPath[currentPath.length - 1] &&
+                                    currentPath[currentPath.length - 1].length >
+                                        0 ? (
+                                        currentPath[currentPath.length - 1].map(
+                                            (item, index) => (
+                                                <Button
+                                                    key={index}
+                                                    variant="ghost"
+                                                    className="m-2 flex h-full w-full flex-col items-center"
+                                                    onClick={() =>
+                                                        handleFolderClick(
+                                                            item.children,
+                                                            item.title,
+                                                            item.id
+                                                        )
+                                                    }>
+                                                    <Folder
+                                                        size={80}
+                                                        className="!h-20 !w-20"
+                                                    />
+                                                    {item.title}
+                                                </Button>
+                                            )
                                         )
-                                    )
-                                ) : (
-                                    <div className="col-span-5 text-center">
-                                        <h1 className="text-lg">Папка пуста</h1>
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div className="col-span-5 text-center">
+                                            <h1 className="text-lg">
+                                                Папка пуста
+                                            </h1>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="h-min">
-                        <ForderNameForm auth={auth} />
+                        <ForderNameForm
+                            auth={auth}
+                            folderId={currentFolderId}
+                        />
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
