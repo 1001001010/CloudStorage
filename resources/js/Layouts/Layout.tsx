@@ -45,7 +45,6 @@ export default function Layout({
             .split('; ')
             .find((row) => row.startsWith('sidebar:state'))
             ?.split('=')[1]
-        console.log('Cookie value:', cookieValue)
         setDefaultOpen(cookieValue === 'true')
     }, [])
     return (

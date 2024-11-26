@@ -35,6 +35,7 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { Progress } from '@/Components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
+import NewFolder from './Folder/NewFolder'
 
 export const iframeHeight = '800px'
 
@@ -130,10 +131,11 @@ export default function SideBarComponent({}: {}) {
                             </Button>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <Button className="flex w-full" variant="outline">
+                            <NewFolder open={open} auth={user}></NewFolder>
+                            {/* <Button className="flex w-full" variant="outline">
                                 <FolderPlus></FolderPlus>
                                 {open == false ? null : <p>Создать папку</p>}
-                            </Button>
+                            </Button> */}
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarHeader>

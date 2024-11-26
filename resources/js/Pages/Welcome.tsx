@@ -13,7 +13,7 @@ import { Link } from '@inertiajs/react'
 export default function Welcome({ auth }: PageProps<{}>) {
     return (
         <>
-            <Layout auth={auth}>
+            <Layout>
                 {auth.user ? null : (
                     <Dialog open={true}>
                         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
