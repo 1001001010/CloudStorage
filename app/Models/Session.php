@@ -17,7 +17,7 @@ class Session extends Model
     ];
 
     /**
-     * Обратная связь с моделей пользователей
+     * Обратная связь с моделью User
      */
     public function user(): BelongsTo
     {

@@ -13,6 +13,14 @@ export interface Session {
     last_activity: number
 }
 
+export interface Folder {
+    id: number
+    title: string
+    parent_id: Folder | null
+    user_id: User
+    children?: Folder[]
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {

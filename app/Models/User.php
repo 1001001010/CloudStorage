@@ -47,10 +47,18 @@ class User extends Authenticatable
     }
 
     /**
-     * Связь с моделей сессий
+     * Связь с моделей Session
      */
     public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
+    }
+
+    /**
+     * Связь с моделей Folder
+     */
+    public function folders()
+    {
+        return $this->hasMany(Folder::class);
     }
 }

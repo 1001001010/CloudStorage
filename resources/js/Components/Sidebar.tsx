@@ -36,6 +36,7 @@ import { Progress } from '@/Components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import NewFolder from './Folder/NewFolder'
+import { Folder as FolderType } from '@/types'
 
 export const iframeHeight = '800px'
 
@@ -100,7 +101,11 @@ const data = {
     ],
 }
 
-export default function SideBarComponent({}: {}) {
+export default function SideBarComponent({
+    forders,
+}: {
+    forders: FolderType[]
+}) {
     const { open, isMobile } = useSidebar()
     const user = usePage().props.auth
 
@@ -131,7 +136,11 @@ export default function SideBarComponent({}: {}) {
                             </Button>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <NewFolder open={open} auth={user}></NewFolder>
+                            <NewFolder
+                                open={open}
+                                auth={user}
+                                forders={forders}
+                            />
                             {/* <Button className="flex w-full" variant="outline">
                                 <FolderPlus></FolderPlus>
                                 {open == false ? null : <p>Создать папку</p>}

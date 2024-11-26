@@ -1,4 +1,4 @@
-import { PageProps } from '@/types'
+import { Folder, PageProps } from '@/types'
 import Layout from '@/Layouts/Layout'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,10 +10,13 @@ import {
 } from '@/Components/ui/dialog'
 import { Link } from '@inertiajs/react'
 
-export default function Welcome({ auth }: PageProps<{}>) {
+export default function Welcome({
+    auth,
+    forders,
+}: PageProps<{ forders: Folder[] }>) {
     return (
         <>
-            <Layout>
+            <Layout forders={forders}>
                 {auth.user ? null : (
                     <Dialog open={true}>
                         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
