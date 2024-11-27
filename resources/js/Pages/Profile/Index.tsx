@@ -1,4 +1,4 @@
-import { PageProps, Session } from '@/types'
+import { Folder, PageProps, Session } from '@/types'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
 import Layout from '@/Layouts/Layout'
@@ -9,13 +9,15 @@ export default function Dashboard({
     activeSession,
     BreadLvl1,
     userAgent,
+    FordersTree,
 }: PageProps<{
     BreadLvl1: string
     activeSession: Session[]
     userAgent: string
+    FordersTree: Folder[]
 }>) {
     return (
-        <Layout BreadLvl1={BreadLvl1}>
+        <Layout FordersTree={FordersTree} BreadLvl1={BreadLvl1}>
             <div className="">
                 <div className="m-4 flex flex-wrap rounded-lg border shadow max-sm:m-1 max-sm:p-1 md:flex-nowrap">
                     <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-2/3">

@@ -4,10 +4,11 @@ use App\Http\Controllers\{ProfileController, MainController,
     FolderController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\GetUserFoldersAndFiles;
 
-Route::get('/', [MainController::class, 'index'])->name('index');
+Route::get('/', [MainController::class, 'index'])->middleware(GetUserFoldersAndFiles::class)->name('index');
 
-Route::middleware('auth')->group(function () {
+Route::middleware([GetUserFoldersAndFiles::class, 'auth'])->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::patch('/profile/edit', 'update')->name('profile.update');

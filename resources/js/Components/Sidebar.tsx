@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 import {
     ChevronRight,
     Files,
@@ -102,9 +101,9 @@ const data = {
 }
 
 export default function SideBarComponent({
-    forders,
+    FordersTree,
 }: {
-    forders: FolderType[]
+    FordersTree: FolderType[]
 }) {
     const { open, isMobile } = useSidebar()
     const user = usePage().props.auth
@@ -139,7 +138,7 @@ export default function SideBarComponent({
                             <NewFolder
                                 open={open}
                                 auth={user}
-                                forders={forders}
+                                FordersTree={FordersTree}
                             />
                             {/* <Button className="flex w-full" variant="outline">
                                 <FolderPlus></FolderPlus>
@@ -174,16 +173,9 @@ export default function SideBarComponent({
                                                         key={subItem.title}>
                                                         <SidebarMenuSubButton
                                                             asChild>
-                                                            <a
-                                                                href={
-                                                                    subItem.url
-                                                                }>
-                                                                <span>
-                                                                    {
-                                                                        subItem.title
-                                                                    }
-                                                                </span>
-                                                            </a>
+                                                            <span>
+                                                                {subItem.title}
+                                                            </span>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>
                                                 ))}

@@ -16,10 +16,6 @@ class MainController extends Controller
      */
     public function index(): Response
     {
-        $helper = new HelperClass();
-
-        return Inertia::render('Welcome', [
-            'forders' => $helper->buildFolderTree(Folder::where('user_id', Auth::id())->get())
-        ]);
+        return Inertia::render('Welcome');
     }
 }

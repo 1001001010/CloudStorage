@@ -12,11 +12,11 @@ import { Link } from '@inertiajs/react'
 
 export default function Welcome({
     auth,
-    forders,
-}: PageProps<{ forders: Folder[] }>) {
+    FordersTree,
+}: PageProps<{ FordersTree: Folder[] }>) {
     return (
         <>
-            <Layout forders={forders}>
+            <Layout FordersTree={FordersTree}>
                 {auth.user ? null : (
                     <Dialog open={true}>
                         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

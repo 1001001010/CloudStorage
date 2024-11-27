@@ -18,7 +18,6 @@ import SideBarComponent from '@/Components/Sidebar'
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Link } from '@inertiajs/react'
 import { Folder } from '@/types'
-// import { cookies } from 'next/headers'
 
 const getInitialSidebarState = () => {
     const cookieValue = document.cookie
@@ -33,13 +32,13 @@ export default function Layout({
     BreadLvl1,
     BreadLvl2,
     BreadLvl3,
-    forders,
+    FordersTree,
 }: PropsWithChildren<{
     header?: ReactNode
     BreadLvl1?: string
     BreadLvl2?: string
     BreadLvl3?: string
-    forders: Folder[]
+    FordersTree: Folder[]
 }>) {
     const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
 
@@ -59,7 +58,7 @@ export default function Layout({
                     } as React.CSSProperties
                 }
                 defaultOpen={defaultOpen}>
-                <SideBarComponent forders={forders} />
+                <SideBarComponent FordersTree={FordersTree} />
                 <SidebarInset>
                     <header className="flex h-16 shrink-0 items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />

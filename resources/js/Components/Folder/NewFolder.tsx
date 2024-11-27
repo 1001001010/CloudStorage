@@ -24,10 +24,12 @@ import ForderNameForm from './ForderNameForm'
 export default function NewFolder({
     auth,
     open,
-    forders,
-}: PageProps<{ open: boolean; forders: FolderTypes[] }>) {
+    FordersTree,
+}: PageProps<{ open: boolean; FordersTree: FolderTypes[] }>) {
     const [isOpen, setIsOpen] = useState(false)
-    const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([forders])
+    const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([
+        FordersTree,
+    ])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
 
