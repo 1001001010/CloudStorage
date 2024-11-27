@@ -36,12 +36,12 @@ export default function ForderNameForm({
 
         post(route('folder.upload'), {
             onSuccess: () => {
-                toast('Успешно', {
-                    description: 'Папка успешно создана',
-                })
-                reset()
-                setIsOpen(false)
                 window.location.reload()
+                // toast('Успешно', {
+                //     description: 'Папка успешно создана',
+                // })
+                reset()
+                // setIsOpen(false)
             },
             onError: (errors) => {
                 toast('Ошибка', {
