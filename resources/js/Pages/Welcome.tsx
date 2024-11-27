@@ -4,11 +4,11 @@ import AuthAlert from './Auth/AuthAlert'
 
 export default function Welcome({
     auth,
-    FordersTree,
-}: PageProps<{ FordersTree: Folder[] }>) {
+    FoldersTree,
+}: PageProps<{ FoldersTree: Folder[] }>) {
     return (
         <>
-            <Layout FordersTree={FordersTree}>
+            <Layout FoldersTree={FoldersTree}>
                 {auth.user ? (
                     <div className="m-4 flex min-h-screen flex-wrap rounded-lg border pb-3 shadow max-sm:m-1 max-sm:p-1 md:flex-nowrap">
                         <div className="min-h-full w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-2/3"></div>

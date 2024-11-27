@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Folder;
+use App\Models\FolderRelation;
 use Illuminate\Support\Facades\Auth;
 
 class GetUserFoldersAndFiles
@@ -15,8 +17,11 @@ class GetUserFoldersAndFiles
      */
     public function handle(Request $request, Closure $next)
     {
-        $foldersTree = $this->buildFolderTree(Folder::where('user_id', Auth::id())->get());
-        Inertia::share('FordersTree', $foldersTree);
+        $folders = Folder::where('user_id', Auth::id())->with('children')->get();
+        $folderRelations = FolderRelation::all();
+        $foldersTree = $this->buildFolderTree($folders);
+
+        Inertia::share('FoldersTree', $foldersTree);
 
         return $next($request);
     }
@@ -24,20 +29,39 @@ class GetUserFoldersAndFiles
     /**
      * Преобразование списка папок в древовидную структуру
      */
-    public function buildFolderTree($folders, $parentId = null)
+    public function buildFolderTree($folders)
     {
-        $branch = [];
+        $tree = [];
 
+        $foldersById = [];
         foreach ($folders as $folder) {
-            if ($folder->parent_id == $parentId) {
-                $children = $this->buildFolderTree($folders, $folder->id);
-                if ($children) {
-                    $folder->children = $children;
-                }
-                $branch[] = $folder;
-            }
+            $foldersById[$folder->id] = $folder;
+            $folder->setRelation('children', collect());
         }
 
-        return $branch;
+        $rootFolders = $folders->filter(function ($folder) {
+            return $folder->parents->isEmpty();
+        });
+
+        foreach ($rootFolders as $folder) {
+            $this->addChildren($folder, $foldersById);
+            $tree[] = $folder;
+        }
+
+        return $tree;
+    }
+
+    /**
+     * Рекурсивное добавление дочерних папок
+     */
+    private function addChildren($folder, $foldersById)
+    {
+        foreach ($foldersById as $childFolder) {
+
+            if ($childFolder->parents->contains('id', $folder->id)) {
+                $folder->children->push($childFolder);
+                $this->addChildren($childFolder, $foldersById);
+            }
+        }
     }
 }

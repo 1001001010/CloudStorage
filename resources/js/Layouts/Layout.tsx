@@ -32,13 +32,13 @@ export default function Layout({
     BreadLvl1,
     BreadLvl2,
     BreadLvl3,
-    FordersTree,
+    FoldersTree,
 }: PropsWithChildren<{
     header?: ReactNode
     BreadLvl1?: string
     BreadLvl2?: string
     BreadLvl3?: string
-    FordersTree: Folder[]
+    FoldersTree: Folder[]
 }>) {
     const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
 
@@ -58,7 +58,7 @@ export default function Layout({
                     } as React.CSSProperties
                 }
                 defaultOpen={defaultOpen}>
-                <SideBarComponent FordersTree={FordersTree} />
+                <SideBarComponent FoldersTree={FoldersTree} />
                 <SidebarInset>
                     <header className="flex h-16 shrink-0 items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />

@@ -9,15 +9,15 @@ export default function Dashboard({
     activeSession,
     BreadLvl1,
     userAgent,
-    FordersTree,
+    FoldersTree,
 }: PageProps<{
     BreadLvl1: string
     activeSession: Session[]
     userAgent: string
-    FordersTree: Folder[]
+    FoldersTree: Folder[]
 }>) {
     return (
-        <Layout FordersTree={FordersTree} BreadLvl1={BreadLvl1}>
+        <Layout FoldersTree={FoldersTree} BreadLvl1={BreadLvl1}>
             <div className="m-4 flex flex-wrap rounded-lg border shadow max-sm:m-1 max-sm:p-1 md:flex-nowrap">
                 <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 md:w-2/3">
                     <div className="mb-4 w-full rounded-lg border p-4 shadow">

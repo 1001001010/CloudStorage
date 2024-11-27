@@ -101,9 +101,9 @@ const data = {
 }
 
 export default function SideBarComponent({
-    FordersTree,
+    FoldersTree,
 }: {
-    FordersTree: FolderType[]
+    FoldersTree: FolderType[]
 }) {
     const { open, isMobile } = useSidebar()
     const user = usePage().props.auth
@@ -138,7 +138,7 @@ export default function SideBarComponent({
                             <NewFolder
                                 open={open}
                                 auth={user}
-                                FordersTree={FordersTree}
+                                FoldersTree={FoldersTree}
                             />
                             {/* <Button className="flex w-full" variant="outline">
                                 <FolderPlus></FolderPlus>

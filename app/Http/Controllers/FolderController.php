@@ -5,24 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Folder;
+use App\Models\{Folder, FolderRelation};
 
 class FolderController extends Controller
 {
     /**
      * Создание папки
      */
-    public function upload(Request $request) : RedirectResponse {
+    public function upload(Request $request) : RedirectResponse
+    {
         $request->validate([
             'title' => 'required|string',
             'folder' => 'required|integer|min:0'
         ]);
 
-        Folder::create([
+        $newFolder = Folder::create([
             'title' => $request->title,
-            'parent_id' => $request->folder == 0 ? null : $request->folder,
             'user_id' => Auth::id()
         ]);
+
+        if ($request->folder > 0) {
+            FolderRelation::create([
+                'parent_id' => $request->folder,
+                'child_id' => $newFolder->id
+            ]);
+        }
 
         return redirect()->back();
     }
