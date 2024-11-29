@@ -21,15 +21,9 @@ class FolderController extends Controller
 
         $newFolder = Folder::create([
             'title' => $request->title,
-            'user_id' => Auth::id()
+            'user_id' => Auth::id(),
+            'parent_id' => $request->folder
         ]);
-
-        if ($request->folder > 0) {
-            FolderRelation::create([
-                'parent_id' => $request->folder,
-                'child_id' => $newFolder->id
-            ]);
-        }
 
         return redirect()->back();
     }

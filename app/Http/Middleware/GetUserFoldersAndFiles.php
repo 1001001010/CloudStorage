@@ -17,8 +17,7 @@ class GetUserFoldersAndFiles
      */
     public function handle(Request $request, Closure $next)
     {
-        $folders = Folder::where('user_id', Auth::id())->with('children')->get();
-        $folderRelations = FolderRelation::all();
+        $folders = Folder::where('user_id', Auth::id())->get();
         $foldersTree = $this->buildFolderTree($folders);
 
         Inertia::share('FoldersTree', $foldersTree);
@@ -27,41 +26,20 @@ class GetUserFoldersAndFiles
     }
 
     /**
-     * Преобразование списка папок в древовидную структуру
+     * Преобразование список папок в древовидную структуру
      */
-    public function buildFolderTree($folders)
+    public function buildFolderTree($folders, $parentId = null)
     {
-        $tree = [];
-
-        $foldersById = [];
+        $branch = [];
         foreach ($folders as $folder) {
-            $foldersById[$folder->id] = $folder;
-            $folder->setRelation('children', collect());
-        }
-
-        $rootFolders = $folders->filter(function ($folder) {
-            return $folder->parents->isEmpty();
-        });
-
-        foreach ($rootFolders as $folder) {
-            $this->addChildren($folder, $foldersById);
-            $tree[] = $folder;
-        }
-
-        return $tree;
-    }
-
-    /**
-     * Рекурсивное добавление дочерних папок
-     */
-    private function addChildren($folder, $foldersById)
-    {
-        foreach ($foldersById as $childFolder) {
-
-            if ($childFolder->parents->contains('id', $folder->id)) {
-                $folder->children->push($childFolder);
-                $this->addChildren($childFolder, $foldersById);
+            if ($folder->parent_id == $parentId) {
+                $children = $this->buildFolderTree($folders, $folder->id);
+                if ($children) {
+                    $folder->children = $children;
+                }
+                $branch[] = $folder;
             }
         }
+        return $branch;
     }
 }
