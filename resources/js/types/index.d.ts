@@ -21,6 +21,14 @@ export interface Folder {
     children?: Folder[]
 }
 
+export interface File {
+    id: number
+    name: string
+    folder_id: Folder | null
+    user_id: User
+    size: number
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {

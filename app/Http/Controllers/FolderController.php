@@ -19,10 +19,15 @@ class FolderController extends Controller
             'folder' => 'required|integer|min:0'
         ]);
 
+        $folder=null;
+        if ($request->folder) {
+            $folder = $request->folder;
+        }
+
         $newFolder = Folder::create([
             'title' => $request->title,
             'user_id' => Auth::id(),
-            'parent_id' => $request->folder
+            'parent_id' => $folder
         ]);
 
         return redirect()->back();
