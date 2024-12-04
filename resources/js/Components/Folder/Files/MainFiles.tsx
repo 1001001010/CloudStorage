@@ -8,28 +8,33 @@ import {
 import { Button } from '@/components/ui/button'
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
-import { Folder } from 'lucide-react'
-import { useState } from 'react'
+import { File, Folder } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 export default function MainFiles({
     auth,
     FoldersTree,
+    FoldersFilesTree,
 }: {
     auth: PageProps['auth']
-    FoldersTree: FolderTypes[]
+    FoldersTree: FolderTypes[] // Дерево папок без файлов
+    FoldersFilesTree: any[] // Дерево папок с файлами
 }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
-            files: null as File[] | null,
             folder_id: 0,
+            files: null as File[] | null,
         })
 
     const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([
-        FoldersTree,
+        FoldersFilesTree,
     ])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
+    const [drag, setDrag] = useState(false)
+
+    const filesRef = useRef<File[] | null>(null)
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
@@ -53,8 +58,6 @@ export default function MainFiles({
         setCurrentFolderId(index === 0 ? 0 : currentPath[index][0].id)
     }
 
-    const [drag, setDrag] = useState(false)
-
     function dragStartHandler(e: any) {
         e.preventDefault()
         setDrag(true)
@@ -68,21 +71,30 @@ export default function MainFiles({
     function onDrophandler(e: any) {
         e.preventDefault()
         let files = [...e.dataTransfer.files]
-        // const files = [...e.dataTransfer.files]
-        // console.log(files)
-        console.log(currentFolderId)
         setData('files', files)
         setData('folder_id', currentFolderId)
-        post(route('file.upload'), {
-            onSuccess: () => {
-                toast('Данные успешно обновлены')
-            },
-            onError: () => {
-                toast('Ошибка обновления данных')
-            },
-        })
+
+        filesRef.current = files
         setDrag(false)
     }
+
+    useEffect(() => {
+        if (filesRef.current && filesRef.current.length > 0) {
+            const files = filesRef.current
+            setData('files', files)
+
+            post(route('file.upload'), {
+                onSuccess: () => {
+                    toast('Файл успешно загружен')
+                },
+                onError: () => {
+                    toast('Ошибка загрузки файла')
+                },
+            })
+        }
+    }, [data.files, data.folder_id])
+
+    console.log(currentFolderId)
     return (
         <>
             {drag ? (
@@ -126,28 +138,64 @@ export default function MainFiles({
                                 ))}
                             </BreadcrumbList>
                         </Breadcrumb>
+
                         <div className="grids grid min-h-[200px] items-center justify-center gap-5">
                             {currentPath[currentPath.length - 1] &&
                             currentPath[currentPath.length - 1].length > 0 ? (
                                 currentPath[currentPath.length - 1].map(
                                     (item, index) => (
-                                        <Button
-                                            key={index}
-                                            variant="ghost"
-                                            className="flex h-full w-full flex-col items-center"
-                                            onClick={() =>
-                                                handleFolderClick(
-                                                    item.children,
-                                                    item.title,
-                                                    item.id
-                                                )
-                                            }>
-                                            <Folder
-                                                size={80}
-                                                className="!h-20 !w-20"
-                                            />
-                                            {item.title}
-                                        </Button>
+                                        <div key={index}>
+                                            <Button
+                                                variant="ghost"
+                                                className="flex h-full w-full flex-col items-center"
+                                                onClick={() =>
+                                                    handleFolderClick(
+                                                        item.children,
+                                                        item.title,
+                                                        item.id
+                                                    )
+                                                }>
+                                                <Folder
+                                                    size={80}
+                                                    className="!h-20 !w-20"
+                                                />
+                                                {item.title}
+                                            </Button>
+
+                                            {item.files &&
+                                                item.files.length > 0 && (
+                                                    <div className="mt-3 w-full">
+                                                        {item.files.map(
+                                                            (
+                                                                file: FileTypes,
+                                                                fileIndex: number
+                                                            ) =>
+                                                                file.folder_id ===
+                                                                    currentFolderId && (
+                                                                    <div
+                                                                        key={
+                                                                            fileIndex
+                                                                        }
+                                                                        className="flex items-center gap-2">
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            className="flex h-full w-full flex-col items-center">
+                                                                            <File
+                                                                                size={
+                                                                                    80
+                                                                                }
+                                                                                className="!h-20 !w-20"
+                                                                            />
+                                                                            {
+                                                                                file.name
+                                                                            }
+                                                                        </Button>
+                                                                    </div>
+                                                                )
+                                                        )}
+                                                    </div>
+                                                )}
+                                        </div>
                                     )
                                 )
                             ) : (

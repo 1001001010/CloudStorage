@@ -6,9 +6,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles};
 
-Route::get('/', [MainController::class, 'index'])->middleware(GetUserFolders::class)->name('index');
 
-Route::middleware([GetUserFolders::class, 'auth'])->group(function () {
+Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class, 'auth'])->group(function () {
+    Route::get('/', [MainController::class, 'index'])->middleware(GetUserFolders::class)->name('index');
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::patch('/profile/edit', 'update')->name('profile.update');

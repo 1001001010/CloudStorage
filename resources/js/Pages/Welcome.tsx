@@ -6,12 +6,17 @@ import MainFiles from '@/Components/Folder/Files/MainFiles'
 export default function Welcome({
     auth,
     FoldersTree,
-}: PageProps<{ FoldersTree: Folder[] }>) {
+    FoldersAndFiles,
+}: PageProps<{ FoldersTree: Folder[]; toast: string; FoldersAndFiles: any }>) {
     return (
         <>
             <Layout FoldersTree={FoldersTree}>
                 {auth.user ? (
-                    <MainFiles auth={auth} FoldersTree={FoldersTree} />
+                    <MainFiles
+                        auth={auth}
+                        FoldersTree={FoldersTree}
+                        FoldersFilesTree={FoldersAndFiles}
+                    />
                 ) : (
                     <AuthAlert auth={auth} />
                 )}

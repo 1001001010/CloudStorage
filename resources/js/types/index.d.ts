@@ -16,15 +16,18 @@ export interface Session {
 export interface Folder {
     id: number
     title: string
-    parent_id: Folder | null
+    parent: Folder | null
+    parent_id: number
     user_id: User
     children?: Folder[]
+    files?: File[]
 }
 
 export interface File {
     id: number
     name: string
-    folder_id: Folder | null
+    folder_id: number
+    folder: Folder | null
     user_id: User
     size: number
 }
