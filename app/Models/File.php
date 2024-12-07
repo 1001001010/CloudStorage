@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    protected $fillable = ['name', 'folder_id', 'user_id', 'size'];
+    protected $fillable = ['name', 'path', 'folder_id', 'user_id', 'size'];
 
     /**
      * Связь с моделью Folder

@@ -12,14 +12,16 @@ import { File, Folder } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
+export type FolderOrFile = FolderTypes | FileTypes
+
 export default function MainFiles({
     auth,
     FoldersTree,
     FoldersFilesTree,
 }: {
     auth: PageProps['auth']
-    FoldersTree: FolderTypes[] // Дерево папок без файлов
-    FoldersFilesTree: any[] // Дерево папок с файлами
+    FoldersTree: FolderTypes[]
+    FoldersFilesTree: any[]
 }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -27,7 +29,7 @@ export default function MainFiles({
             files: null as File[] | null,
         })
 
-    const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([
+    const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
@@ -38,18 +40,23 @@ export default function MainFiles({
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
+        files: FileTypes[] | undefined,
         title: string,
         folderId: number
     ) => {
-        if (children) {
-            setCurrentPath([...currentPath, children])
-            setBreadcrumbPath([...breadcrumbPath, title])
-            setCurrentFolderId(folderId)
-        } else {
-            setCurrentPath([...currentPath, []])
-            setBreadcrumbPath([...breadcrumbPath, title])
-            setCurrentFolderId(folderId)
+        // Объединяем children и files в один массив
+        const combinedItems: FolderOrFile[] = []
+        if (Array.isArray(children)) {
+            combinedItems.push(...children)
         }
+        if (Array.isArray(files)) {
+            combinedItems.push(...files)
+        }
+
+        // Добавляем объединенный массив в setCurrentPath
+        setCurrentPath([...currentPath, combinedItems])
+        setBreadcrumbPath([...breadcrumbPath, title])
+        setCurrentFolderId(folderId)
     }
 
     const handleBreadcrumbClick = (index: number) => {
@@ -94,7 +101,6 @@ export default function MainFiles({
         }
     }, [data.files, data.folder_id])
 
-    console.log(currentFolderId)
     return (
         <>
             {drag ? (
@@ -145,56 +151,35 @@ export default function MainFiles({
                                 currentPath[currentPath.length - 1].map(
                                     (item, index) => (
                                         <div key={index}>
-                                            <Button
-                                                variant="ghost"
-                                                className="flex h-full w-full flex-col items-center"
-                                                onClick={() =>
-                                                    handleFolderClick(
-                                                        item.children,
-                                                        item.title,
-                                                        item.id
-                                                    )
-                                                }>
-                                                <Folder
-                                                    size={80}
-                                                    className="!h-20 !w-20"
-                                                />
-                                                {item.title}
-                                            </Button>
-
-                                            {item.files &&
-                                                item.files.length > 0 && (
-                                                    <div className="mt-3 w-full">
-                                                        {item.files.map(
-                                                            (
-                                                                file: FileTypes,
-                                                                fileIndex: number
-                                                            ) =>
-                                                                file.folder_id ===
-                                                                    currentFolderId && (
-                                                                    <div
-                                                                        key={
-                                                                            fileIndex
-                                                                        }
-                                                                        className="flex items-center gap-2">
-                                                                        <Button
-                                                                            variant="ghost"
-                                                                            className="flex h-full w-full flex-col items-center">
-                                                                            <File
-                                                                                size={
-                                                                                    80
-                                                                                }
-                                                                                className="!h-20 !w-20"
-                                                                            />
-                                                                            {
-                                                                                file.name
-                                                                            }
-                                                                        </Button>
-                                                                    </div>
-                                                                )
-                                                        )}
-                                                    </div>
-                                                )}
+                                            {item.hasOwnProperty('name') ? (
+                                                <Button
+                                                    variant="ghost"
+                                                    className="flex h-full w-full flex-col items-center">
+                                                    <File
+                                                        size={80}
+                                                        className="!h-20 !w-20"
+                                                    />
+                                                    {item.name}
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="ghost"
+                                                    className="flex h-full w-full flex-col items-center"
+                                                    onClick={() =>
+                                                        handleFolderClick(
+                                                            item.children,
+                                                            item.files,
+                                                            item.title,
+                                                            item.id
+                                                        )
+                                                    }>
+                                                    <Folder
+                                                        size={80}
+                                                        className="!h-20 !w-20"
+                                                    />
+                                                    {item.title}
+                                                </Button>
+                                            )}
                                         </div>
                                     )
                                 )

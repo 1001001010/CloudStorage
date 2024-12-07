@@ -26,13 +26,13 @@ class FileController extends Controller
 
         foreach ($request->file('files') as $file) {
             // Генерация уникального имени для файла
-            $newName = Str::random(40) . '.' . $file->getClientOriginalExtension();
-
+            $newPath = Str::random(40) . '.' . $file->getClientOriginalExtension();
             // Сохранение файла в папку 'files' в storage
-            $path = $file->storeAs('files', $newName, 'public'); // используем диск 'public'
+            $path = $file->storeAs('files', $newPath, 'public'); // используем диск 'public'
 
             File::create([
-                'name' => $newName,
+                'name' => $file->getClientOriginalName(),
+                'path' => $newPath,
                 'folder_id' => $folder->id,
                 'user_id' => Auth::id(),
                 'size' => $file->getSize(),
