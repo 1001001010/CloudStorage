@@ -23,7 +23,7 @@ class FileController extends Controller
                             ->first();
 
             if (!$folder) {
-                return redirect()->back()->with('msg', 'Папка не найдена или она не принадлежит вам');
+                return redirect()->back()->with('msg', 'Папка не найдена');
             }
         }
 
@@ -54,7 +54,6 @@ class FileController extends Controller
             return redirect()->back()->with('msg', 'Файл уже существует - ' . $existingFile->name . '.' . $fileExtension);
             }
 
-}
             $path = $file->storeAs('files', $newPath, 'public');
 
             File::create([
@@ -67,7 +66,23 @@ class FileController extends Controller
                 'user_id' => Auth::id(),
                 'size' => $file->getSize()
             ]);
-            return redirect()->route('index')->with('msg', 'Файлы успешно загружены.');
+            return redirect()->route('index')->with('msg', 'Файлы успешно загружены');
+        }
     }
 
+    public function download($file)
+    {
+        $fileRecord = File::with('extension')->find($file);
+        if ($fileRecord && $fileRecord->user_id == Auth::id()) {
+            $filePath = storage_path('/app/public/' . $fileRecord->path);
+            if (file_exists($filePath)) {
+                $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
+                return response()->download($filePath, $fileName);
+            } else {
+                return redirect()->back()->with('msg', 'Файл не найден');
+            }
+        } else {
+            return redirect()->back()->with('msg', 'Файл не найден');
+        }
+    }
 }

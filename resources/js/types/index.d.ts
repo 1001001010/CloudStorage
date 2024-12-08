@@ -30,6 +30,7 @@ export interface File {
     extension_id: number
     extension: FileExtension
     mime_type_id: number | null
+    mime_type: MimeType
     file_hash: string | null
     folder_id: number | null
     user_id: number | null

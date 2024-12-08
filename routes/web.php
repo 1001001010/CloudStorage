@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles};
 
 
-Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class, 'auth'])->group(function () {
+Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
     Route::get('/', [MainController::class, 'index'])->name('index');
+
     Route::middleware('auth')->group(function () {
         Route::controller(ProfileController::class)->group(function () {
             Route::get('/profile', 'index')->name('profile.index');
@@ -20,6 +21,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class, 'auth']
         });
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
+            Route::get('/file/download/{file}', 'download')->name('file.download');
         });
     });
 });
