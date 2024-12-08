@@ -45,14 +45,23 @@ export default function MainFiles({
         title: string,
         folderId: number
     ) => {
+        // console.log('Children: ', children)
+        // console.log('Files: ', files)
+
         const combinedItems: FolderOrFile[] = []
+
         if (Array.isArray(children)) {
             combinedItems.push(...children)
         }
 
-        if (Array.isArray(files)) {
+        if (files && !Array.isArray(files)) {
+            combinedItems.push(...Object.values(files))
+        } else if (Array.isArray(files)) {
             combinedItems.push(...files)
         }
+
+        // console.log('Combined items: ', combinedItems)
+
         if (combinedItems.length === 0 && Array.isArray(files)) {
             combinedItems.push(...files)
         }
@@ -94,14 +103,7 @@ export default function MainFiles({
             const files = filesRef.current
             setData('files', files)
 
-            post(route('file.upload'), {
-                // onSuccess: () => {
-                //     toast('Файл успешно загружен')
-                // },
-                // onError: () => {
-                //     toast('Ошибка загрузки файла')
-                // },
-            })
+            post(route('file.upload'))
         }
     }, [data.files, data.folder_id])
 
