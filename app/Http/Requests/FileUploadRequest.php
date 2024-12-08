@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class FileUploadRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Право выполнения этого запроса
      */
     public function authorize(): bool
     {
@@ -16,14 +16,14 @@ class FileUploadRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Правила валидации при загрузки файла
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'folder_id' => 'required|numeric|min:0',
+            'folder_id' => 'required|numeric',
             'files' => 'required|array|min:1|max:5',
             'files.*' => [
                 'file',
@@ -33,10 +33,12 @@ class FileUploadRequest extends FormRequest
                     $extension = $value->getClientOriginalExtension();
 
                     if (in_array(strtolower($extension), $disallowedExtensions)) {
-                        $fail('Загрузка файлов с расширением .'.$extension.' запрещена.');
+                        session()->flash('msg', 'Загрузка файлов с расширением .'.$extension.' запрещена');
+                        $fail('Загрузка файлов с расширением .'.$extension.' запрещена');
                     }
                 },
             ],
         ];
     }
+
 }

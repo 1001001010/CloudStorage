@@ -7,10 +7,16 @@ export default function Welcome({
     auth,
     FoldersTree,
     FoldersAndFiles,
-}: PageProps<{ FoldersTree: Folder[]; toast: string; FoldersAndFiles: any }>) {
+    msg,
+}: PageProps<{
+    FoldersTree: Folder[]
+    toast: string
+    FoldersAndFiles: any
+    msg: string
+}>) {
     return (
         <>
-            <Layout FoldersTree={FoldersTree}>
+            <Layout FoldersTree={FoldersTree} msg={msg}>
                 {auth.user ? (
                     <MainFiles
                         auth={auth}

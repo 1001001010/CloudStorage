@@ -17,8 +17,8 @@ export interface Folder {
     id: number
     title: string
     parent: Folder | null
-    parent_id: number
-    user_id: User
+    parent_id: number | null
+    user_id: number
     children?: Folder[]
     files?: File[]
 }
@@ -26,10 +26,27 @@ export interface Folder {
 export interface File {
     id: number
     name: string
-    folder_id: number
-    folder: Folder | null
-    user_id: User
+    path: string
+    extension_id: number
+    extension: FileExtension
+    mime_type_id: number | null
+    file_hash: string | null
+    folder_id: number | null
+    user_id: number | null
     size: number
+    created_at: string
+    updated_at: string
+    deleted_at: string | null
+}
+
+export interface FileExtension {
+    id: number
+    extension: string
+}
+
+export interface MimeType {
+    id: number
+    mime_type: string
 }
 
 export type PageProps<

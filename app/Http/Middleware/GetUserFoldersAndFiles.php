@@ -16,16 +16,11 @@ class GetUserFoldersAndFiles
      */
     public function handle(Request $request, Closure $next)
     {
-        // Получаем папки пользователя
         $folders = Folder::where('user_id', Auth::id())->get();
-        // Получаем файлы пользователя
-        $files = File::where('user_id', Auth::id())->get();
+        $files = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->get();
 
-        // Строим древовидную структуру папок и добавляем файлы в соответствующие папки
         $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files);
-        // dd($FoldersFilesTree);
-        // Передаем данные в Inertia
-        Inertia::share('FoldersAndFiles', $FoldersFilesTree); // Передаем папки и файлы в одном объекте
+        Inertia::share('FoldersAndFiles', $FoldersFilesTree);
 
         return $next($request);
     }

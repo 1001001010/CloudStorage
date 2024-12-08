@@ -15,7 +15,13 @@ import {
     SidebarTrigger,
 } from '@/Components/ui/sidebar'
 import SideBarComponent from '@/Components/Sidebar'
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
+import {
+    PropsWithChildren,
+    ReactNode,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { Link } from '@inertiajs/react'
 import { Folder } from '@/types'
 import { toast } from 'sonner'
@@ -34,16 +40,17 @@ export default function Layout({
     BreadLvl2,
     BreadLvl3,
     FoldersTree,
-    // msg,
+    msg,
 }: PropsWithChildren<{
     header?: ReactNode
     BreadLvl1?: string
     BreadLvl2?: string
     BreadLvl3?: string
     FoldersTree: Folder[]
-    // msg: string
+    msg?: string
 }>) {
     const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
+    const hasShownMessage = useRef(false)
 
     useEffect(() => {
         const cookieValue = document.cookie
@@ -53,13 +60,13 @@ export default function Layout({
         setDefaultOpen(cookieValue === 'true')
     }, [])
 
-    // console.log(msg)
-    // useEffect(() => {
-    //     if (msg && msg !== '') {
-    //         console.log('Toast message:', msg) // Логируем сообщение
-    //         toast(msg) // Показываем toast
-    //     }
-    // }, [msg])
+    useEffect(() => {
+        if (msg && !hasShownMessage.current) {
+            toast(msg)
+            hasShownMessage.current = true
+        }
+    }, [msg])
+
     return (
         <>
             <SidebarProvider

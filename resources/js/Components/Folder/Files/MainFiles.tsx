@@ -11,8 +11,9 @@ import { useForm } from '@inertiajs/react'
 import { File, Folder } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import FileContext from './FileContext'
 
-export type FolderOrFile = FolderTypes | FileTypes
+export type FolderOrFile = any
 
 export default function MainFiles({
     auth,
@@ -44,16 +45,18 @@ export default function MainFiles({
         title: string,
         folderId: number
     ) => {
-        // Объединяем children и files в один массив
         const combinedItems: FolderOrFile[] = []
         if (Array.isArray(children)) {
             combinedItems.push(...children)
         }
+
         if (Array.isArray(files)) {
             combinedItems.push(...files)
         }
+        if (combinedItems.length === 0 && Array.isArray(files)) {
+            combinedItems.push(...files)
+        }
 
-        // Добавляем объединенный массив в setCurrentPath
         setCurrentPath([...currentPath, combinedItems])
         setBreadcrumbPath([...breadcrumbPath, title])
         setCurrentFolderId(folderId)
@@ -79,8 +82,9 @@ export default function MainFiles({
         e.preventDefault()
         let files = [...e.dataTransfer.files]
         setData('files', files)
-        setData('folder_id', currentFolderId)
-
+        if (currentFolderId !== 0) {
+            setData('folder_id', currentFolderId)
+        }
         filesRef.current = files
         setDrag(false)
     }
@@ -91,12 +95,12 @@ export default function MainFiles({
             setData('files', files)
 
             post(route('file.upload'), {
-                onSuccess: () => {
-                    toast('Файл успешно загружен')
-                },
-                onError: () => {
-                    toast('Ошибка загрузки файла')
-                },
+                // onSuccess: () => {
+                //     toast('Файл успешно загружен')
+                // },
+                // onError: () => {
+                //     toast('Ошибка загрузки файла')
+                // },
             })
         }
     }, [data.files, data.folder_id])
@@ -152,15 +156,7 @@ export default function MainFiles({
                                     (item, index) => (
                                         <div key={index}>
                                             {item.hasOwnProperty('name') ? (
-                                                <Button
-                                                    variant="ghost"
-                                                    className="flex h-full w-full flex-col items-center">
-                                                    <File
-                                                        size={80}
-                                                        className="!h-20 !w-20"
-                                                    />
-                                                    {item.name}
-                                                </Button>
+                                                <FileContext file={item} />
                                             ) : (
                                                 <Button
                                                     variant="ghost"
