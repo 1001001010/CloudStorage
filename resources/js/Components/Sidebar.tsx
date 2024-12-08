@@ -36,8 +36,20 @@ import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import NewFolder from './Folder/NewFolder'
 import { Folder as FolderType } from '@/types'
-
 export const iframeHeight = '800px'
+
+const formatFileSize = (bytes: number) => {
+    const mb = 1024 * 1024 // 1MB = 1024 * 1024 bytes
+    const gb = 1024 * 1024 * 1024 // 1GB = 1024 * 1024 * 1024 bytes
+
+    if (bytes >= gb) {
+        return `${(bytes / gb).toFixed(2)} ГБ`
+    } else if (bytes >= mb) {
+        return `${(bytes / mb).toFixed(2)} МБ`
+    } else {
+        return `${bytes} Б`
+    }
+}
 
 const data = {
     navMain: [
@@ -101,8 +113,10 @@ const data = {
 }
 
 export default function SideBarComponent({
+    totalSize,
     FoldersTree,
 }: {
+    totalSize: number
     FoldersTree: FolderType[]
 }) {
     const { open, isMobile } = useSidebar()
@@ -198,10 +212,17 @@ export default function SideBarComponent({
                                 exit={{ opacity: 0, x: -100 }}
                                 transition={{ duration: 0.1 }}>
                                 <Alert>
-                                    <Progress value={50} />
+                                    <Progress
+                                        value={
+                                            (totalSize /
+                                                (5 * 1024 * 1024 * 1024)) *
+                                            100
+                                        }
+                                    />
                                     <AlertTitle className="pt-2 text-center">
                                         <p className="text-nowrap">
-                                            Занято 2.5 ГБ из 5ГБ
+                                            Занято {formatFileSize(totalSize)}{' '}
+                                            из 5 ГБ
                                         </p>
                                     </AlertTitle>
                                     <AlertDescription className="flex justify-center pt-2">

@@ -7,16 +7,18 @@ export default function Welcome({
     auth,
     FoldersTree,
     FoldersAndFiles,
+    totalSize,
     msg,
 }: PageProps<{
     FoldersTree: Folder[]
     toast: string
     FoldersAndFiles: any
+    totalSize: number
     msg: string
 }>) {
     return (
         <>
-            <Layout FoldersTree={FoldersTree} msg={msg}>
+            <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize}>
                 {auth.user ? (
                     <MainFiles
                         auth={auth}
