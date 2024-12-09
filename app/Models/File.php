@@ -20,6 +20,8 @@ class File extends Model
         'size',
     ];
 
+    protected $dates = ['deleted_at'];
+
     /**
      * Связь с моделью Folder
      */
@@ -51,4 +53,5 @@ class File extends Model
     {
         return $this->belongsTo(MimeType::class, 'mime_type_id');
     }
+
 }

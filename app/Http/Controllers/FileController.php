@@ -97,4 +97,14 @@ class FileController extends Controller
         }
         return redirect()->back()->with('msg', 'Название успешно изменено');
     }
+
+    public function delete($file) {
+        $file = File::where('user_id', Auth::id())->find($file);
+
+        if(!$file) {
+            return redirect()->back()->with('msg', 'Файл не найден');
+        }
+        $file->delete();
+        return redirect()->back()->with('msg', 'Файл перемещён в корзину');
+    }
 }

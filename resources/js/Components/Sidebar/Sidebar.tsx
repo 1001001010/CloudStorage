@@ -161,10 +161,12 @@ export default function SideBarComponent({
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarMenu>
-                            <SidebarMenuButton>
-                                <Trash2 />
-                                <span>Корзина</span>
-                            </SidebarMenuButton>
+                            <Link href={route('trash.index')}>
+                                <SidebarMenuButton>
+                                    <Trash2 />
+                                    <span>Корзина</span>
+                                </SidebarMenuButton>
+                            </Link>
                             {data.navMain.map((item) => (
                                 <Collapsible
                                     key={item.title}

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\{ProfileController, MainController,
-    FolderController, FileController};
+    FolderController, FileController, TrashController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
@@ -22,7 +22,11 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
             Route::get('/file/download/{file}', 'download')->name('file.download');
-            Route::patch('/file/rename/{file}', 'rename')->name('file.rename');
+            Route::patch('/file/rename/{file}', 'rename')->name('file.rename')->whereNumber('file');
+            Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
+        });
+        Route::controller(TrashController::class)->group(function () {
+            Route::get('/trash', 'index')->name('trash.index');
         });
     });
 

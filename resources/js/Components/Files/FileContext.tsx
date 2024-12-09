@@ -11,6 +11,7 @@ import FilePreview from './FilePreview'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { useForm } from '@inertiajs/react'
+import FileDelete from './Actions/Delete'
 
 export default function FileContext({ file }: { file: FileType }) {
     const { data, setData, patch, errors, processing, reset } = useForm({
@@ -81,10 +82,7 @@ export default function FileContext({ file }: { file: FileType }) {
                     <Edit className="mr-2 h-4 w-4" />
                     Переименовать
                 </ContextMenuItem>
-                <ContextMenuItem onClick={handleEditClick}>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Удалить
-                </ContextMenuItem>
+                <FileDelete file={file} />
             </ContextMenuContent>
         </ContextMenu>
     )
