@@ -4,7 +4,7 @@ use App\Http\Controllers\{ProfileController, MainController,
     FolderController, FileController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles};
+use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
 
 
 Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
@@ -24,6 +24,13 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::get('/file/download/{file}', 'download')->name('file.download');
         });
     });
+
+    Route::middleware(IsAdmin::class)->group(function () {
+        Route::controller(AdminController::class)->group(function () {
+        Route::get('/admin', 'index')->name('admin.index');
+        });
+    });
+
 });
 
 require __DIR__.'/auth.php';

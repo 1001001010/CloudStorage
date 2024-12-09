@@ -14,7 +14,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/Components/ui/sidebar'
-import SideBarComponent from '@/Components/Sidebar'
+import SideBarComponent from '@/Components/Sidebar/Sidebar'
 import {
     PropsWithChildren,
     ReactNode,

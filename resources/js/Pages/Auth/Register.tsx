@@ -33,7 +33,7 @@ export default function Register() {
             <Card className="w-[450px]">
                 <form onSubmit={submit}>
                     <CardHeader>
-                        <CardTitle>Вход в аккаунт</CardTitle>
+                        <CardTitle>Регистрация</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid w-full items-center gap-4">

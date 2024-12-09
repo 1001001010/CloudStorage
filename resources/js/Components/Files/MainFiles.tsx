@@ -182,7 +182,7 @@ export default function MainFiles({
                                     )
                                 )
                             ) : (
-                                <div className="col-span-5 text-center">
+                                <div className="col-span-7 text-center">
                                     <h1 className="text-lg">Папка пуста</h1>
                                 </div>
                             )}

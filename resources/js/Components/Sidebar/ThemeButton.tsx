@@ -1,8 +1,6 @@
 import { PageProps } from '@/types'
 import { MoonStar, SunMedium } from 'lucide-react'
-import { Link } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
 
 export default function ThemeButton({}: PageProps<{}>) {
     const handleToggleDarkMode = () => {

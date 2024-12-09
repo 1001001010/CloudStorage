@@ -37,11 +37,7 @@ export default function ForderNameForm({
         post(route('folder.upload'), {
             onSuccess: () => {
                 window.location.reload()
-                // toast('Успешно', {
-                //     description: 'Папка успешно создана',
-                // })
                 reset()
-                // setIsOpen(false)
             },
             onError: (errors) => {
                 toast('Ошибка', {
@@ -50,7 +46,6 @@ export default function ForderNameForm({
             },
         })
     }
-
     return (
         <>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>

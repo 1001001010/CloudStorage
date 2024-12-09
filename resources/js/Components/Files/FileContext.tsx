@@ -10,9 +10,14 @@ import { Download, Edit, Trash2 } from 'lucide-react'
 import FilePreview from './FilePreview'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Link } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 
 export default function FileContext({ file }: { file: FileType }) {
+    const { data, setData, post, errors, processing, reset } = useForm({
+        file_id: 0,
+        name: '',
+    })
+
     const [isEditing, setIsEditing] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
     const [newName, setNewName] = useState(file.name)
@@ -70,11 +75,7 @@ export default function FileContext({ file }: { file: FileType }) {
                 </Button>
             </ContextMenuTrigger>
             <ContextMenuContent>
-                <a
-                    href={route('file.download', { file: file.id })}
-                    // target="_blank"
-                    // rel="noopener noreferrer"
-                >
+                <a href={route('file.download', { file: file.id })}>
                     <ContextMenuItem>
                         <Download className="mr-2 h-4 w-4" />
                         Скачать

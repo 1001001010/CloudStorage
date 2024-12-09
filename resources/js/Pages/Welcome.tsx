@@ -1,7 +1,7 @@
 import { Folder, PageProps } from '@/types'
 import Layout from '@/Layouts/Layout'
 import AuthAlert from './Auth/AuthAlert'
-import MainFiles from '@/Components/Folder/Files/MainFiles'
+import MainFiles from '@/Components/Files/MainFiles'
 
 export default function Welcome({
     auth,

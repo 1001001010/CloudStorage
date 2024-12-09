@@ -6,6 +6,7 @@ import {
     Folder,
     FolderPlus,
     GalleryVerticalEnd,
+    Trash2,
     Upload,
 } from 'lucide-react'
 import {
@@ -29,18 +30,18 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from './ui/collapsible'
-import { Alert, AlertDescription, AlertTitle } from './ui/alert'
+} from '../ui/collapsible'
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
 import { Progress } from '@/Components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
-import NewFolder from './Folder/NewFolder'
+import NewFolder from '../Folder/NewFolder'
 import { Folder as FolderType } from '@/types'
 export const iframeHeight = '800px'
 
 const formatFileSize = (bytes: number) => {
-    const mb = 1024 * 1024 // 1MB = 1024 * 1024 bytes
-    const gb = 1024 * 1024 * 1024 // 1GB = 1024 * 1024 * 1024 bytes
+    const mb = 1024 * 1024 // 1MB = 1024 * 1024
+    const gb = 1024 * 1024 * 1024 // 1GB = 1024 * 1024 * 1024
 
     if (bytes >= gb) {
         return `${(bytes / gb).toFixed(2)} ГБ`
@@ -154,10 +155,6 @@ export default function SideBarComponent({
                                 auth={user}
                                 FoldersTree={FoldersTree}
                             />
-                            {/* <Button className="flex w-full" variant="outline">
-                                <FolderPlus></FolderPlus>
-                                {open == false ? null : <p>Создать папку</p>}
-                            </Button> */}
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarHeader>
@@ -165,6 +162,10 @@ export default function SideBarComponent({
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarMenu>
+                            <SidebarMenuButton>
+                                <Trash2 />
+                                <span>Корзина</span>
+                            </SidebarMenuButton>
                             {data.navMain.map((item) => (
                                 <Collapsible
                                     key={item.title}

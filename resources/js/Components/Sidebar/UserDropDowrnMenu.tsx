@@ -9,13 +9,14 @@ import {
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
-import { SidebarMenuButton } from './ui/sidebar'
+import { SidebarMenuButton } from '../ui/sidebar'
 import {
     BadgeCheck,
     Bell,
     ChevronsUpDown,
     CreditCard,
     LogOut,
+    ScanEye,
     Sparkles,
 } from 'lucide-react'
 import { assert } from 'console'
@@ -99,10 +100,12 @@ export default function UserDropDownMenu({
                                 Профиль
                             </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem>
-                            <CreditCard />
-                            Billing
-                        </DropdownMenuItem>
+                        {auth.user?.is_admin == true ? (
+                            <DropdownMenuItem>
+                                <ScanEye />
+                                Панель администратора
+                            </DropdownMenuItem>
+                        ) : null}
                         <DropdownMenuItem>
                             <Bell />
                             Notifications
