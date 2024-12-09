@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/Components/ui/dialog'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import { Folder, FolderPlus } from 'lucide-react'
 import {
     Breadcrumb,

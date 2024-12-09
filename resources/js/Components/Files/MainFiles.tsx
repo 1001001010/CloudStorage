@@ -5,7 +5,7 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from '@/Components/ui/breadcrumb'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
 import { File, Folder } from 'lucide-react'

@@ -4,7 +4,6 @@ import {
     ChevronRight,
     Files,
     Folder,
-    FolderPlus,
     GalleryVerticalEnd,
     Trash2,
     Upload,
@@ -33,7 +32,7 @@ import {
 } from '../ui/collapsible'
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
 import { Progress } from '@/Components/ui/progress'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import NewFolder from '../Folder/NewFolder'
 import { Folder as FolderType } from '@/types'

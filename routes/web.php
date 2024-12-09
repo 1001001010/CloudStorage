@@ -22,12 +22,13 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
             Route::get('/file/download/{file}', 'download')->name('file.download');
+            Route::patch('/file/rename/{file}', 'rename')->name('file.rename');
         });
     });
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {
-        Route::get('/admin', 'index')->name('admin.index');
+            Route::get('/admin', 'index')->name('admin.index');
         });
     });
 

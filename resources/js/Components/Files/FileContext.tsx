@@ -8,19 +8,17 @@ import {
 import { File as FileType } from '@/types'
 import { Download, Edit, Trash2 } from 'lucide-react'
 import FilePreview from './FilePreview'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/Components/ui/button'
+import { Input } from '@/Components/ui/input'
 import { useForm } from '@inertiajs/react'
 
 export default function FileContext({ file }: { file: FileType }) {
-    const { data, setData, post, errors, processing, reset } = useForm({
-        file_id: 0,
+    const { data, setData, patch, errors, processing, reset } = useForm({
         name: '',
     })
 
     const [isEditing, setIsEditing] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
-    const [newName, setNewName] = useState(file.name)
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -28,13 +26,9 @@ export default function FileContext({ file }: { file: FileType }) {
         }
     }, [isEditing])
 
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewName(event.target.value)
-    }
-
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
-        console.log('New file name:', newName)
+        patch(route('file.rename', { file: file.id }))
         setIsEditing(false)
     }
 
@@ -61,9 +55,11 @@ export default function FileContext({ file }: { file: FileType }) {
                             className="flex items-center">
                             <Input
                                 type="text"
-                                value={newName}
+                                defaultValue={file.name}
                                 ref={inputRef}
-                                onChange={handleNameChange}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 className="rounded border border-gray-300 p-3"
                             />
                         </form>

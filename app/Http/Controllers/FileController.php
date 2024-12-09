@@ -85,4 +85,16 @@ class FileController extends Controller
             return redirect()->back()->with('msg', 'Файл не найден');
         }
     }
+
+    public function rename(Request $request, $file) {
+        $validate_data = $request->validate([
+            'name' => 'string|min:1'
+        ]);
+
+        $file = File::findOrFail($file);
+        if ($file) {
+            $file->update(['name' => $request->name]);
+        }
+        return redirect()->back()->with('msg', 'Название успешно изменено');
+    }
 }
