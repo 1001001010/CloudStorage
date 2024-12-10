@@ -21,7 +21,11 @@ export default function Trash({
 }>) {
     return (
         <>
-            <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize}>
+            <Layout
+                FoldersTree={FoldersTree}
+                msg={msg}
+                totalSize={totalSize}
+                BreadLvl1="Корзина">
                 {auth.user ? <TrashFiles auth={auth} files={files} /> : null}
             </Layout>
         </>
