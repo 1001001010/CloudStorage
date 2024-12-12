@@ -5,15 +5,15 @@ import { Dialog } from '@radix-ui/react-dialog'
 import { MoreHorizontal } from 'lucide-react'
 
 import { toast } from '@/hooks/use-toast'
-// import {
-//     AlertDialog,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-// } from '@/Components/ui/'
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/Components/ui/alert-dialog'
 import { Button } from '@/Components/ui/button'
 import {
     DialogContent,
@@ -101,7 +101,7 @@ export function PresetActions() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            {/* <AlertDialog
+            <AlertDialog
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}>
                 <AlertDialogContent>
@@ -130,7 +130,7 @@ export function PresetActions() {
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
-            </AlertDialog> */}
+            </AlertDialog>
         </>
     )
 }
