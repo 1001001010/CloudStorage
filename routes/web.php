@@ -32,7 +32,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         });
     });
 
-    Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
+    Route::get('/editor/{file}', [EditorController::class, 'index'])->name('file.edit')->whereNumber('file');
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {

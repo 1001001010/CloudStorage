@@ -24,31 +24,44 @@ import { TemperatureSelector } from './components/temperature-selector'
 import { TopPSelector } from './components/top-p-selector'
 import { models, types } from './data/models'
 import { presets } from './data/presets'
+import { PageProps, File } from '@/types'
+import { useEffect, useState } from 'react'
 
 // export const metadata: Metadata = {
 //     title: 'Playground',
 //     description: 'The OpenAI Playground built using the components.',
 // }
 
-export default function EditorField() {
+export default function EditorField({ file }: PageProps<{ file: any }>) {
+    // const showFile = (file: any) => {
+    //     e.preventDefault()
+    //     const reader = new FileReader()
+    //     reader.onload = (e) => {
+    //         const text = e.target?.result
+    //         console.log(text)
+    //     }
+    //     reader.readAsText(e.target.files[0])
+    // }
+
+    const [fileContent, setFileContent] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+                const text = event.target?.result as string
+                setFileContent(text)
+                console.log(text)
+            }
+            const blob = new Blob([file], { type: file.mime_type })
+            reader.readAsText(blob)
+        }
+    }, [file])
+
     return (
         <>
             <div className="expend-h mx-4 my-2 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-2">
-                    {/* <Image
-                    src="/examples/playground-light.png"
-                    width={1280}
-                    height={916}
-                    alt="Playground"
-                    className="block dark:hidden"
-                />
-                <Image
-                    src="/examples/playground-dark.png"
-                    width={1280}
-                    height={916}
-                    alt="Playground"
-                    className="hidden dark:block"
-                /> */}
                     <div className="hidden h-full w-full flex-col px-4 pr-2 md:flex">
                         <div className="flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
                             <h2 className="text-lg font-semibold">
@@ -206,6 +219,10 @@ export default function EditorField() {
                                             value="complete"
                                             className="mt-0 border-0 p-0">
                                             <div className="flex h-full flex-col space-y-4">
+                                                {/* <input
+                                                    type="file"
+                                                    onChange={showFile}
+                                                /> */}
                                                 <Textarea
                                                     placeholder="Write a tagline for an ice cream shop"
                                                     className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"

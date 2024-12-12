@@ -1,4 +1,4 @@
-import { Folder, PageProps } from '@/types'
+import { File, Folder, PageProps } from '@/types'
 import Layout from '@/Layouts/Layout'
 import TrashFiles from '@/Components/Files/TrashFiles'
 import EditorField from '@/Components/Editor/EditorField'
@@ -8,14 +8,14 @@ export default function Trash({
     FoldersTree,
     FoldersAndFiles,
     totalSize,
-    files,
+    file,
     msg,
 }: PageProps<{
     FoldersTree: Folder[]
     toast: string
     FoldersAndFiles: any
     totalSize: number
-    files: any
+    file: File
     msg: string
 }>) {
     return (
@@ -25,7 +25,7 @@ export default function Trash({
                 msg={msg}
                 totalSize={totalSize}
                 breadcrumbs={['Корзина']}>
-                {auth.user ? <EditorField /> : null}
+                {auth.user ? <EditorField file={file} /> : null}
             </Layout>
         </>
     )

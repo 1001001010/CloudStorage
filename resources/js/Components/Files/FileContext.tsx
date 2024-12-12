@@ -6,15 +6,7 @@ import {
     ContextMenuTrigger,
 } from '@/Components/ui/context-menu'
 import { File as FileType } from '@/types'
-import {
-    ArchiveRestore,
-    CroissantIcon,
-    Cross,
-    Crosshair,
-    Download,
-    Edit,
-    Trash2,
-} from 'lucide-react'
+import { PenLine } from 'lucide-react'
 import FilePreview from './FilePreview'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
@@ -23,6 +15,7 @@ import FileDelete from './Actions/Delete'
 import FileDownload from './Actions/Download'
 import FileRestore from './Actions/Restore'
 import FileForceDelete from './Actions/ForceDelete'
+import FileEdit from './Actions/FileEdit'
 
 export default function FileContext({
     file,
@@ -97,8 +90,9 @@ export default function FileContext({
                 ) : (
                     <>
                         <FileDownload file={file} />
+                        <FileEdit file={file} />
                         <ContextMenuItem onClick={handleEditClick}>
-                            <Edit className="mr-2 h-4 w-4" />
+                            <PenLine className="mr-2 h-4 w-4" />
                             Переименовать
                         </ContextMenuItem>
                         <FileDelete file={file} />
