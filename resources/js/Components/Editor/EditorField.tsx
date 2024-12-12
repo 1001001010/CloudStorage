@@ -26,38 +26,9 @@ import { models, types } from './data/models'
 import { presets } from './data/presets'
 import { PageProps, File } from '@/types'
 import { useEffect, useState } from 'react'
+import TextTabs from './Tabs/TextTabs'
 
-// export const metadata: Metadata = {
-//     title: 'Playground',
-//     description: 'The OpenAI Playground built using the components.',
-// }
-
-export default function EditorField({ file }: PageProps<{ file: any }>) {
-    // const showFile = (file: any) => {
-    //     e.preventDefault()
-    //     const reader = new FileReader()
-    //     reader.onload = (e) => {
-    //         const text = e.target?.result
-    //         console.log(text)
-    //     }
-    //     reader.readAsText(e.target.files[0])
-    // }
-
-    const [fileContent, setFileContent] = useState<string | null>(null)
-
-    useEffect(() => {
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (event) => {
-                const text = event.target?.result as string
-                setFileContent(text)
-                console.log(text)
-            }
-            const blob = new Blob([file], { type: file.mime_type })
-            reader.readAsText(blob)
-        }
-    }, [file])
-
+export default function EditorField({ file, auth }: PageProps<{ file: File }>) {
     return (
         <>
             <div className="expend-h mx-4 my-2 flex min-h-screen flex-wrap rounded-lg border shadow">
@@ -68,13 +39,10 @@ export default function EditorField({ file }: PageProps<{ file: any }>) {
                                 Редактирование
                             </h2>
                             <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-                                <PresetSelector presets={presets} />
-                                <PresetSave />
                                 <div className="hidden space-x-2 md:flex">
                                     <CodeViewer />
                                     <PresetShare />
                                 </div>
-                                <PresetActions />
                             </div>
                         </div>
                         <Separator />
@@ -202,42 +170,9 @@ export default function EditorField({ file }: PageProps<{ file: any }>) {
                                                 </TabsTrigger>
                                             </TabsList>
                                         </div>
-                                        <ModelSelector
-                                            types={types}
-                                            models={models}
-                                        />
-                                        <TemperatureSelector
-                                            defaultValue={[0.56]}
-                                        />
-                                        <MaxLengthSelector
-                                            defaultValue={[256]}
-                                        />
-                                        <TopPSelector defaultValue={[0.9]} />
                                     </div>
                                     <div className="md:order-1">
-                                        <TabsContent
-                                            value="complete"
-                                            className="mt-0 border-0 p-0">
-                                            <div className="flex h-full flex-col space-y-4">
-                                                {/* <input
-                                                    type="file"
-                                                    onChange={showFile}
-                                                /> */}
-                                                <Textarea
-                                                    placeholder="Write a tagline for an ice cream shop"
-                                                    className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
-                                                />
-                                                <div className="flex items-center space-x-2">
-                                                    <Button>Submit</Button>
-                                                    <Button variant="secondary">
-                                                        <span className="sr-only">
-                                                            Show history
-                                                        </span>
-                                                        <RotateCcw />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </TabsContent>
+                                        <TextTabs auth={auth} file={file} />
                                         <TabsContent
                                             value="insert"
                                             className="mt-0 border-0 p-0">
@@ -248,45 +183,6 @@ export default function EditorField({ file }: PageProps<{ file: any }>) {
                                                         className="h-full min-h-[300px] lg:min-h-[700px] xl:min-h-[700px]"
                                                     />
                                                     <div className="rounded-md border bg-muted"></div>
-                                                </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <Button>Submit</Button>
-                                                    <Button variant="secondary">
-                                                        <span className="sr-only">
-                                                            Show history
-                                                        </span>
-                                                        <RotateCcw />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </TabsContent>
-                                        <TabsContent
-                                            value="edit"
-                                            className="mt-0 border-0 p-0">
-                                            <div className="flex flex-col space-y-4">
-                                                <div className="grid h-full gap-6 lg:grid-cols-2">
-                                                    <div className="flex flex-col space-y-4">
-                                                        <div className="flex flex-1 flex-col space-y-2">
-                                                            <Label htmlFor="input">
-                                                                Input
-                                                            </Label>
-                                                            <Textarea
-                                                                id="input"
-                                                                placeholder="We is going to the market."
-                                                                className="flex-1 lg:min-h-[580px]"
-                                                            />
-                                                        </div>
-                                                        <div className="flex flex-col space-y-2">
-                                                            <Label htmlFor="instructions">
-                                                                Instructions
-                                                            </Label>
-                                                            <Textarea
-                                                                id="instructions"
-                                                                placeholder="Fix the grammar."
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="mt-[21px] min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <Button>Submit</Button>

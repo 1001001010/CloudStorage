@@ -33,6 +33,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
     });
 
     Route::get('/editor/{file}', [EditorController::class, 'index'])->name('file.edit')->whereNumber('file');
+    Route::post('/editor/{file}', [EditorController::class, 'upload'])->name('file.edit.upload')->whereNumber('file');
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {

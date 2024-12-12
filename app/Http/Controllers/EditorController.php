@@ -15,8 +15,9 @@ class EditorController extends Controller
         $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($file);
         if ($file) {
             if (in_array($file->extension->extension, $allowedExtensions) && in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
+                $file->content = file_get_contents(storage_path('app/public/' . $file->path));
                 return Inertia::render('Editor', [
-                    'file' => $file
+                    'file' => $file,
                 ]);
             } else {
                 return redirect()->back()->with('msg', 'Файл не является текстовым документом');
@@ -24,6 +25,29 @@ class EditorController extends Controller
         } else {
             return redirect()->back()->with('msg', 'Файл не найден');
         }
-        return redirect()->back()->with('msg', 'Просто не ворк');
     }
+
+    public function upload(Request $request, $fileId)
+    {
+        $file = File::where('user_id', Auth::id())->find($fileId);
+        if ($file) {
+            $filePath = storage_path('app/public/' . $file->path);
+            if (file_exists($filePath)) {
+                $fileText = $request->fileText;
+                file_put_contents($filePath, $fileText);
+
+                $newFileSize = filesize($filePath);
+                $file->size = $newFileSize;
+                $file->save();
+
+                return redirect()->back()->with('msg', 'Файл успешно сохранён');
+            } else {
+                return redirect()->back()->with('msg', 'Файл не найден');
+            }
+        }
+
+        return redirect()->back()->with('msg', 'Файл не найден');
+    }
+
+
 }

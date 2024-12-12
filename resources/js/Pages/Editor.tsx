@@ -24,8 +24,11 @@ export default function Trash({
                 FoldersTree={FoldersTree}
                 msg={msg}
                 totalSize={totalSize}
-                breadcrumbs={['Корзина']}>
-                {auth.user ? <EditorField file={file} /> : null}
+                breadcrumbs={[
+                    'Редактирование',
+                    `${file.name + '.' + file.extension.extension}`,
+                ]}>
+                {auth.user ? <EditorField auth={auth} file={file} /> : null}
             </Layout>
         </>
     )
