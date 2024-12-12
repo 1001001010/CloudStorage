@@ -70,6 +70,9 @@ class FileController extends Controller
         }
     }
 
+    /**
+     * Скачивание файла
+     */
     public function download($file)
     {
         $fileRecord = File::with('extension')->find($file);
@@ -86,6 +89,9 @@ class FileController extends Controller
         }
     }
 
+    /**
+     * Переименование файлов
+     */
     public function rename(Request $request, $file) {
         $validate_data = $request->validate([
             'name' => 'string|min:1'
@@ -98,6 +104,9 @@ class FileController extends Controller
         return redirect()->back()->with('msg', 'Название успешно изменено');
     }
 
+    /**
+     * Мягкое удаление файла
+     */
     public function delete($file) {
         $file = File::where('user_id', Auth::id())->find($file);
 
@@ -106,5 +115,29 @@ class FileController extends Controller
         }
         $file->delete();
         return redirect()->back()->with('msg', 'Файл перемещён в корзину');
+    }
+
+    /**
+     * Восстановление удаленного файла
+     */
+    public function restore($file) {
+        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
+        if (!$file) {
+            return redirect()->back()->with('msg', 'Файл не найден');
+        }
+        $file->restore();
+        return redirect()->back()->with('msg', 'Файл успешно восстановлен');
+    }
+
+    /**
+     * Удаление файла
+     */
+    public function forceDelete($file) {
+        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
+        if (!$file) {
+            return redirect()->back()->with('msg', 'Файл не найден');
+        }
+        $file->forceDelete();
+        return redirect()->back()->with('msg', 'Файл успешно восстановлен');
     }
 }

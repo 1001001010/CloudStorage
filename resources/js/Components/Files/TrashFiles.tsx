@@ -24,7 +24,7 @@ export type FolderOrFile = any
 export default function TrashFiles({
     files,
 }: {
-    files: any //изменить на File
+    files: FileTypes[]
     auth: PageProps['auth']
 }) {
     return (
@@ -35,7 +35,7 @@ export default function TrashFiles({
                         {files.map((item: any, index: number) => (
                             <div key={index}>
                                 {item.hasOwnProperty('name') ? (
-                                    <FileContext file={item} />
+                                    <FileContext file={item} trash={true} />
                                 ) : null}
                             </div>
                         ))}

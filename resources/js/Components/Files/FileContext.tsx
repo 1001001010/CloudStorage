@@ -6,14 +6,31 @@ import {
     ContextMenuTrigger,
 } from '@/Components/ui/context-menu'
 import { File as FileType } from '@/types'
-import { Download, Edit, Trash2 } from 'lucide-react'
+import {
+    ArchiveRestore,
+    CroissantIcon,
+    Cross,
+    Crosshair,
+    Download,
+    Edit,
+    Trash2,
+} from 'lucide-react'
 import FilePreview from './FilePreview'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { useForm } from '@inertiajs/react'
 import FileDelete from './Actions/Delete'
+import FileDownload from './Actions/Download'
+import FileRestore from './Actions/Restore'
+import FileForceDelete from './Actions/ForceDelete'
 
-export default function FileContext({ file }: { file: FileType }) {
+export default function FileContext({
+    file,
+    trash,
+}: {
+    file: FileType
+    trash?: boolean
+}) {
     const { data, setData, patch, errors, processing, reset } = useForm({
         name: '',
     })
@@ -72,17 +89,21 @@ export default function FileContext({ file }: { file: FileType }) {
                 </Button>
             </ContextMenuTrigger>
             <ContextMenuContent>
-                <a href={route('file.download', { file: file.id })}>
-                    <ContextMenuItem>
-                        <Download className="mr-2 h-4 w-4" />
-                        Скачать
-                    </ContextMenuItem>
-                </a>
-                <ContextMenuItem onClick={handleEditClick}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Переименовать
-                </ContextMenuItem>
-                <FileDelete file={file} />
+                {trash ? (
+                    <>
+                        <FileRestore file={file} />
+                        <FileForceDelete file={file} />
+                    </>
+                ) : (
+                    <>
+                        <FileDownload file={file} />
+                        <ContextMenuItem onClick={handleEditClick}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Переименовать
+                        </ContextMenuItem>
+                        <FileDelete file={file} />
+                    </>
+                )}
             </ContextMenuContent>
         </ContextMenu>
     )

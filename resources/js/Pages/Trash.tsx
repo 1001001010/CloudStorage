@@ -1,7 +1,5 @@
 import { Folder, PageProps } from '@/types'
 import Layout from '@/Layouts/Layout'
-import AuthAlert from './Auth/AuthAlert'
-import MainFiles from '@/Components/Files/MainFiles'
 import TrashFiles from '@/Components/Files/TrashFiles'
 
 export default function Trash({
@@ -25,7 +23,7 @@ export default function Trash({
                 FoldersTree={FoldersTree}
                 msg={msg}
                 totalSize={totalSize}
-                BreadLvl1="Корзина">
+                breadcrumbs={['Корзина']}>
                 {auth.user ? <TrashFiles auth={auth} files={files} /> : null}
             </Layout>
         </>

@@ -36,17 +36,13 @@ const getInitialSidebarState = () => {
 
 export default function Layout({
     children,
-    BreadLvl1,
-    BreadLvl2,
-    BreadLvl3,
+    breadcrumbs = [],
     FoldersTree,
     totalSize,
     msg,
 }: PropsWithChildren<{
     header?: ReactNode
-    BreadLvl1?: string
-    BreadLvl2?: string
-    BreadLvl3?: string
+    breadcrumbs?: string[]
     FoldersTree: Folder[]
     totalSize: number
     msg?: string
@@ -72,11 +68,7 @@ export default function Layout({
     return (
         <>
             <SidebarProvider
-                style={
-                    {
-                        '--sidebar-width': '19rem',
-                    } as React.CSSProperties
-                }
+                style={{ '--sidebar-width': '19rem' } as React.CSSProperties}
                 defaultOpen={defaultOpen}>
                 <SideBarComponent
                     FoldersTree={FoldersTree}
@@ -98,36 +90,17 @@ export default function Layout({
                                         </BreadcrumbLink>
                                     </Link>
                                 </BreadcrumbItem>
-                                {BreadLvl1 ? (
+
+                                {breadcrumbs.map((breadcrumb, index) => (
                                     <>
+                                        <BreadcrumbSeparator />
                                         <BreadcrumbItem>
-                                            <BreadcrumbSeparator className="hidden md:block" />
                                             <BreadcrumbPage>
-                                                {BreadLvl1}
+                                                {breadcrumb}
                                             </BreadcrumbPage>
                                         </BreadcrumbItem>
                                     </>
-                                ) : null}
-                                {BreadLvl2 ? (
-                                    <>
-                                        <BreadcrumbSeparator className="hidden md:block" />
-                                        <BreadcrumbItem>
-                                            <BreadcrumbPage>
-                                                {BreadLvl2}
-                                            </BreadcrumbPage>
-                                        </BreadcrumbItem>
-                                    </>
-                                ) : null}
-                                {BreadLvl3 ? (
-                                    <>
-                                        <BreadcrumbSeparator className="hidden md:block" />
-                                        <BreadcrumbItem>
-                                            <BreadcrumbPage>
-                                                {BreadLvl3}
-                                            </BreadcrumbPage>
-                                        </BreadcrumbItem>
-                                    </>
-                                ) : null}
+                                ))}
                             </BreadcrumbList>
                         </Breadcrumb>
                     </header>

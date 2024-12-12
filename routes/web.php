@@ -23,7 +23,9 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::post('/file', 'upload')->name('file.upload');
             Route::get('/file/download/{file}', 'download')->name('file.download');
             Route::patch('/file/rename/{file}', 'rename')->name('file.rename')->whereNumber('file');
+            Route::patch('/file/restore/{file}', 'restore')->name('file.restore')->whereNumber('file');
             Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
+            Route::delete('/file/delete/force/{file}', 'forceDelete')->name('file.force.delete')->whereNumber('file');
         });
         Route::controller(TrashController::class)->group(function () {
             Route::get('/trash', 'index')->name('trash.index');
