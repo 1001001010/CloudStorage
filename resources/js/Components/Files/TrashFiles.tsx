@@ -31,15 +31,19 @@ export default function TrashFiles({
         <>
             <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-5">
-                    <div className="grids grid min-h-[200px] items-center justify-center gap-5">
-                        {files.map((item: any, index: number) => (
-                            <div key={index}>
-                                {item.hasOwnProperty('name') ? (
-                                    <FileContext file={item} trash={true} />
-                                ) : null}
-                            </div>
-                        ))}
-                    </div>
+                    {files.length ? (
+                        <div className="grids grid min-h-[200px] items-center justify-center gap-5">
+                            {files.map((item: any, index: number) => (
+                                <div key={index}>
+                                    {item.hasOwnProperty('name') ? (
+                                        <FileContext file={item} trash={true} />
+                                    ) : null}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <h1 className="text-center text-lg">Корзина пуста</h1>
+                    )}
                 </div>
             </div>
         </>

@@ -14,8 +14,7 @@ class MainController extends Controller
     /**
      * Отображение главной страницы.
      */
-    public function index(): Response
-    {
+    public function index(): Response {
         return Inertia::render('Welcome');
     }
 }

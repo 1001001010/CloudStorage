@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\{ProfileController, MainController,
-    FolderController, FileController, TrashController};
+    FolderController, FileController, TrashController, EditorController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
@@ -31,6 +31,8 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::get('/trash', 'index')->name('trash.index');
         });
     });
+
+    Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {
