@@ -1,16 +1,21 @@
 'use client'
 
 import * as React from 'react'
+import { SliderProps } from '@radix-ui/react-slider'
 
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from '@/Components/ui/hover-card'
-import { Slider } from '@/Components/ui/slider'
 import { Label } from '@/Components/ui/label'
+import { Slider } from '@/Components/ui/slider'
 
-export function MaxLengthSelector({ defaultValue }: any) {
+interface MaxLengthSelectorProps {
+    defaultValue: SliderProps['defaultValue']
+}
+
+export function MaxLengthSelector({ defaultValue }: MaxLengthSelectorProps) {
     const [value, setValue] = React.useState(defaultValue)
 
     return (
