@@ -4,7 +4,7 @@ import { ArchiveRestore } from 'lucide-react'
 import { useForm } from '@inertiajs/react'
 
 export default function FileRestore({ file }: { file: FileType }) {
-    const { data, setData, patch, errors, processing, reset } = useForm()
+    const { patch, processing } = useForm()
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
@@ -12,7 +12,7 @@ export default function FileRestore({ file }: { file: FileType }) {
     }
 
     return (
-        <ContextMenuItem onClick={handleSubmit}>
+        <ContextMenuItem onClick={handleSubmit} disabled={processing}>
             <ArchiveRestore className="mr-2 h-4 w-4" />
             Восстановить
         </ContextMenuItem>

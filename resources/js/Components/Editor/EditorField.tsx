@@ -61,14 +61,9 @@ export default function EditorField({ file, auth }: PageProps<{ file: File }>) {
                                                 <HoverCardContent
                                                     className="w-[320px] text-sm"
                                                     side="left">
-                                                    Choose the interface that
-                                                    best suits your task. You
-                                                    can provide: a simple prompt
-                                                    to complete, starting and
-                                                    ending text to insert a
-                                                    completion within, or some
-                                                    text with instructions to
-                                                    edit it.
+                                                    Более удобное и
+                                                    структурирование отображение
+                                                    кода
                                                 </HoverCardContent>
                                             </HoverCard>
                                             <TabsList className="grid grid-cols-2">

@@ -4,22 +4,16 @@ import { Trash2 } from 'lucide-react'
 import { useForm } from '@inertiajs/react'
 
 export default function FileDelete({ file }: { file: FileType }) {
-    const {
-        data,
-        setData,
-        delete: destroy,
-        errors,
-        processing,
-        reset,
-    } = useForm()
+    const { delete: destroy, processing } = useForm()
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         destroy(route('file.delete', { file: file.id }))
+        window.location.reload()
     }
 
     return (
-        <ContextMenuItem onClick={handleSubmit}>
+        <ContextMenuItem onClick={handleSubmit} disabled={processing}>
             <Trash2 className="mr-2 h-4 w-4" />
             Удалить
         </ContextMenuItem>

@@ -69,6 +69,18 @@ export default function MainFiles({
         setCurrentPath([...currentPath, combinedItems])
         setBreadcrumbPath([...breadcrumbPath, title])
         setCurrentFolderId(folderId)
+        // sessionStorage.setItem(
+        //     'currentPath',
+        //     JSON.stringify([...currentPath, combinedItems])
+        // )
+        // sessionStorage.setItem(
+        //     'breadcrumbPath',
+        //     JSON.stringify([...breadcrumbPath, title])
+        // )
+        // sessionStorage.setItem(
+        //     'currentFolderId',
+        //     JSON.stringify(currentFolderId)
+        // )
     }
 
     const handleBreadcrumbClick = (index: number) => {
@@ -106,6 +118,17 @@ export default function MainFiles({
             post(route('file.upload'))
         }
     }, [data.files, data.folder_id])
+
+    // useEffect(() => {
+    //     const storedPath = sessionStorage.getItem('currentPath')
+    //     if (storedPath) {
+    //         setCurrentPath(JSON.parse(storedPath))
+    //     }
+    // }, [])
+
+    // useEffect(() => {
+    //     sessionStorage.setItem('currentPath', JSON.stringify(currentPath))
+    // }, [currentPath])
 
     return (
         <>

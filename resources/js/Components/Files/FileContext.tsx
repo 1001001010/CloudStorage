@@ -24,7 +24,7 @@ export default function FileContext({
     file: FileType
     trash?: boolean
 }) {
-    const { data, setData, patch, errors, processing, reset } = useForm({
+    const { setData, patch, processing, reset } = useForm({
         name: '',
     })
 
@@ -40,6 +40,7 @@ export default function FileContext({
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         patch(route('file.rename', { file: file.id }))
+        reset()
         setIsEditing(false)
     }
 
@@ -91,7 +92,9 @@ export default function FileContext({
                     <>
                         <FileDownload file={file} />
                         <FileEdit file={file} />
-                        <ContextMenuItem onClick={handleEditClick}>
+                        <ContextMenuItem
+                            onClick={handleEditClick}
+                            disabled={processing}>
                             <PenLine className="mr-2 h-4 w-4" />
                             Переименовать
                         </ContextMenuItem>
