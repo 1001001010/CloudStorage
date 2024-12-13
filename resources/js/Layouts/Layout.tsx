@@ -8,7 +8,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/Components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/Components/ui/separator'
 import {
     SidebarInset,
     SidebarProvider,

@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './isotope.min.css';
 
 @layer base {
     :root {
@@ -91,4 +92,17 @@
 
 .grids {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d4d4d8;
+    border-radius: 20px;
 }

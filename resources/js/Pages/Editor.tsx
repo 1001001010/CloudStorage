@@ -3,7 +3,7 @@ import Layout from '@/Layouts/Layout'
 import TrashFiles from '@/Components/Files/TrashFiles'
 import EditorField from '@/Components/Editor/EditorField'
 
-export default function Trash({
+export default function Editor({
     auth,
     FoldersTree,
     FoldersAndFiles,
