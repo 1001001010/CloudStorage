@@ -6,19 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\{Folder, FolderRelation};
+use App\Http\Requests\FolderUploadRequest;
 
 class FolderController extends Controller
 {
     /**
      * Создание папки
      */
-    public function upload(Request $request) : RedirectResponse
+    public function upload(FolderUploadRequest $request) : RedirectResponse
     {
-        $request->validate([
-            'title' => 'required|string',
-            'folder' => 'required|integer|min:0'
-        ]);
-
         $folder=null;
         if ($request->folder) {
             $folder = $request->folder;

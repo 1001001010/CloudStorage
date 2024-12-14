@@ -26,13 +26,15 @@ export default function MainFiles({
 }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
-            folder_id: 0,
+            folder_id: null as number | null,
             files: null as File[] | null,
         })
 
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
+    console.log(currentPath)
+
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
@@ -103,21 +105,40 @@ export default function MainFiles({
         e.preventDefault()
         let files = [...e.dataTransfer.files]
         setData('files', files)
-        if (currentFolderId !== 0) {
+        if (currentFolderId == 0) {
+            setData('folder_id', null)
+        } else {
             setData('folder_id', currentFolderId)
         }
         filesRef.current = files
         setDrag(false)
+        handleFileUpload()
     }
 
-    useEffect(() => {
-        if (filesRef.current && filesRef.current.length > 0) {
+    const handleFileUpload = () => {
+        if (filesRef.current) {
             const files = filesRef.current
             setData('files', files)
 
             post(route('file.upload'))
         }
+    }
+
+    useEffect(() => {
+        handleFileUpload()
     }, [data.files, data.folder_id])
+
+    // useEffect(() => {
+    //     console.log(213)
+    //     // if (filesRef.current && filesRef.current.length > 0) {
+    //     // console.log(filesRef.current)
+    //     if (filesRef.current) {
+    //         const files = filesRef.current
+    //         setData('files', files)
+
+    //         post(route('file.upload'))
+    //     }
+    // }, [data.files, data.folder_id])
 
     // useEffect(() => {
     //     const storedPath = sessionStorage.getItem('currentPath')

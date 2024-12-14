@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/Components/ui/dialog'
+} from '@/components/ui/dialog'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { useForm } from '@inertiajs/react'
@@ -64,6 +64,7 @@ export default function ForderNameForm({
                             <Input
                                 id="name"
                                 name="name"
+                                maxLength={20}
                                 placeholder="Название папки"
                                 className="col-span-3"
                                 onChange={(e) =>

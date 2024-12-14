@@ -15,7 +15,7 @@ import {
     SidebarTrigger,
 } from '@/Components/ui/sidebar'
 import SideBarComponent from '@/Components/Sidebar/Sidebar'
-import {
+import React, {
     PropsWithChildren,
     ReactNode,
     useEffect,
@@ -92,14 +92,14 @@ export default function Layout({
                                 </BreadcrumbItem>
 
                                 {breadcrumbs.map((breadcrumb, index) => (
-                                    <>
+                                    <React.Fragment key={index}>
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
                                             <BreadcrumbPage>
                                                 {breadcrumb}
                                             </BreadcrumbPage>
                                         </BreadcrumbItem>
-                                    </>
+                                    </React.Fragment>
                                 ))}
                             </BreadcrumbList>
                         </Breadcrumb>
