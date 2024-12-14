@@ -7,7 +7,10 @@ import { RotateCcw } from 'lucide-react'
 import { CodeViewer } from '../components/code-viewer'
 import { TabsContent } from '@/Components/ui/tabs'
 
-export default function CodeTabs({ file }: PageProps<{ file: File }>) {
+export default function CodeTabs({
+    file,
+    language,
+}: PageProps<{ file: File; language: string }>) {
     const { data, setData, post, reset } = useForm({
         fileText: file.content || '',
     })
@@ -64,7 +67,7 @@ export default function CodeTabs({ file }: PageProps<{ file: File }>) {
                         className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
                     />
                     <div className="rounded-md border bg-muted">
-                        <CodeViewer code={content ?? ''} language="html" />
+                        <CodeViewer code={content ?? ''} language={language} />
                     </div>
                 </div>
                 <div className="flex items-center space-x-2">

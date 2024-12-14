@@ -10,6 +10,7 @@ export default function Editor({
     totalSize,
     file,
     msg,
+    language,
 }: PageProps<{
     FoldersTree: Folder[]
     toast: string
@@ -17,6 +18,7 @@ export default function Editor({
     totalSize: number
     file: File
     msg: string
+    language: string
 }>) {
     return (
         <>
@@ -28,7 +30,9 @@ export default function Editor({
                     'Редактирование',
                     `${file.name + '.' + file.extension.extension}`,
                 ]}>
-                {auth.user ? <EditorField auth={auth} file={file} /> : null}
+                {auth.user ? (
+                    <EditorField auth={auth} file={file} language={language} />
+                ) : null}
             </Layout>
         </>
     )

@@ -29,7 +29,11 @@ import { useEffect, useState } from 'react'
 import TextTabs from './Tabs/TextTabs'
 import CodeTabs from './Tabs/CodeTabs'
 
-export default function EditorField({ file, auth }: PageProps<{ file: File }>) {
+export default function EditorField({
+    file,
+    auth,
+    language,
+}: PageProps<{ file: File; language: string }>) {
     return (
         <>
             <div className="expend-h mx-4 my-2 flex min-h-screen flex-wrap rounded-lg border shadow">
@@ -84,7 +88,11 @@ export default function EditorField({ file, auth }: PageProps<{ file: File }>) {
                                     </div>
                                     <div className="md:order-1">
                                         <TextTabs auth={auth} file={file} />
-                                        <CodeTabs auth={auth} file={file} />
+                                        <CodeTabs
+                                            auth={auth}
+                                            file={file}
+                                            language={language}
+                                        />
                                     </div>
                                 </div>
                             </div>

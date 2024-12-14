@@ -38,14 +38,41 @@ class EditorController extends Controller
         $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($fileId);
         if ($file) {
             if (in_array($file->extension->extension, $allowedExtensions) && in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
+                $language = $this->getLanguageByExtension($file->extension->extension);
                 $file->content = file_get_contents(storage_path('app/public/' . $file->path));
-                return Inertia::render('Editor', ['file' => $file]);
+                return Inertia::render('Editor', ['file' => $file, 'language' => $language]);
             } else {
                 return redirect()->back()->with('msg', 'Невозможно открыть файл');
             }
         } else {
             return redirect()->back()->with('msg', 'Файл не найден');
         }
+    }
+
+    private function getLanguageByExtension($extension)
+    {
+        $languageMap = [
+            'py' => 'python',
+            'js' => 'javascript',
+            'php' => 'php',
+            'html' => 'html',
+            'css' => 'css',
+            'java' => 'java',
+            'cpp' => 'cpp',
+            'ts' => 'typescript',
+            'tsx' => 'typescript',
+            'jsx' => 'javascript',
+            'txt' => 'text',
+            'doc' => 'text',
+            'docx' => 'text',
+            'pdf' => 'text',
+            'rtf' => 'text',
+            'odt' => 'text',
+            'c' => 'c',
+            'h' => 'c',
+        ];
+
+        return $languageMap[$extension] ?? 'text';  // Default to text if no match
     }
 
     public function upload(Request $request, $fileId)

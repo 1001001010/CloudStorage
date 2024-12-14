@@ -13,14 +13,12 @@ export function CodeViewer({
 
     useEffect(() => {
         if (codeRef.current) {
-            codeRef.current.innerHTML = ''
             const codeElement = document.createElement('code')
             codeElement.className = `language-${language}`
             codeElement.textContent = code
+            codeRef.current.innerHTML = ''
             codeRef.current.appendChild(codeElement)
-
-
-            hljs.highlightElement(codeRef.current)
+            hljs.highlightElement(codeElement)
         }
     }, [code, language])
 
