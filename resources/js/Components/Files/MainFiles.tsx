@@ -26,7 +26,7 @@ export default function MainFiles({
 }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
-            folder_id: 0,
+            folder_id: null as number | null,
             files: null as File[] | null,
         })
 
@@ -45,9 +45,6 @@ export default function MainFiles({
         title: string,
         folderId: number
     ) => {
-        // console.log('Children: ', children)
-        // console.log('Files: ', files)
-
         const combinedItems: FolderOrFile[] = []
 
         if (Array.isArray(children)) {
@@ -60,8 +57,6 @@ export default function MainFiles({
             combinedItems.push(...files)
         }
 
-        // console.log('Combined items: ', combinedItems)
-
         if (combinedItems.length === 0 && Array.isArray(files)) {
             combinedItems.push(...files)
         }
@@ -69,18 +64,6 @@ export default function MainFiles({
         setCurrentPath([...currentPath, combinedItems])
         setBreadcrumbPath([...breadcrumbPath, title])
         setCurrentFolderId(folderId)
-        // sessionStorage.setItem(
-        //     'currentPath',
-        //     JSON.stringify([...currentPath, combinedItems])
-        // )
-        // sessionStorage.setItem(
-        //     'breadcrumbPath',
-        //     JSON.stringify([...breadcrumbPath, title])
-        // )
-        // sessionStorage.setItem(
-        //     'currentFolderId',
-        //     JSON.stringify(currentFolderId)
-        // )
     }
 
     const handleBreadcrumbClick = (index: number) => {
@@ -99,36 +82,26 @@ export default function MainFiles({
         setDrag(false)
     }
 
-    function onDrophandler(e: any) {
+    const onDrophandler = (e: any) => {
         e.preventDefault()
         let files = [...e.dataTransfer.files]
-        setData('files', files)
         if (currentFolderId !== 0) {
-            setData('folder_id', currentFolderId)
+            setData({
+                folder_id: currentFolderId,
+                files: files,
+            })
+        } else {
+            setData({
+                folder_id: null,
+                files: files,
+            })
         }
-        filesRef.current = files
         setDrag(false)
     }
 
     useEffect(() => {
-        if (filesRef.current && filesRef.current.length > 0) {
-            const files = filesRef.current
-            setData('files', files)
-
-            post(route('file.upload'))
-        }
+        post(route('file.upload'))
     }, [data.files, data.folder_id])
-
-    // useEffect(() => {
-    //     const storedPath = sessionStorage.getItem('currentPath')
-    //     if (storedPath) {
-    //         setCurrentPath(JSON.parse(storedPath))
-    //     }
-    // }, [])
-
-    // useEffect(() => {
-    //     sessionStorage.setItem('currentPath', JSON.stringify(currentPath))
-    // }, [currentPath])
 
     return (
         <>

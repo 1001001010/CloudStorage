@@ -15,6 +15,7 @@ class FileController extends Controller
      * Загрузка файла
      */
     public function upload(FileUploadRequest $request) {
+        // dd($request);
         // Проверка существования папки
         if ($request->folder_id && $request->folder_id != 0) {
             $folder = Folder::where('id', $request->folder_id)
@@ -25,7 +26,6 @@ class FileController extends Controller
                 return redirect()->back()->with('msg', 'Папка не найдена');
             }
         }
-
 
         foreach ($request->file('files') as $file) {
             $fileExtension = $file->getClientOriginalExtension(); // Расширение файла

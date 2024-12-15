@@ -31,17 +31,23 @@ class GetUserFoldersAndFiles
     public function buildFolderTreeWithFiles($folders, $files, $parentId = null)
     {
         $branch = [];
+        if ($parentId === null) {
+            $orphanFiles = $files->where('folder_id', null);
+            foreach ($orphanFiles as $file) {
+                $branch[] = array_merge(
+                    $file->toArray(),
+                    ['is_file' => true]
+                );
+            }
+        }
+
         foreach ($folders as $folder) {
             if ($folder->parent_id == $parentId) {
-                // Рекурсивное построение дерева
                 $children = $this->buildFolderTreeWithFiles($folders, $files, $folder->id);
-
-                // Получаем файлы, относящиеся к текущей папке
                 $folderFiles = $files->where('folder_id', $folder->id);
                 if ($folderFiles->isNotEmpty()) {
-                    $folder->files = $folderFiles; // Добавляем файлы в папку
+                    $folder->files = $folderFiles;
                 }
-
                 if ($children) {
                     $folder->children = $children;
                 }

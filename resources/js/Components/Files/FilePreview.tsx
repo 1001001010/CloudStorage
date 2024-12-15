@@ -36,9 +36,9 @@ export default function FilePreview({ file }: { file: FileType }) {
             | 'font'
             | 'virtual'
     ) => {
-        const extension = file.extension.extension.toLowerCase()
-        const mimeType = file.mime_type.mime_type.toLowerCase()
-
+        const extension = file.extension?.extension?.toLowerCase()
+        const mimeType = file.mime_type?.mime_type?.toLowerCase()
+        // console.log(file)
         const fileTypes = {
             image: {
                 extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'],
