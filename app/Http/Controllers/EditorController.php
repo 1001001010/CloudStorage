@@ -12,19 +12,23 @@ class EditorController extends Controller
     public function index($fileId)
     {
         $allowedExtensions = [
-            'txt', 'doc', 'docx', 'pdf', 'odt', 'rtf', 'js', 'php', 'html', 'py',
-            'jsx', 'ts', 'tsx', 'java', 'cpp', 'c', 'h'
+            'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
+            'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
+            'go', 'rs', 'swift', 'kt', 'kts', 'm', 'sh',
+            'bash', 'sql', 'html', 'css', 'scss', 'sass',
+            'json', 'yaml', 'yml', 'xml', 'r',
+            'pl', 'pm', 'lua', 'hs',
+            'ex', 'exs'
         ];
+
 
         $allowedMimeTypes = [
             'text/plain',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/pdf',
-            'application/vnd.oasis.opendocument.text',
-            'application/rtf',
+            'text/markdown',
+            'text/csv',
+            'text/plain',
             'application/javascript',
-            'application/x-javascript',
+            'application/x-php',
             'text/html',
             'text/x-python',
             'text/typescript',
@@ -32,8 +36,14 @@ class EditorController extends Controller
             'text/x-c++src',
             'text/x-csrc',
             'text/x-c',
-            'text/x-php'
+            'application/x-ruby',
+            'application/sql',
+            'text/css',
+            'application/json',
+            ['application/x-yaml','text/yaml'],
+           ['application/xml','text/xml'],
         ];
+
 
         $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($fileId);
         if ($file) {
@@ -59,20 +69,28 @@ class EditorController extends Controller
             'css' => 'css',
             'java' => 'java',
             'cpp' => 'cpp',
-            'ts' => 'typescript',
-            'tsx' => 'typescript',
-            'jsx' => 'javascript',
-            'txt' => 'text',
-            'doc' => 'text',
-            'docx' => 'text',
-            'pdf' => 'text',
-            'rtf' => 'text',
-            'odt' => 'text',
             'c' => 'c',
             'h' => 'c',
+            'hpp' => 'cpp',
+            'rb' => 'ruby',
+            'go' => 'go',
+            'rs' => 'rust',
+            'swift' => 'swift',
+            'kt' => 'kotlin',
+            'kts' => 'kotlin',
+            'm' => 'objective-c',
+            'sh' => 'bash',
+            'bash' => 'bash',
+            'sql' => 'sql',
+            'txt' => 'text',
+            'md' => 'markdown',
+            'csv' => 'csv',
+            'log' => 'log',
+            'json' => 'json'
         ];
 
-        return $languageMap[$extension] ?? 'text';  // Default to text if no match
+
+        return $languageMap[$extension] ?? 'text';
     }
 
     public function upload(Request $request, $fileId)

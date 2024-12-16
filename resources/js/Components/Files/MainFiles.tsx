@@ -10,8 +10,18 @@ import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
 import { File, Folder } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
 import FileContext from './FileContext'
+import { Input } from '@/Components/ui/input'
+import { Label } from '@/Components/ui/label'
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogTrigger,
+    DialogFooter,
+} from '@/Components/ui/dialog'
 
 export type FolderOrFile = any
 
@@ -30,6 +40,7 @@ export default function MainFiles({
             files: null as File[] | null,
         })
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
@@ -85,6 +96,9 @@ export default function MainFiles({
     const onDrophandler = (e: any) => {
         e.preventDefault()
         let files = [...e.dataTransfer.files]
+        if (files[0]['name'].length > 20) {
+            setIsDialogOpen(true)
+        }
         if (currentFolderId !== 0) {
             setData({
                 folder_id: currentFolderId,
@@ -100,7 +114,8 @@ export default function MainFiles({
     }
 
     useEffect(() => {
-        post(route('file.upload'))
+        // post(route('file.upload'))
+        console.log('Форма отправилась')
     }, [data.files, data.folder_id])
 
     return (
@@ -186,6 +201,32 @@ export default function MainFiles({
                     </div>
                 </div>
             )}
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Имя файла слишком длинное</DialogTitle>
+                        <DialogDescription>
+                            Введите новое имя файла, что сохранить его
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="flex items-center gap-4">
+                            <Input
+                                id="name"
+                                placeholder="Название файла"
+                                maxLength={20}
+                            />
+                            <Label htmlFor="name" className="text-right">
+                                .png
+                            </Label>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit">Сохранить</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }

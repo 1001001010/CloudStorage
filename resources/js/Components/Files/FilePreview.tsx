@@ -73,6 +73,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 extensions: ['sql', 'db', 'sqlite', 'mdb', 'accdb'],
                 mimeTypes: [
                     'application/sql',
+                    'text/plain',
                     'application/x-sqlite3',
                     'application/vnd.ms-access',
                     'application/vnd.ms-access.database',
