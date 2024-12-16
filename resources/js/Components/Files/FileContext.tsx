@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import {
     ContextMenu,
     ContextMenuContent,
@@ -9,13 +9,14 @@ import { File as FileType } from '@/types'
 import { PenLine } from 'lucide-react'
 import FilePreview from './FilePreview'
 import { Button } from '@/Components/ui/button'
-import { Input } from '@/Components/ui/input'
-import { useForm } from '@inertiajs/react'
 import FileDelete from './Actions/Delete'
 import FileDownload from './Actions/Download'
 import FileRestore from './Actions/Restore'
 import FileForceDelete from './Actions/ForceDelete'
 import FileEdit from './Actions/FileEdit'
+import Rename from './Actions/Rename'
+import PhotoView from './Actions/PhotoView'
+import { imageExtensions, textAndCodeExtensions } from '@/extensions'
 
 export default function FileContext({
     file,
@@ -24,35 +25,25 @@ export default function FileContext({
     file: FileType
     trash?: boolean
 }) {
-    const { setData, patch, processing, reset } = useForm({
-        name: '',
-    })
-
     const [isEditing, setIsEditing] = useState(false)
-    const inputRef = useRef<HTMLInputElement>(null)
 
-    useEffect(() => {
-        if (isEditing && inputRef.current) {
-            inputRef.current.focus()
-        }
-    }, [isEditing])
-
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault()
-        patch(route('file.rename', { file: file.id }))
-        reset()
+    const handleRenameCancel = () => {
         setIsEditing(false)
     }
 
-    const handleEditClick = () => {
-        setIsEditing(true)
+    const handleRenameSuccess = () => {
+        setIsEditing(false)
     }
 
-    useEffect(() => {
-        if (isEditing && inputRef.current) {
-            inputRef.current.focus()
-        }
-    }, [isEditing])
+    const isTextOrCodeFile = textAndCodeExtensions.includes(
+        file.extension.extension
+    )
+    const isTextOrCodeMimeType = file.mime_type.mime_type.startsWith('text/')
+    const canEdit = isTextOrCodeFile || isTextOrCodeMimeType
+
+    const isImageFile =
+        imageExtensions.includes(file.extension.extension) ||
+        file.mime_type.mime_type.startsWith('image/')
 
     return (
         <ContextMenu>
@@ -62,19 +53,12 @@ export default function FileContext({
                     className="flex h-full w-full flex-col items-center">
                     <FilePreview file={file} />
                     {isEditing ? (
-                        <form
-                            onSubmit={handleSubmit}
-                            className="flex items-center">
-                            <Input
-                                type="text"
-                                defaultValue={file.name}
-                                ref={inputRef}
-                                onChange={(e) =>
-                                    setData('name', e.target.value)
-                                }
-                                className="rounded border border-gray-300 p-3"
-                            />
-                        </form>
+                        <Rename
+                            fileId={file.id}
+                            initialName={file.name}
+                            onCancel={handleRenameCancel}
+                            onRename={handleRenameSuccess}
+                        />
                     ) : (
                         <p>
                             {file.name}.{file.extension.extension}
@@ -91,10 +75,11 @@ export default function FileContext({
                 ) : (
                     <>
                         <FileDownload file={file} />
-                        <FileEdit file={file} />
+                        {canEdit && <FileEdit file={file} />}
+                        {isImageFile && <PhotoView file={file} />}
                         <ContextMenuItem
-                            onClick={handleEditClick}
-                            disabled={processing}>
+                            onClick={() => setIsEditing(true)}
+                            disabled={false}>
                             <PenLine className="mr-2 h-4 w-4" />
                             Переименовать
                         </ContextMenuItem>

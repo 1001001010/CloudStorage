@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('folder_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->bigInteger('size');
+            $table->string('share_token', 64)->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
 

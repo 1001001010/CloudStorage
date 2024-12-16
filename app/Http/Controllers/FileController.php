@@ -113,7 +113,7 @@ class FileController extends Controller
             return redirect()->back()->with('msg', 'Файл не найден');
         }
         $file->delete();
-        return redirect()->back()->with('msg', 'Файл перемещён в корзину');
+        return redirect()->route('index')->with('msg', '123Файл перемещён в корзину');
     }
 
     /**

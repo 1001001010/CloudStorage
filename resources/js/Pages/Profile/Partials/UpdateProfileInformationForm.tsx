@@ -2,9 +2,9 @@ import { useForm, usePage } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
 import { PageProps } from '@/types'
 import { toast } from 'sonner'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 
 export default function UpdateProfileInformation({
     className = '',

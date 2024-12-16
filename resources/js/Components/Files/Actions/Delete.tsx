@@ -9,9 +9,9 @@ export default function FileDelete({ file }: { file: FileType }) {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         destroy(route('file.delete', { file: file.id }))
-        setTimeout(() => {
-            window.location.reload()
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.reload()
+        // }, 2000)
     }
 
     return (

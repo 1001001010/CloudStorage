@@ -23,7 +23,7 @@ class FileUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'folder_id' => 'required|numeric',
+            'folder_id' => 'nullable|numeric',
             'files' => 'required|array|min:1|max:5',
             'files.*' => [
                 'file',

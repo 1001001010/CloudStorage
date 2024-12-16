@@ -1,8 +1,8 @@
 import { useRef, FormEventHandler } from 'react'
 import { useForm } from '@inertiajs/react'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import { toast } from 'sonner'
 
 export default function UpdatePasswordForm({
