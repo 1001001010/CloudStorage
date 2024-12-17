@@ -9,7 +9,7 @@ import { Button } from '@/Components/ui/button'
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
 import { File, Folder } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { FormEventHandler, useEffect, useRef, useState } from 'react'
 import FileContext from './FileContext'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
@@ -19,9 +19,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-    DialogTrigger,
     DialogFooter,
-} from '@/Components/ui/dialog'
+} from '@/components/ui/dialog'
 
 export type FolderOrFile = any
 
@@ -38,8 +37,10 @@ export default function MainFiles({
         useForm({
             folder_id: null as number | null,
             files: null as File[] | null,
+            file_name: null as string | null,
         })
 
+    const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
@@ -103,19 +104,31 @@ export default function MainFiles({
             setData({
                 folder_id: currentFolderId,
                 files: files,
+                file_name: null,
             })
         } else {
             setData({
                 folder_id: null,
                 files: files,
+                file_name: null,
             })
         }
+        const fileName = files[0].name
+        const fileExt = fileName.slice(fileName.lastIndexOf('.') + 1)
+        setFileExtension(fileExt)
         setDrag(false)
     }
 
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault()
+        post(route('file.upload'))
+        setIsDialogOpen(false)
+    }
+
     useEffect(() => {
-        // post(route('file.upload'))
-        console.log('Форма отправилась')
+        if (data.files && data.files[0]['name'].length < 20) {
+            post(route('file.upload'))
+        }
     }, [data.files, data.folder_id])
 
     return (
@@ -204,27 +217,32 @@ export default function MainFiles({
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>Имя файла слишком длинное</DialogTitle>
-                        <DialogDescription>
-                            Введите новое имя файла, что сохранить его
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="flex items-center gap-4">
-                            <Input
-                                id="name"
-                                placeholder="Название файла"
-                                maxLength={20}
-                            />
-                            <Label htmlFor="name" className="text-right">
-                                .png
-                            </Label>
+                    <form onSubmit={submit}>
+                        <DialogHeader>
+                            <DialogTitle>Имя файла слишком длинное</DialogTitle>
+                            <DialogDescription>
+                                Введите новое имя файла, что сохранить его
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <div className="flex items-center gap-4">
+                                <Input
+                                    id="name"
+                                    placeholder="Название файла"
+                                    maxLength={20}
+                                    onChange={(e) =>
+                                        setData('file_name', e.target.value)
+                                    }
+                                />
+                                <Label htmlFor="name" className="text-right">
+                                    .{fileExtension}
+                                </Label>
+                            </div>
                         </div>
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit">Сохранить</Button>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <Button disabled={processing}>Сохранить</Button>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>

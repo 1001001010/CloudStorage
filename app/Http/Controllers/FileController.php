@@ -15,7 +15,6 @@ class FileController extends Controller
      * Загрузка файла
      */
     public function upload(FileUploadRequest $request) {
-        // dd($request);
         // Проверка существования папки
         if ($request->folder_id && $request->folder_id != 0) {
             $folder = Folder::where('id', $request->folder_id)
@@ -56,7 +55,7 @@ class FileController extends Controller
             $path = $file->storeAs('files', $newPath, 'public');
 
             File::create([
-                'name' => pathinfo($file->getClientOriginalName())['filename'],
+                'name' => $request->file_name ?? pathinfo($file->getClientOriginalName())['filename'],
                 'path' => $path,
                 'extension_id' => $extension->id,
                 'mime_type_id' => $mime->id,
