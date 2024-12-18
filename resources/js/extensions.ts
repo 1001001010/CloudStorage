@@ -51,3 +51,22 @@ export const textAndCodeExtensions = [
     'ex',
     'exs',
 ]
+
+export const videoExtensions = [
+    'mp4',
+    'mkv',
+    'webm',
+    'avi',
+    'mov',
+    'flv',
+    'wmv',
+    'mpeg',
+    'mpg',
+    '3gp',
+    'ts',
+    'ogg',
+    'rm',
+    'asf',
+    'm4v',
+    'vob',
+]

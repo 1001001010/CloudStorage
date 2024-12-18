@@ -15,8 +15,13 @@ import FileRestore from './Actions/Restore'
 import FileForceDelete from './Actions/ForceDelete'
 import FileEdit from './Actions/FileEdit'
 import Rename from './Actions/Rename'
+import {
+    imageExtensions,
+    textAndCodeExtensions,
+    videoExtensions,
+} from '@/extensions'
 import PhotoView from './Actions/PhotoView'
-import { imageExtensions, textAndCodeExtensions } from '@/extensions'
+import VideoView from './Actions/VideoView'
 
 export default function FileContext({
     file,
@@ -44,6 +49,10 @@ export default function FileContext({
     const isImageFile =
         imageExtensions.includes(file.extension.extension) ||
         file.mime_type.mime_type.startsWith('image/')
+
+    const isVideoFile =
+        videoExtensions.includes(file.extension.extension) ||
+        file.mime_type.mime_type.startsWith('video/')
 
     return (
         <ContextMenu>
@@ -77,6 +86,7 @@ export default function FileContext({
                         <FileDownload file={file} />
                         {canEdit && <FileEdit file={file} />}
                         {isImageFile && <PhotoView file={file} />}
+                        {isVideoFile && <VideoView file={file} />}
                         <ContextMenuItem
                             onClick={() => setIsEditing(true)}
                             disabled={false}>

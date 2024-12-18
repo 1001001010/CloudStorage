@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\{ProfileController, MainController,
-    FolderController, FileController, TrashController, EditorController};
+    FolderController, FileController, TrashController, EditorController,
+    AdminController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
