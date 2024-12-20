@@ -14,14 +14,15 @@ import FileDownload from './Actions/Download'
 import FileRestore from './Actions/Restore'
 import FileForceDelete from './Actions/ForceDelete'
 import FileEdit from './Actions/FileEdit'
-import Rename from './Actions/Rename'
+import FileRename from './Actions/Rename'
 import {
     imageExtensions,
     textAndCodeExtensions,
     videoExtensions,
 } from '@/extensions'
-import PhotoView from './Actions/PhotoView'
-import VideoView from './Actions/VideoView'
+import FilePhotoView from './Actions/PhotoView'
+import FileVideoView from './Actions/VideoView'
+import FileShare from './Actions/Share'
 
 export default function FileContext({
     file,
@@ -62,7 +63,7 @@ export default function FileContext({
                     className="flex h-full w-full flex-col items-center">
                     <FilePreview file={file} />
                     {isEditing ? (
-                        <Rename
+                        <FileRename
                             fileId={file.id}
                             initialName={file.name}
                             onCancel={handleRenameCancel}
@@ -84,9 +85,10 @@ export default function FileContext({
                 ) : (
                     <>
                         <FileDownload file={file} />
+                        <FileShare file={file} />
                         {canEdit && <FileEdit file={file} />}
-                        {isImageFile && <PhotoView file={file} />}
-                        {isVideoFile && <VideoView file={file} />}
+                        {isImageFile && <FilePhotoView file={file} />}
+                        {isVideoFile && <FileVideoView file={file} />}
                         <ContextMenuItem
                             onClick={() => setIsEditing(true)}
                             disabled={false}>

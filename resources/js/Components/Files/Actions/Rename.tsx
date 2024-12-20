@@ -9,7 +9,7 @@ interface RenameProps {
     onRename: () => void
 }
 
-export default function Rename({
+export default function FileRename({
     fileId,
     initialName,
     onCancel,

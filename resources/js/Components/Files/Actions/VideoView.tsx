@@ -12,7 +12,7 @@ import {
 import React from 'react'
 import ReactPlayer from 'react-player'
 
-export default function VideoView({ file }: { file: FileType }) {
+export default function FileVideoView({ file }: { file: FileType }) {
     const url = `http://localhost:5173/storage/app/public/` + file.path
     return (
         <Dialog>

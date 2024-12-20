@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\{File, Folder, FileExtension,
     MimeType};
+use Illuminate\Http\RedirectResponse;
 
 class FileController extends Controller
 {
@@ -64,7 +65,9 @@ class FileController extends Controller
                 'user_id' => Auth::id(),
                 'size' => $file->getSize()
             ]);
-            return redirect()->route('index')->with('msg', 'Файлы успешно загружены');
+            return redirect()->route('index')->with('msg', [
+                'title' => 'Файлы успешно загружен',
+            ]);
         }
     }
 
@@ -80,17 +83,21 @@ class FileController extends Controller
                 $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
                 return response()->download($filePath, $fileName);
             } else {
-                return redirect()->back()->with('msg', 'Файл не найден');
+                return redirect()->back()->with('msg', [
+                    'title' => 'Файлы не найден',
+                ]);
             }
         } else {
-            return redirect()->back()->with('msg', 'Файл не найден');
+            return redirect()->back()->with('msg', [
+                'title' => 'Файлы не найден',
+            ]);
         }
     }
 
     /**
      * Переименование файлов
      */
-    public function rename(Request $request, $file) {
+    public function rename(Request $request, $file): RedirectResponse {
         $validate_data = $request->validate([
             'name' => 'string|min:1'
         ]);
@@ -99,43 +106,58 @@ class FileController extends Controller
         if ($file) {
             $file->update(['name' => $request->name]);
         }
-        return redirect()->back()->with('msg', 'Название успешно изменено');
+        return redirect()->back()->with('msg', [
+            'title' => 'Название успешно изменено',
+        ]);
     }
 
     /**
      * Мягкое удаление файла
      */
-    public function delete($file) {
+    public function delete($file): RedirectResponse {
         $file = File::where('user_id', Auth::id())->find($file);
 
         if(!$file) {
-            return redirect()->back()->with('msg', 'Файл не найден');
+            return redirect()->back()->with('msg', [
+                'title' => 'Файлы не найден',
+            ]);
         }
         $file->delete();
-        return redirect()->route('index')->with('msg', '123Файл перемещён в корзину');
+        return redirect()->route('index')->with('msg', [
+            'title' => 'Файл перемещён в корзину',
+            'description' => 'Вы можете его восставновить из корзины'
+        ]);
     }
 
     /**
      * Восстановление удаленного файла
      */
-    public function restore($file) {
+    public function restore($file): RedirectResponse {
         $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
         if (!$file) {
-            return redirect()->back()->with('msg', 'Файл не найден');
+            return redirect()->back()->with('msg', [
+                'title' => 'Файл не найден',
+            ]);
         }
         $file->restore();
-        return redirect()->back()->with('msg', 'Файл успешно восстановлен');
+        return redirect()->back()->with('msg', [
+            'title' => 'Файлы успешно восстановлен',
+        ]);
     }
 
     /**
      * Удаление файла
      */
-    public function forceDelete($file) {
+    public function forceDelete($file): RedirectResponse {
         $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
         if (!$file) {
-            return redirect()->back()->with('msg', 'Файл не найден');
+            return redirect()->back()->with('msg', [
+                'title' => 'Файл не найден',
+            ]);
         }
         $file->forceDelete();
-        return redirect()->back()->with('msg', 'Файл успешно восстановлен');
+        return redirect()->back()->with('msg', [
+            'title' => 'Файл полностью удален',
+        ]);
     }
 }

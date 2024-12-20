@@ -69,4 +69,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class);
     }
+
+    /**
+     * Связь с моделей FileUserAccess
+     */
+    public function fileUserAccesses()
+    {
+        return $this->hasMany(FileUserAccess::class);
+    }
 }

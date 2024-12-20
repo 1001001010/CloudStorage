@@ -19,15 +19,7 @@ export default function Welcome({
     return (
         <>
             <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize}>
-                {auth.user ? (
-                    <MainFiles
-                        auth={auth}
-                        FoldersTree={FoldersTree}
-                        FoldersFilesTree={FoldersAndFiles}
-                    />
-                ) : (
-                    <AuthAlert auth={auth} />
-                )}
+                123
             </Layout>
         </>
     )

@@ -101,10 +101,14 @@ export default function UserDropDownMenu({
                             </DropdownMenuItem>
                         </Link>
                         {auth.user?.is_admin == true ? (
-                            <DropdownMenuItem>
-                                <ScanEye />
-                                Панель администратора
-                            </DropdownMenuItem>
+                            <Link
+                                href={route('admin.index')}
+                                className="w-full">
+                                <DropdownMenuItem>
+                                    <ScanEye />
+                                    Панель администратора
+                                </DropdownMenuItem>
+                            </Link>
                         ) : null}
                         <DropdownMenuItem>
                             <Bell />

@@ -23,7 +23,7 @@ import React, {
     useState,
 } from 'react'
 import { Link } from '@inertiajs/react'
-import { Folder } from '@/types'
+import { Folder, ToastMessage } from '@/types'
 import { toast } from 'sonner'
 
 const getInitialSidebarState = () => {
@@ -45,7 +45,7 @@ export default function Layout({
     breadcrumbs?: string[]
     FoldersTree: Folder[]
     totalSize: number
-    msg?: string
+    msg?: ToastMessage
 }>) {
     const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
     const hasShownMessage = useRef(false)
@@ -60,7 +60,18 @@ export default function Layout({
 
     useEffect(() => {
         if (msg && !hasShownMessage.current) {
-            toast(msg)
+            toast(msg.title, {
+                description: msg.description ? msg.description : undefined,
+
+                action: msg.action
+                    ? {
+                          label: msg.action?.label,
+                          onClick: () => {
+                              msg.action?.onClick.toString()
+                          },
+                      }
+                    : null,
+            })
             hasShownMessage.current = true
         }
     }, [msg])

@@ -241,7 +241,7 @@ export default function SideBarComponent({
                     </AnimatePresence>
                     <UserDropDownMenu
                         auth={user}
-                        isMobile={isMobile}></UserDropDownMenu>
+                        isMobile={isMobile} />
                 </SidebarFooter>
             </Sidebar>
         </>

@@ -52,6 +52,17 @@ export interface MimeType {
     mime_type: string
 }
 
+interface ToastAction {
+    label: string
+    onClick: () => void
+}
+
+interface ToastMessage {
+    title: string
+    description?: string
+    action?: ToastAction
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {

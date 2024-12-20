@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\{ProfileController, MainController,
     FolderController, FileController, TrashController, EditorController,
-    AdminController};
+    AdminController, FileAccessTokenController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
@@ -28,13 +28,17 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
             Route::delete('/file/delete/force/{file}', 'forceDelete')->name('file.force.delete')->whereNumber('file');
         });
+        Route::controller(EditorController::class)->group(function () {
+            Route::get('/editor/{file}', 'index')->name('file.edit')->whereNumber('file');
+            Route::post('/editor/{file}', 'upload')->name('file.edit.upload')->whereNumber('file');
+        });
         Route::controller(TrashController::class)->group(function () {
             Route::get('/trash', 'index')->name('trash.index');
         });
+        Route::controller(FileAccessTokenController::class)->group(function () {
+            Route::post('/access/create', 'upload')->name('access.upload');
+        });
     });
-
-    Route::get('/editor/{file}', [EditorController::class, 'index'])->name('file.edit')->whereNumber('file');
-    Route::post('/editor/{file}', [EditorController::class, 'upload'])->name('file.edit.upload')->whereNumber('file');
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {

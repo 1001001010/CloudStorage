@@ -11,7 +11,7 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog'
 
-export default function PhotoView({ file }: { file: FileType }) {
+export default function FilePhotoView({ file }: { file: FileType }) {
     const [scale, setScale] = useState(1)
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const imgRef = useRef<HTMLImageElement | null>(null)

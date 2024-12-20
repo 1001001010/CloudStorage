@@ -31,6 +31,7 @@ class EditorController extends Controller
             'application/x-php',
             'text/html',
             'text/x-python',
+            'text/x-script.python',
             'text/typescript',
             'text/x-java-source',
             'text/x-c++src',
@@ -52,10 +53,14 @@ class EditorController extends Controller
                 $file->content = file_get_contents(storage_path('app/public/' . $file->path));
                 return Inertia::render('Editor', ['file' => $file, 'language' => $language]);
             } else {
-                return redirect()->back()->with('msg', 'Невозможно открыть файл');
+                return redirect()->back()->with('msg', [
+                    'title' => 'Невозможно открыть файл',
+                ]);
             }
         } else {
-            return redirect()->back()->with('msg', 'Файл не найден');
+            return redirect()->back()->with('msg', [
+                'title' => 'Файл не найден',
+            ]);;
         }
     }
 
@@ -106,13 +111,19 @@ class EditorController extends Controller
                 $file->size = $newFileSize;
                 $file->save();
 
-                return redirect()->back()->with('msg', 'Файл успешно сохранён');
+                return redirect()->back()->with('msg', [
+                    'title' => 'Файл успешно сохранён',
+                ]);
             } else {
-                return redirect()->back()->with('msg', 'Файл не найден');
+                return redirect()->back()->with('msg', [
+                    'title' => 'Файл не найден',
+                ]);
             }
         }
 
-        return redirect()->back()->with('msg', 'Файл не найден');
+        return redirect()->back()->with('msg', [
+            'title' => 'Файл не найден',
+        ]);
     }
 
 

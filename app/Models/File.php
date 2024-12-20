@@ -54,4 +54,12 @@ class File extends Model
         return $this->belongsTo(MimeType::class, 'mime_type_id');
     }
 
+    /**
+     * Связь с моделью FileAccessToken
+     */
+    public function accessTokens()
+    {
+        return $this->hasMany(FileAccessToken::class);
+    }
+
 }

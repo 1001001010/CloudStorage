@@ -113,6 +113,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                     'text/javascript',
                     'text/typescript',
                     'text/x-python',
+                    'text/x-script.python',
                     'text/x-java-source',
                     'text/x-c++src',
                     'text/x-csrc',
