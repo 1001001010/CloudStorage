@@ -24,6 +24,7 @@ export default function Welcome({
                         auth={auth}
                         FoldersTree={FoldersTree}
                         FoldersFilesTree={FoldersAndFiles}
+                        accessLink={msg?.access_link}
                     />
                 ) : (
                     <AuthAlert auth={auth} />

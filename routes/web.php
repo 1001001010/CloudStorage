@@ -37,6 +37,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         });
         Route::controller(FileAccessTokenController::class)->group(function () {
             Route::post('/access/create', 'upload')->name('access.upload');
+            Route::get('/access/{token}', 'invite')->name('access.user.upload');
         });
     });
 

@@ -27,9 +27,11 @@ import FileShare from './Actions/Share'
 export default function FileContext({
     file,
     trash,
+    accessLink,
 }: {
     file: FileType
     trash?: boolean
+    accessLink?: string
 }) {
     const [isEditing, setIsEditing] = useState(false)
 
@@ -85,7 +87,7 @@ export default function FileContext({
                 ) : (
                     <>
                         <FileDownload file={file} />
-                        <FileShare file={file} />
+                        <FileShare file={file} accessLink={accessLink} />
                         {canEdit && <FileEdit file={file} />}
                         {isImageFile && <FilePhotoView file={file} />}
                         {isVideoFile && <FileVideoView file={file} />}

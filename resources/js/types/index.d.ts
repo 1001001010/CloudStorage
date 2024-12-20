@@ -59,6 +59,7 @@ interface ToastAction {
 
 interface ToastMessage {
     title: string
+    access_link?: string
     description?: string
     action?: ToastAction
 }

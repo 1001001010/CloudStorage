@@ -21,7 +21,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/Components/ui/dialog'
+} from '@/components/ui/dialog'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -73,11 +73,6 @@ export function PresetActions() {
                             Playground Warnings
                         </h4>
                         <div className="flex items-start justify-between space-x-4 pt-3">
-                            {/* <Switch
-                                name="show"
-                                id="show"
-                                defaultChecked={true}
-                            /> */}
                             <Label
                                 className="grid gap-1 font-normal"
                                 htmlFor="show">

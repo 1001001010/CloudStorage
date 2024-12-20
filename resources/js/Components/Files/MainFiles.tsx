@@ -28,10 +28,12 @@ export default function MainFiles({
     auth,
     FoldersTree,
     FoldersFilesTree,
+    accessLink,
 }: {
     auth: PageProps['auth']
     FoldersTree: FolderTypes[]
     FoldersFilesTree: any[]
+    accessLink?: string
 }) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -182,7 +184,10 @@ export default function MainFiles({
                                     (item, index) => (
                                         <div key={index}>
                                             {item.hasOwnProperty('name') ? (
-                                                <FileContext file={item} />
+                                                <FileContext
+                                                    file={item}
+                                                    accessLink={accessLink}
+                                                />
                                             ) : (
                                                 <Button
                                                     variant="ghost"

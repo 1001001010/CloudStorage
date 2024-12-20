@@ -58,19 +58,21 @@ export default function Layout({
         setDefaultOpen(cookieValue === 'true')
     }, [])
 
+    const textToCopy = msg?.action?.onClick ? String(msg.action.onClick) : ''
+
     useEffect(() => {
         if (msg && !hasShownMessage.current) {
             toast(msg.title, {
                 description: msg.description ? msg.description : undefined,
 
-                action: msg.action
-                    ? {
-                          label: msg.action?.label,
-                          onClick: () => {
-                              msg.action?.onClick.toString()
-                          },
-                      }
-                    : null,
+                // action: msg.action
+                //     ? {
+                //           label: msg.action?.label,
+                //           onClick: () => {
+                //               navigator.clipboard.writeText(textToCopy)
+                //           },
+                //       }
+                //     : null,
             })
             hasShownMessage.current = true
         }

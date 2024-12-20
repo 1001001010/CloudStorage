@@ -20,19 +20,18 @@ class FileAccessTokenController extends Controller
         }
 
         $accessToken = bin2hex(random_bytes(32));
-
-        FileAccessToken::create([
+        $access = FileAccessToken::create([
             'file_id' => $file->id,
             'access_token' => $accessToken,
             'user_limit' => $request->user_limit,
         ]);
-
+        
         return redirect()->back()->with('msg', [
+            'access_link' => url(route('access.user.upload', ['token' => $access->access_token])),
             'title' => 'Ссылка успешно создана',
-            'description' => '123',
             'action' => [
                 'label' => 'Скопировать',
-                'onClick' => 'console.log("Undo")',
+                'onClick' => url(route('access.user.upload', ['token' => $access->access_token])),
             ],
         ]);
     }

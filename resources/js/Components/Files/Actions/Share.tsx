@@ -14,10 +14,19 @@ import { FormEventHandler, useState, useEffect } from 'react'
 import { Button } from '@/Components/ui/button'
 import { useForm } from '@inertiajs/react'
 import { toast } from 'sonner'
+import AccessFileLink from '../AccessFileLink'
 
-export default function FileShare({ file }: { file: FileType }) {
+export default function FileShare({
+    file,
+    accessLink,
+}: {
+    file: FileType
+    accessLink?: string
+}) {
     // console.log(link)
     const [val, setVal] = useState(1)
+    const [open, setIsOpen] = useState(false)
+    const [openLink, setIsOpenLink] = useState(false)
     const { post, reset, errors, processing, setData } = useForm({
         file_id: file.id,
         user_limit: val,
@@ -30,9 +39,10 @@ export default function FileShare({ file }: { file: FileType }) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault()
         post(route('access.upload'), {
-            // onSuccess: () => {
-            //     toast('Ссылка успешно создана: ', { description: link })
-            // },
+            onSuccess: () => {
+                setIsOpen(false)
+                setIsOpenLink(true)
+            },
         })
     }
 
@@ -54,39 +64,50 @@ export default function FileShare({ file }: { file: FileType }) {
     }
 
     return (
-        <Dialog>
-            <DialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                <Share2 className="mr-2 h-4 w-4" />
-                Поделиться
-            </DialogTrigger>
-            <DialogContent className="min-w-fit">
-                <DialogHeader className="h-min">
-                    <DialogTitle>
-                        Поделиться файлом {file.name}.{file.extension.extension}
-                    </DialogTitle>
-                    <DialogDescription>
-                        Выберите кол-во человек, которые получат доступ к файлу
-                        <span className="block">
-                            После будет сгенерированная ссылка
-                        </span>
-                    </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={submit} className="flex flex-col gap-4">
-                    <p className="text-center">
-                        Файл получат: {getPeopleText(val)}
-                    </p>
-                    <Slider
-                        defaultValue={[val]}
-                        max={50}
-                        min={1}
-                        step={1}
-                        onValueChange={(i) => setVal(i[0])}
-                    />
-                    <Button type="submit" disabled={processing}>
-                        Поделиться
-                    </Button>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <>
+            <Dialog open={open}>
+                <DialogTrigger
+                    onClick={() => setIsOpen(true)}
+                    className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Поделиться
+                </DialogTrigger>
+                <DialogContent className="min-w-fit">
+                    <DialogHeader className="h-min">
+                        <DialogTitle>
+                            Поделиться файлом {file.name}.
+                            {file.extension.extension}
+                        </DialogTitle>
+                        <DialogDescription>
+                            Выберите кол-во человек, которые получат доступ к
+                            файлу
+                            <span className="block">
+                                После будет сгенерированная ссылка
+                            </span>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={submit} className="flex flex-col gap-4">
+                        <p className="text-center">
+                            Файл получат: {getPeopleText(val)}
+                        </p>
+                        <Slider
+                            defaultValue={[val]}
+                            max={50}
+                            min={1}
+                            step={1}
+                            onValueChange={(i) => setVal(i[0])}
+                        />
+                        <Button type="submit" disabled={processing}>
+                            Поделиться
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            <AccessFileLink
+                file={file}
+                accessLink={accessLink}
+                openLink={openLink}
+            />
+        </>
     )
 }
