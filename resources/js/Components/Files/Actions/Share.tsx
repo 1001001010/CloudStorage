@@ -23,7 +23,6 @@ export default function FileShare({
     file: FileType
     accessLink?: string
 }) {
-    // console.log(link)
     const [val, setVal] = useState(1)
     const [open, setIsOpen] = useState(false)
     const [openLink, setIsOpenLink] = useState(false)
@@ -65,7 +64,7 @@ export default function FileShare({
 
     return (
         <>
-            <Dialog open={open}>
+            <Dialog open={open} onOpenChange={setIsOpen}>
                 <DialogTrigger
                     onClick={() => setIsOpen(true)}
                     className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
@@ -107,6 +106,7 @@ export default function FileShare({
                 file={file}
                 accessLink={accessLink}
                 openLink={openLink}
+                setIsOpenLink={setIsOpenLink}
             />
         </>
     )

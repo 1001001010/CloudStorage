@@ -1,10 +1,12 @@
 'use client'
 
 import {
+    AlignEndVerticalIcon,
     ChevronRight,
     Files,
     Folder,
     GalleryVerticalEnd,
+    ScanEye,
     Trash2,
     Upload,
 } from 'lucide-react'
@@ -112,6 +114,18 @@ const data = {
                 },
             ],
         },
+        {
+            title: 'Панель администратора',
+            url: '#',
+            icon: ScanEye,
+            isActive: false,
+            items: [
+                {
+                    title: 'Пользователи',
+                    url: route('admin.users'),
+                },
+            ],
+        },
     ],
 }
 
@@ -166,6 +180,12 @@ export default function SideBarComponent({
                         <SidebarMenu>
                             <Link href={route('trash.index')}>
                                 <SidebarMenuButton>
+                                    <AlignEndVerticalIcon className="mr-2 h-4 w-4" />
+                                    <span>Общий доступ</span>
+                                </SidebarMenuButton>
+                            </Link>
+                            <Link href={route('trash.index')}>
+                                <SidebarMenuButton>
                                     <Trash2 />
                                     <span>Корзина</span>
                                 </SidebarMenuButton>
@@ -190,12 +210,16 @@ export default function SideBarComponent({
                                                 {item.items?.map((subItem) => (
                                                     <SidebarMenuSubItem
                                                         key={subItem.title}>
-                                                        <SidebarMenuSubButton
-                                                            asChild>
-                                                            <span>
-                                                                {subItem.title}
-                                                            </span>
-                                                        </SidebarMenuSubButton>
+                                                        <a href={subItem.url}>
+                                                            <SidebarMenuSubButton
+                                                                asChild>
+                                                                <span>
+                                                                    {
+                                                                        subItem.title
+                                                                    }
+                                                                </span>
+                                                            </SidebarMenuSubButton>
+                                                        </a>
                                                     </SidebarMenuSubItem>
                                                 ))}
                                             </SidebarMenuSub>
@@ -239,9 +263,7 @@ export default function SideBarComponent({
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    <UserDropDownMenu
-                        auth={user}
-                        isMobile={isMobile} />
+                    <UserDropDownMenu auth={user} isMobile={isMobile} />
                 </SidebarFooter>
             </Sidebar>
         </>

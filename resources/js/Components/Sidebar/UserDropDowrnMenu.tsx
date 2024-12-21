@@ -100,7 +100,7 @@ export default function UserDropDownMenu({
                                 Профиль
                             </DropdownMenuItem>
                         </Link>
-                        {auth.user?.is_admin == true ? (
+                        {/* {auth.user?.is_admin == true ? (
                             <Link
                                 href={route('admin.index')}
                                 className="w-full">
@@ -109,7 +109,7 @@ export default function UserDropDownMenu({
                                     Панель администратора
                                 </DropdownMenuItem>
                             </Link>
-                        ) : null}
+                        ) : null} */}
                         <DropdownMenuItem>
                             <Bell />
                             Notifications
