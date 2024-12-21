@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('file_user_access', function (Blueprint $table) {
+        Schema::create('file_user_accesses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('file_access_token_id');
             $table->unsignedBigInteger('user_id');
