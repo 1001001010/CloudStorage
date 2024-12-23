@@ -8,19 +8,11 @@ import {
 import { Button } from '@/Components/ui/button'
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
-import { File, Folder } from 'lucide-react'
-import { FormEventHandler, useEffect, useRef, useState } from 'react'
+import { Folder } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import FileContext from './FileContext'
-import { Input } from '@/Components/ui/input'
-import { Label } from '@/Components/ui/label'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from '@/Components/ui/dialog'
+import RenameLoadFile from './MainFilesComponents/RenameLoadFile'
+import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
 
 export type FolderOrFile = any
 
@@ -81,12 +73,6 @@ export default function MainFiles({
         setCurrentFolderId(folderId)
     }
 
-    const handleBreadcrumbClick = (index: number) => {
-        setCurrentPath(currentPath.slice(0, index + 1))
-        setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
-        setCurrentFolderId(index === 0 ? 0 : currentPath[index][0].id)
-    }
-
     function dragStartHandler(e: any) {
         e.preventDefault()
         setDrag(true)
@@ -112,16 +98,6 @@ export default function MainFiles({
         const fileExt = fileName.slice(fileName.lastIndexOf('.') + 1)
         setFileExtension(fileExt)
         setDrag(false)
-    }
-
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault()
-        post(route('file.upload'), {
-            onSuccess: () => {
-                window.location.reload()
-            },
-        })
-        setIsDialogOpen(false)
     }
 
     useEffect(() => {
@@ -159,25 +135,13 @@ export default function MainFiles({
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
-                        <Breadcrumb className="pb-2">
-                            <BreadcrumbList>
-                                {breadcrumbPath.map((title, index) => (
-                                    <BreadcrumbItem key={index}>
-                                        <BreadcrumbLink
-                                            className="cursor-pointer"
-                                            onClick={() =>
-                                                handleBreadcrumbClick(index)
-                                            }>
-                                            {title}
-                                        </BreadcrumbLink>
-                                        {index < breadcrumbPath.length - 1 && (
-                                            <BreadcrumbSeparator />
-                                        )}
-                                    </BreadcrumbItem>
-                                ))}
-                            </BreadcrumbList>
-                        </Breadcrumb>
-
+                        <BreadcrumbFile
+                            breadcrumbPath={breadcrumbPath}
+                            currentPath={currentPath}
+                            setCurrentPath={setCurrentPath}
+                            setBreadcrumbPath={setBreadcrumbPath}
+                            setCurrentFolderId={setCurrentFolderId}
+                        />
                         <div className="grids grid min-h-[200px] items-center justify-center gap-5">
                             {currentPath[currentPath.length - 1] &&
                             currentPath[currentPath.length - 1].length > 0 ? (
@@ -221,36 +185,14 @@ export default function MainFiles({
                 </div>
             )}
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={submit}>
-                        <DialogHeader>
-                            <DialogTitle>Имя файла слишком длинное</DialogTitle>
-                            <DialogDescription>
-                                Введите новое имя файла, что сохранить его
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="flex items-center gap-4">
-                                <Input
-                                    id="name"
-                                    placeholder="Название файла"
-                                    maxLength={20}
-                                    onChange={(e) =>
-                                        setData('file_name', e.target.value)
-                                    }
-                                />
-                                <Label htmlFor="name" className="text-right">
-                                    .{fileExtension}
-                                </Label>
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button disabled={processing}>Сохранить</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            <RenameLoadFile
+                isDialogOpen={isDialogOpen}
+                setIsDialogOpen={setIsDialogOpen}
+                post={post}
+                setData={setData}
+                processing={processing}
+                fileExtension={fileExtension}
+            />
         </>
     )
 }

@@ -1,12 +1,9 @@
 import { File, PageProps } from '@/types'
-import Layout from '@/Layouts/Layout'
-import TrashFiles from '@/Components/Files/TrashFiles'
-import EditorField from '@/Components/Editor/EditorField'
 import { TabsContent } from '@/Components/ui/tabs'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { RotateCcw } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from '@inertiajs/react'
 
 export default function TextTabs({ file }: PageProps<{ file: File }>) {

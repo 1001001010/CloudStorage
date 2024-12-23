@@ -1,31 +1,13 @@
-// import { Metadata } from 'next'
-// import Image from 'next/image'
-import { Code2, RotateCcw, TextIcon } from 'lucide-react'
-
-import { Button } from '../ui/button'
+import { Code2, TextIcon } from 'lucide-react'
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from '@/Components/ui/hover-card'
-import { Label } from '@/Components/ui/label'
 import { Separator } from '@/Components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
-import { Textarea } from '@/Components/ui/textarea'
-
-import { CodeViewer } from './components/code-viewer'
-import { MaxLengthSelector } from './components/maxlength-selector'
-import { ModelSelector } from './components/model-selector'
-import { PresetActions } from './components/preset-actions'
-import { PresetSave } from './components/preset-save'
-import { PresetSelector } from './components/preset-selector'
+import { Tabs, TabsList, TabsTrigger } from '@/Components/ui/tabs'
 import { PresetShare } from './components/preset-share'
-import { TemperatureSelector } from './components/temperature-selector'
-import { TopPSelector } from './components/top-p-selector'
-import { models, types } from './data/models'
-import { presets } from './data/presets'
 import { PageProps, File } from '@/types'
-import { useEffect, useState } from 'react'
 import TextTabs from './Tabs/TextTabs'
 import CodeTabs from './Tabs/CodeTabs'
 
