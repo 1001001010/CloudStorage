@@ -7,22 +7,25 @@ import {
 } from '@/Components/ui/context-menu'
 import { File as FileType } from '@/types'
 import { PenLine } from 'lucide-react'
-import FilePreview from './FilePreview'
 import { Button } from '@/Components/ui/button'
-import FileDelete from './Actions/Delete'
-import FileDownload from './Actions/Download'
-import FileRestore from './Actions/Restore'
-import FileForceDelete from './Actions/ForceDelete'
-import FileEdit from './Actions/FileEdit'
-import FileRename from './Actions/Rename'
 import {
     imageExtensions,
     textAndCodeExtensions,
     videoExtensions,
 } from '@/extensions'
-import FilePhotoView from './Actions/PhotoView'
-import FileVideoView from './Actions/VideoView'
-import FileShare from './Actions/Share'
+
+import {
+    FilePhotoView,
+    FileVideoView,
+    FileShare,
+    FilePreview,
+    FileDelete,
+    FileDownload,
+    FileRestore,
+    FileForceDelete,
+    FileEdit,
+    FileRename,
+} from '@/Components/Files/Actions/index'
 
 export default function FileContext({
     file,

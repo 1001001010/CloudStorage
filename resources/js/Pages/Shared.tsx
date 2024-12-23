@@ -2,7 +2,7 @@ import { File, Folder, PageProps, ToastMessage } from '@/types'
 import Layout from '@/Layouts/Layout'
 import AuthAlert from './Auth/AuthAlert'
 import MainFiles from '@/Components/Files/MainFiles'
-import FileContext from '@/Components/Files/FileContext'
+import FileContext from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FileContext'
 
 export default function Welcome({
     auth,

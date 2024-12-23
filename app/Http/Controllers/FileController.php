@@ -50,7 +50,9 @@ class FileController extends Controller
 
             $existingFile = File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first(); // Проверка на существование такого файла
             if ($existingFile) {
-                return redirect()->back()->with('msg', 'Файл уже существует - ' . $existingFile->name . '.' . $fileExtension);
+                return redirect()->back()->with('msg', [
+                    'title' => "Файл уже существует - $existingFile->name.$fileExtension",
+                ]);
             }
 
             $path = $file->storeAs('files', $newPath, 'public');
@@ -189,8 +191,14 @@ class FileController extends Controller
             ]);
         }
         $file->forceDelete();
+
+        $filePath = 'public/' . $file->path;
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
         return redirect()->back()->with('msg', [
             'title' => 'Файл полностью удален',
         ]);
     }
+    
 }

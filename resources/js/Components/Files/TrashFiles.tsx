@@ -16,8 +16,7 @@ import { useForm } from '@inertiajs/react'
 import { File as FileType, Folder } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import FileContext from './FileContext'
-import FilePreview from './FilePreview'
+import FileContext from './MainFilesComponents/FoldersAndFiles/FileContext'
 
 export type FolderOrFile = any
 
