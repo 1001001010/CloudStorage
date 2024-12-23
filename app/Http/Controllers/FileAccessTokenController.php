@@ -11,8 +11,20 @@ use App\Models\{File, FileAccessToken, FileUserAccess};
 
 class FileAccessTokenController extends Controller
 {
-    public function index(): Response {
-        return Inertia::render('Shared');
+    public function index(): Response
+    {
+        $user = Auth::user();
+
+        $files = FileUserAccess::with(['accessToken.file',
+                                        'accessToken.file.extension',
+                                        'accessToken.file.user',
+                                        'accessToken.file.mimeType'])->where('user_id', $user->id)->get()
+        ->map(function ($fileUserAccess) {
+            return $fileUserAccess->accessToken->file;
+        })->unique();
+        return Inertia::render('Shared', [
+            'files' => $files,
+        ]);
     }
 
     public function upload(AccessUploadRequest $request): RedirectResponse {
@@ -38,36 +50,33 @@ class FileAccessTokenController extends Controller
     }
 
     public function invite($token) {
-        // $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
-        // if($access->file->user_id == Auth::id()) {
-        //     return redirect()->back()->with('msg', [
-        //         'title' => 'Вы не можете поделиться файлом с собой'
-        //     ]);
-        // }
-        // if($access->canAddUser()) {
-        //     $userAcess = FileUserAccess::where('file_access_token_id', $access->id)->where('user_id', Auth::id())->first();
-        //     if ($userAcess) {
-        //         return redirect()->back()->with('msg', [
-        //             'title' => 'Файлы успешно загружен',
-        //         ]);
-        //     } else {
-        //         FileUserAccess::create([
-        //             'file_access_token_id' => $access->id,
-        //             'user_id' => Auth::id()
-        //         ]);
-        //         // return redirect()->back()->with('msg', [
-        //         //     'title' => 'Доступ к файлу закрыт',
-        //         // ]);
-        //         return redirect(route('shared.index'))->with('msg', [
-        //             'title' => 'Доступ получен',
-        //             'description' => 'Можете просмотреть его в вкладке "Общий доступ"'
-        //         ]);
-        //     }
-        // } else {
-        //     return redirect()->back()->with('msg', [
-        //         'title' => 'Доступ к файлу закрыт',
-        //     ]);
-        // }
-        return redirect()->back()->with('msg', ['title' => 'Папка не найдена']);
+        $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
+        if($access->file->user_id == Auth::id()) {
+            return redirect()->back()->with('msg', [
+                'title' => 'Вы не можете поделиться файлом с собой'
+            ]);
+        }
+        if($access->canAddUser()) {
+            $userAcess = FileUserAccess::where('file_access_token_id', $access->id)->where('user_id', Auth::id())->first();
+            if ($userAcess) {
+                return redirect()->back()->with('msg', [
+                    'title' => 'Файлы успешно загружен',
+                ]);
+            } else {
+                FileUserAccess::create([
+                    'file_access_token_id' => $access->id,
+                    'user_id' => Auth::id()
+                ]);
+
+                return redirect(route('shared.index'))->with('msg', [
+                    'title' => 'Доступ получен',
+                    'description' => 'Можете просмотреть его в вкладке "Общий доступ"'
+                ]);
+            }
+        } else {
+            return redirect()->back()->with('msg', [
+                'title' => 'Доступ к файлу закрыт',
+            ]);
+        }
     }
 }

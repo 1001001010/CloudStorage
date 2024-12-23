@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\{Storage, Auth};
 use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\{File, Folder, FileExtension,
-    MimeType};
+    MimeType, FileUserAccess};
 use Illuminate\Http\RedirectResponse;
 
 class FileController extends Controller
@@ -48,9 +48,9 @@ class FileController extends Controller
                 ['mime_type' => $mimeType]
             );
 
-            $existingFile = File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first(); // Проверка на сущестование такого файла
+            $existingFile = File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first(); // Проверка на существование такого файла
             if ($existingFile) {
-            return redirect()->back()->with('msg', 'Файл уже существует - ' . $existingFile->name . '.' . $fileExtension);
+                return redirect()->back()->with('msg', 'Файл уже существует - ' . $existingFile->name . '.' . $fileExtension);
             }
 
             $path = $file->storeAs('files', $newPath, 'public');
@@ -65,31 +65,64 @@ class FileController extends Controller
                 'user_id' => Auth::id(),
                 'size' => $file->getSize()
             ]);
-            return redirect()->route('index')->with('msg', [
-                'title' => 'Файлы успешно загружен',
+        }
+
+        return redirect()->route('index')->with('msg', [
+            'title' => 'Файлы успешно загружены',
+        ]);
+    }
+
+
+    /**
+     * Логика скачивания файла
+     */
+    public function download($file)
+    {
+        $fileRecord = File::with('extension')->find($file);
+
+        if ($fileRecord) {
+            if ($fileRecord->user_id == Auth::id()) {
+                return $this->serveFile($fileRecord); // Проверка на владельца файла
+            }
+
+            $hasAccess = $this->userHasAccessToFile($fileRecord->id, Auth::id());
+            if ($hasAccess) {
+                return $this->serveFile($fileRecord);
+            }
+
+            return redirect()->back()->with('msg', [
+                'title' => 'У вас нет прав на просмотр этого файла',
             ]);
         }
+
+        return redirect()->back()->with('msg', [
+            'title' => 'Файл не найден',
+        ]);
+    }
+
+    /**
+     * Проверка наличия токена доступа у пользователя
+     */
+    protected function userHasAccessToFile($fileId, $userId)
+    {
+        return FileUserAccess::whereHas('accessToken', function ($query) use ($fileId) {
+            $query->where('file_id', $fileId);
+        })->where('user_id', $userId)->exists();
     }
 
     /**
      * Скачивание файла
      */
-    public function download($file)
+    protected function serveFile($fileRecord)
     {
-        $fileRecord = File::with('extension')->find($file);
-        if ($fileRecord && $fileRecord->user_id == Auth::id()) {
-            $filePath = storage_path('/app/public/' . $fileRecord->path);
-            if (file_exists($filePath)) {
-                $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
-                return response()->download($filePath, $fileName);
-            } else {
-                return redirect()->back()->with('msg', [
-                    'title' => 'Файлы не найден',
-                ]);
-            }
+        $filePath = storage_path('/app/public/' . $fileRecord->path);
+
+        if (file_exists($filePath)) {
+            $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
+            return response()->download($filePath, $fileName);
         } else {
             return redirect()->back()->with('msg', [
-                'title' => 'Файлы не найден',
+                'title' => 'Файл не найден на сервере',
             ]);
         }
     }

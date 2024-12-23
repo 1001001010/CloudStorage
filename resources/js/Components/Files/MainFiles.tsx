@@ -20,7 +20,7 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter,
-} from '@/components/ui/dialog'
+} from '@/Components/ui/dialog'
 
 export type FolderOrFile = any
 
@@ -47,6 +47,7 @@ export default function MainFiles({
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
+    const [toastMessages, setToastMessages] = useState<any[]>([])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
@@ -99,22 +100,14 @@ export default function MainFiles({
     const onDrophandler = (e: any) => {
         e.preventDefault()
         let files = [...e.dataTransfer.files]
-        if (files[0]['name'].length > 20) {
+        if (files.some((file) => file.name.length > 20)) {
             setIsDialogOpen(true)
         }
-        if (currentFolderId !== 0) {
-            setData({
-                folder_id: currentFolderId,
-                files: files,
-                file_name: null,
-            })
-        } else {
-            setData({
-                folder_id: null,
-                files: files,
-                file_name: null,
-            })
-        }
+        setData({
+            folder_id: currentFolderId !== 0 ? currentFolderId : null,
+            files: files,
+            file_name: null,
+        })
         const fileName = files[0].name
         const fileExt = fileName.slice(fileName.lastIndexOf('.') + 1)
         setFileExtension(fileExt)
@@ -123,13 +116,21 @@ export default function MainFiles({
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault()
-        post(route('file.upload'))
+        post(route('file.upload'), {
+            onSuccess: () => {
+                window.location.reload()
+            },
+        })
         setIsDialogOpen(false)
     }
 
     useEffect(() => {
         if (data.files && data.files[0]['name'].length < 20) {
-            post(route('file.upload'))
+            post(route('file.upload'), {
+                onSuccess: () => {
+                    window.location.reload()
+                },
+            })
         }
     }, [data.files, data.folder_id])
 

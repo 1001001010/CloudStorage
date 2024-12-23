@@ -58,8 +58,6 @@ export default function Layout({
         setDefaultOpen(cookieValue === 'true')
     }, [])
 
-    const textToCopy = msg?.action?.onClick ? String(msg.action.onClick) : ''
-
     useEffect(() => {
         if (msg && !hasShownMessage.current) {
             toast(msg.title, {

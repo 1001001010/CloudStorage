@@ -28,9 +28,11 @@ export default function FileContext({
     file,
     trash,
     accessLink,
+    general,
 }: {
     file: FileType
     trash?: boolean
+    general?: boolean
     accessLink?: string
 }) {
     const [isEditing, setIsEditing] = useState(false)
@@ -83,6 +85,12 @@ export default function FileContext({
                     <>
                         <FileRestore file={file} />
                         <FileForceDelete file={file} />
+                    </>
+                ) : general ? (
+                    <>
+                        <FileDownload file={file} />
+                        {isImageFile && <FilePhotoView file={file} />}
+                        {isVideoFile && <FileVideoView file={file} />}
                     </>
                 ) : (
                     <>
