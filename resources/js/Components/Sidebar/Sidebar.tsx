@@ -38,6 +38,8 @@ import { Button } from '@/Components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import NewFolder from '../Folder/NewFolder'
 import { Folder as FolderType } from '@/types'
+import UserDataLink from './data/UsersData'
+import AdminDataLink from './data/AdminData'
 export const iframeHeight = '800px'
 
 const formatFileSize = (bytes: number) => {
@@ -114,6 +116,11 @@ const data = {
                 },
             ],
         },
+    ],
+}
+
+const AdminData = {
+    navMain: [
         {
             title: 'Панель администратора',
             url: '#',
@@ -137,7 +144,7 @@ export default function SideBarComponent({
     FoldersTree: FolderType[]
 }) {
     const { open, isMobile } = useSidebar()
-    const user = usePage().props.auth
+    const auth = usePage().props.auth
 
     return (
         <>
@@ -168,7 +175,7 @@ export default function SideBarComponent({
                         <SidebarMenuItem>
                             <NewFolder
                                 open={open}
-                                auth={user}
+                                auth={auth}
                                 FoldersTree={FoldersTree}
                             />
                         </SidebarMenuItem>
@@ -190,49 +197,14 @@ export default function SideBarComponent({
                                     <span>Корзина</span>
                                 </SidebarMenuButton>
                             </Link>
-                            {data.navMain.map((item) => (
-                                <Collapsible
-                                    key={item.title}
-                                    asChild
-                                    defaultOpen={item.isActive}
-                                    className="group/collapsible">
-                                    <SidebarMenuItem>
-                                        <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton
-                                                tooltip={item.title}>
-                                                {item.icon && <item.icon />}
-                                                <span>{item.title}</span>
-                                                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                            </SidebarMenuButton>
-                                        </CollapsibleTrigger>
-                                        <CollapsibleContent>
-                                            <SidebarMenuSub>
-                                                {item.items?.map((subItem) => (
-                                                    <SidebarMenuSubItem
-                                                        key={subItem.title}>
-                                                        <a href={subItem.url}>
-                                                            <SidebarMenuSubButton
-                                                                asChild>
-                                                                <span>
-                                                                    {
-                                                                        subItem.title
-                                                                    }
-                                                                </span>
-                                                            </SidebarMenuSubButton>
-                                                        </a>
-                                                    </SidebarMenuSubItem>
-                                                ))}
-                                            </SidebarMenuSub>
-                                        </CollapsibleContent>
-                                    </SidebarMenuItem>
-                                </Collapsible>
-                            ))}
+                            <UserDataLink />
+                            <AdminDataLink auth={auth} />
                         </SidebarMenu>
                     </SidebarGroup>
                 </SidebarContent>
 
                 <SidebarFooter>
-                    <ThemeButton auth={user}></ThemeButton>
+                    <ThemeButton auth={auth}></ThemeButton>
                     <AnimatePresence>
                         {open && (
                             <motion.div
@@ -263,7 +235,7 @@ export default function SideBarComponent({
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    <UserDropDownMenu auth={user} isMobile={isMobile} />
+                    <UserDropDownMenu auth={auth} isMobile={isMobile} />
                 </SidebarFooter>
             </Sidebar>
         </>

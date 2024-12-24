@@ -10,7 +10,7 @@ class AdminController extends Controller
 {
     public function index(): Response {
         return Inertia::render('Admin/Users', [
-            'users' => User::all(),
+            'users' => User::withCount(['files', 'folders'])->get(),
         ]);
     }
 }

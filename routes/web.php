@@ -44,7 +44,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {
-            Route::get('/admin', 'index')->name('admin.users');
+            Route::get('/admin/users', 'index')->name('admin.users');
         });
     });
 

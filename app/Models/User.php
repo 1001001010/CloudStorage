@@ -62,12 +62,22 @@ class User extends Authenticatable
         return $this->hasMany(Folder::class);
     }
 
+    public function folderCount(): int // Подсчет кол-ва созданных файлов : int
+    {
+        return $this->folders()->count();
+    }
+
     /**
      * Связь с моделей File
      */
     public function files()
     {
         return $this->hasMany(File::class);
+    }
+
+    public function fileCount(): int // Подсчет кол-ва загруженных файлов : int
+    {
+        return $this->files()->count();
     }
 
     /**
