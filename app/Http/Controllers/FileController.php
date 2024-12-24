@@ -190,15 +190,11 @@ class FileController extends Controller
                 'title' => 'Файл не найден',
             ]);
         }
-        $file->forceDelete();
 
-        $filePath = 'public/' . $file->path;
-        if (Storage::exists($filePath)) {
-            Storage::delete($filePath);
-        }
+        Storage::disk('public')->delete($file->path);
+        $file->forceDelete();
         return redirect()->back()->with('msg', [
             'title' => 'Файл полностью удален',
         ]);
     }
-    
 }

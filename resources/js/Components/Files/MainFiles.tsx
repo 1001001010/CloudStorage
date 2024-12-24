@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import RenameLoadFile from './MainFilesComponents/RenameLoadFile'
 import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
+import { Upload } from 'lucide-react'
 
 export type FolderOrFile = any
 
@@ -30,12 +31,9 @@ export default function MainFiles({
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
-    const [toastMessages, setToastMessages] = useState<any[]>([])
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
-
-    const filesRef = useRef<File[] | null>(null)
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
@@ -111,11 +109,21 @@ export default function MainFiles({
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}
                         onDrop={(e) => onDrophandler(e)}>
-                        <div className="flex w-full flex-col gap-2 pt-5 text-center">
-                            <p className="text-xl">Перетащите файлы</p>
-                            <p className="text-lg text-white/80">
-                                максимальный размер файла - 2ГБ
-                            </p>
+                        <div className="flex h-[33vh] flex-col items-center justify-center gap-4 sm:px-5">
+                            <div className="rounded-full border border-dashed p-3">
+                                <Upload
+                                    className="size-7 text-muted-foreground"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-px">
+                                <p className="text-center text-xl font-medium text-muted-foreground">
+                                    Перетащите файлы, чтобы загрузить
+                                </p>
+                                <p className="text-m text-center text-muted-foreground/70">
+                                    Максимальный размер одного файла - 2ГБ
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

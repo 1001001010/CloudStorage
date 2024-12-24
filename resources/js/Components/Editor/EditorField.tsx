@@ -25,12 +25,6 @@ export default function EditorField({
                             <h2 className="text-lg font-semibold">
                                 Редактирование
                             </h2>
-                            <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-                                <div className="hidden space-x-2 md:flex">
-                                    {/* <CodeViewer /> */}
-                                    <PresetShare />
-                                </div>
-                            </div>
                         </div>
                         <Separator />
                         <Tabs defaultValue="complete" className="flex-1">
@@ -41,7 +35,7 @@ export default function EditorField({
                                             <HoverCard openDelay={200}>
                                                 <HoverCardTrigger asChild>
                                                     <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                        Mode
+                                                        Режим
                                                     </span>
                                                 </HoverCardTrigger>
                                                 <HoverCardContent
