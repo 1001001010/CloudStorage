@@ -36,7 +36,7 @@ export default function Welcome({
                                             {item.hasOwnProperty('name') ? (
                                                 <FileContext
                                                     file={item}
-                                                    general={true}
+                                                    shared={true}
                                                 />
                                             ) : null}
                                         </div>

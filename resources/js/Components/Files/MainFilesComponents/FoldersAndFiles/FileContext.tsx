@@ -25,17 +25,18 @@ import {
     FileForceDelete,
     FileEdit,
     FileRename,
+    FileInfo,
 } from '@/Components/Files/Actions/File/index'
 
 export default function FileContext({
     file,
     trash,
     accessLink,
-    general,
+    shared,
 }: {
     file: FileType
     trash?: boolean
-    general?: boolean
+    shared?: boolean
     accessLink?: string
 }) {
     const [isEditing, setIsEditing] = useState(false)
@@ -89,9 +90,10 @@ export default function FileContext({
                         <FileRestore file={file} />
                         <FileForceDelete file={file} />
                     </>
-                ) : general ? (
+                ) : shared ? (
                     <>
                         <FileDownload file={file} />
+                        <FileInfo file={file} role={'Receiver'} />
                         {isImageFile && <FilePhotoView file={file} />}
                         {isVideoFile && <FileVideoView file={file} />}
                     </>
