@@ -8,8 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-} from '@/components/ui/dialog'
-import React from 'react'
+} from '@/Components/ui/dialog'
 import ReactPlayer from 'react-player'
 
 export default function FileVideoView({ file }: { file: FileType }) {

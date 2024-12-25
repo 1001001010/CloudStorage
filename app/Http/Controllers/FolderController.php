@@ -28,4 +28,22 @@ class FolderController extends Controller
 
         return redirect()->back();
     }
+
+    /**
+     * Мягкое удаление папки
+     */
+    public function delete($folder) : RedirectResponse
+    {
+        $folder = Folder::where('user_id', Auth::id())->find($folder);
+
+        if(!$folder) {
+            return redirect()->back()->with('msg', [
+                'title' => 'Папка не найдена',
+            ]);
+        }
+        $folder->delete();
+        return redirect()->route('index')->with('msg', [
+            'title' => 'Папка успешно удалена',
+        ]);
+    }
 }
