@@ -1,6 +1,5 @@
-import { Button } from '@/Components/ui/button'
-import { Folder } from 'lucide-react'
 import FileContext from './FileContext'
+import FolderContext from './FolderContext'
 
 export type FolderOrFile = any
 
@@ -26,20 +25,10 @@ export default function FoldersAndFiles({
                                     accessLink={accessLink}
                                 />
                             ) : (
-                                <Button
-                                    variant="ghost"
-                                    className="flex h-full w-full flex-col items-center"
-                                    onClick={() =>
-                                        handleFolderClick(
-                                            item.children,
-                                            item.files,
-                                            item.title,
-                                            item.id
-                                        )
-                                    }>
-                                    <Folder size={80} className="!h-20 !w-20" />
-                                    {item.title}
-                                </Button>
+                                <FolderContext
+                                    folder={item}
+                                    handleFolderClick={handleFolderClick}
+                                />
                             )}
                         </div>
                     ))

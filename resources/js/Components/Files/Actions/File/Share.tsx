@@ -1,4 +1,3 @@
-import { ContextMenuItem } from '@/Components/ui/context-menu'
 import { File as FileType } from '@/types'
 import { Share2 } from 'lucide-react'
 import {
@@ -8,13 +7,12 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-} from '@/components/ui/dialog'
+} from '@/Components/ui/dialog'
 import { Slider } from '@/Components/ui/slider'
 import { FormEventHandler, useState, useEffect } from 'react'
 import { Button } from '@/Components/ui/button'
 import { useForm } from '@inertiajs/react'
-import { toast } from 'sonner'
-import AccessFileLink from '../AccessFileLink'
+import AccessFileLink from '../../AccessFileLink'
 
 export default function FileShare({
     file,

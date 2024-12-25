@@ -25,7 +25,7 @@ import {
     FileForceDelete,
     FileEdit,
     FileRename,
-} from '@/Components/Files/Actions/index'
+} from '@/Components/Files/Actions/File/index'
 
 export default function FileContext({
     file,

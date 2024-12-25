@@ -36,7 +36,7 @@ const data = {
 export default function AdminDataLink({ auth }: PageProps<{}>) {
     return (
         <>
-            {auth && auth.user.is_admin == true ? (
+            {auth.user && auth.user.is_admin == true ? (
                 <>
                     {data.navMain.map((item) => (
                         <Collapsible

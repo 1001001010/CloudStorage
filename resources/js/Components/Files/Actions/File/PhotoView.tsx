@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-} from '@/components/ui/dialog'
+} from '@/Components/ui/dialog'
 
 export default function FilePhotoView({ file }: { file: FileType }) {
     const [scale, setScale] = useState(1)
