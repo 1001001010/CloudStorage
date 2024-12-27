@@ -1,6 +1,6 @@
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import RenameLoadFile from './MainFilesComponents/RenameLoadFile'
 import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
@@ -9,8 +9,6 @@ import { Upload } from 'lucide-react'
 export type FolderOrFile = any
 
 export default function MainFiles({
-    auth,
-    FoldersTree,
     FoldersFilesTree,
     accessLink,
 }: {
@@ -19,12 +17,11 @@ export default function MainFiles({
     FoldersFilesTree: any[]
     accessLink?: string
 }) {
-    const { data, setData, post, errors, processing, recentlySuccessful } =
-        useForm({
-            folder_id: null as number | null,
-            files: null as File[] | null,
-            file_name: null as string | null,
-        })
+    const { data, setData, post, processing } = useForm({
+        folder_id: null as number | null,
+        files: null as File[] | null,
+        file_name: null as string | null,
+    })
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false)

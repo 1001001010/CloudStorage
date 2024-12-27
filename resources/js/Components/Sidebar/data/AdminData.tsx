@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronRight, Files, Folder, ScanEye } from 'lucide-react'
+import { ChevronRight, ScanEye } from 'lucide-react'
 import {
     SidebarMenuButton,
     SidebarMenuItem,

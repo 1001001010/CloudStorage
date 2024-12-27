@@ -1,21 +1,5 @@
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbSeparator,
-} from '@/Components/ui/breadcrumb'
-import { Button } from '@/Components/ui/button'
-import {
-    Folder as FolderTypes,
-    PageProps,
-    File as FileTypes,
-    File,
-} from '@/types'
-import { useForm } from '@inertiajs/react'
-import { File as FileType, Folder } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { PageProps, File as FileTypes } from '@/types'
+
 import FileContext from './MainFilesComponents/FoldersAndFiles/FileContext'
 
 export type FolderOrFile = any

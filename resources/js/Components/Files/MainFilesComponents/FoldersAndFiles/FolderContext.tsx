@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import {
     ContextMenu,
     ContextMenuContent,
     ContextMenuTrigger,
 } from '@/Components/ui/context-menu'
 import { Folder as FolderType } from '@/types'
-import { Folder, PenLine } from 'lucide-react'
+import { Folder } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 import FolderDelete from '../../Actions/Folder/Delete'
 

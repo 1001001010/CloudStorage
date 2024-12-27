@@ -57,7 +57,9 @@ export default function FileInfo({
                 </div>
                 <div>
                     <p>
-                        <span className="font-bold">Отправитель: </span>
+                        <span className="font-bold">
+                            Отправитель: {file.user.name}
+                        </span>
                     </p>
                 </div>
             </DialogContent>

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { Input } from '@/Components/ui/input'
 import { useForm } from '@inertiajs/react'
 
@@ -12,10 +12,9 @@ interface RenameProps {
 export default function FileRename({
     fileId,
     initialName,
-    onCancel,
     onRename,
 }: RenameProps) {
-    const { setData, patch, processing, reset } = useForm({
+    const { setData, patch, reset } = useForm({
         name: initialName,
     })
     const inputRef = useRef<HTMLInputElement>(null)

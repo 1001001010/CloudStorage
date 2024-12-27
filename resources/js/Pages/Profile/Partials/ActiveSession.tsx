@@ -1,5 +1,5 @@
-import React, { useState, useEffect, FormEventHandler } from 'react'
-import { Button } from '@/components/ui/button'
+import React, { FormEventHandler } from 'react'
+import { Button } from '@/Components/ui/button'
 import type { Session } from '@/types'
 import { useForm } from '@inertiajs/react'
 

@@ -13,7 +13,6 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from '@/Components/ui/collapsible'
-import { Folder as FolderType } from '@/types'
 export const iframeHeight = '800px'
 
 const data = {

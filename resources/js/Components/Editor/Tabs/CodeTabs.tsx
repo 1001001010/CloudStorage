@@ -11,7 +11,7 @@ export default function CodeTabs({
     file,
     language,
 }: PageProps<{ file: File; language: string }>) {
-    const { data, setData, post, reset } = useForm({
+    const { setData, post } = useForm({
         fileText: file.content || '',
     })
 

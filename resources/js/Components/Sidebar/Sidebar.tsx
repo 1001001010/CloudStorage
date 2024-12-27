@@ -2,11 +2,7 @@
 
 import {
     AlignEndVerticalIcon,
-    ChevronRight,
-    Files,
-    Folder,
     GalleryVerticalEnd,
-    ScanEye,
     Trash2,
     Upload,
 } from 'lucide-react'
@@ -19,20 +15,12 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
     useSidebar,
 } from '@/Components/ui/sidebar'
 import { Link, usePage } from '@inertiajs/react'
 import UserDropDownMenu from './UserDropDowrnMenu'
 import ThemeButton from './ThemeButton'
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from '../ui/collapsible'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
 import { Progress } from '@/Components/ui/progress'
 import { Button } from '@/Components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -56,84 +44,6 @@ const formatFileSize = (bytes: number) => {
     } else {
         return `${bytes} Б`
     }
-}
-
-const data = {
-    navMain: [
-        {
-            title: 'Все файлы',
-            url: '#',
-            icon: Files,
-            isActive: false,
-            items: [
-                {
-                    title: 'Недавнее',
-                    url: '#',
-                },
-                {
-                    title: 'Фото',
-                    url: '#',
-                },
-                {
-                    title: 'Видео',
-                    url: '#',
-                },
-                {
-                    title: 'Архивы',
-                    url: '#',
-                },
-                {
-                    title: 'Документы',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Папки',
-            url: '#',
-            icon: Folder,
-            isActive: false,
-            items: [
-                {
-                    title: 'Папка 1',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 2',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 3',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 4',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 5',
-                    url: '#',
-                },
-            ],
-        },
-    ],
-}
-
-const AdminData = {
-    navMain: [
-        {
-            title: 'Панель администратора',
-            url: '#',
-            icon: ScanEye,
-            isActive: false,
-            items: [
-                {
-                    title: 'Пользователи',
-                    url: route('admin.users'),
-                },
-            ],
-        },
-    ],
 }
 
 export default function SideBarComponent({

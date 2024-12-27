@@ -1,28 +1,18 @@
-import * as React from 'react'
-import Layout from '@/Layouts/Layout'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from '@/Components/ui/card'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { PropsWithChildren, ReactNode, useEffect } from 'react'
 
-export default function Login({
-    status,
-    canResetPassword,
-}: {
-    status?: string
-    canResetPassword: boolean
-}) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+export default function Login() {
+    const { data, setData, post, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,

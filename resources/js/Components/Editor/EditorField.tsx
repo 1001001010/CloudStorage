@@ -6,7 +6,6 @@ import {
 } from '@/Components/ui/hover-card'
 import { Separator } from '@/Components/ui/separator'
 import { Tabs, TabsList, TabsTrigger } from '@/Components/ui/tabs'
-import { PresetShare } from './components/preset-share'
 import { PageProps, File } from '@/types'
 import TextTabs from './Tabs/TextTabs'
 import CodeTabs from './Tabs/CodeTabs'

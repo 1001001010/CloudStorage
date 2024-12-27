@@ -1,6 +1,5 @@
 import { File as FileType } from '@/types'
 import { VideotapeIcon } from 'lucide-react'
-import { useForm } from '@inertiajs/react'
 import {
     Dialog,
     DialogTrigger,

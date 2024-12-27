@@ -1,5 +1,5 @@
 import { PageProps } from '@/types'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 import {
     Dialog,
     DialogContent,

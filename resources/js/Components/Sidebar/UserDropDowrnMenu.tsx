@@ -1,4 +1,4 @@
-import { PageProps, User } from '@/types'
+import { PageProps } from '@/types'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,18 +14,14 @@ import {
     BadgeCheck,
     Bell,
     ChevronsUpDown,
-    CreditCard,
     LogOut,
-    ScanEye,
     Sparkles,
 } from 'lucide-react'
-import { assert } from 'console'
 import { FormEventHandler } from 'react'
 import { Link } from '@inertiajs/react'
 
 export default function UserDropDownMenu({
     auth,
-    isMobile,
 }: PageProps<{ isMobile: boolean }>) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault()
@@ -61,7 +57,6 @@ export default function UserDropDownMenu({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                     className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                    // side={isMobile ? 'bottom' : 'right'}
                     align="start"
                     sideOffset={4}>
                     <DropdownMenuLabel className="p-0 font-normal">
@@ -100,16 +95,6 @@ export default function UserDropDownMenu({
                                 Профиль
                             </DropdownMenuItem>
                         </Link>
-                        {/* {auth.user?.is_admin == true ? (
-                            <Link
-                                href={route('admin.index')}
-                                className="w-full">
-                                <DropdownMenuItem>
-                                    <ScanEye />
-                                    Панель администратора
-                                </DropdownMenuItem>
-                            </Link>
-                        ) : null} */}
                         <DropdownMenuItem>
                             <Bell />
                             Notifications

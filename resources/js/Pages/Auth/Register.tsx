@@ -1,19 +1,18 @@
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from '@/Components/ui/card'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/Components/ui/button'
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm({
         name: '',
         email: '',
         password: '',

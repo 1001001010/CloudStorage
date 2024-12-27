@@ -5,7 +5,6 @@ import Layout from '@/Layouts/Layout'
 import ActiveSession from './Partials/ActiveSession'
 
 export default function Dashboard({
-    auth,
     activeSession,
     userAgent,
     FoldersTree,

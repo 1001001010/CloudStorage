@@ -3,11 +3,7 @@ import { Folder, PageProps, ToastMessage, User } from '@/types'
 import Layout from '@/Layouts/Layout'
 
 import * as React from 'react'
-import {
-    CaretSortIcon,
-    ChevronDownIcon,
-    DotsHorizontalIcon,
-} from '@radix-ui/react-icons'
+import { ChevronDownIcon } from '@radix-ui/react-icons'
 import moment from 'moment'
 import {
     ColumnDef,
@@ -39,7 +35,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table'
-import { Link } from '@inertiajs/react'
 import { User2Icon } from 'lucide-react'
 
 const columns: ColumnDef<User>[] = [

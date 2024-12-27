@@ -5,7 +5,6 @@ import TrashFiles from '@/Components/Files/TrashFiles'
 export default function Trash({
     auth,
     FoldersTree,
-    FoldersAndFiles,
     totalSize,
     files,
     msg,
