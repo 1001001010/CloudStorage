@@ -28,34 +28,32 @@ export interface File {
     id: number
     name: string
     path: string
-    // extension_id: number
     extension: FileExtension
-    // mime_type_id: number | null
     mime_type: MimeType
     file_hash: string | null
-    // folder_id: number | null
     folder: Folder
-    // user_id: number | null
     user: User
     size: number
     created_at: string
     updated_at: string
     content: string | null
     deleted_at: string | null
-    access_token: FileAccessToken
+    access_tokens: FileAccessToken[]
 }
+
 export interface FileAccessToken {
     id: number
-    file: File
     access_token: string
     user_limit: number
     users: FileUsersAccess[]
+    users_with_access: FileUsersAccess[]
 }
 
 export interface FileUsersAccess {
     id: number
     file_access_token_id: FileAccessToken
     user: User
+    created_at: string
 }
 
 export interface FileExtension {

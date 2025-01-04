@@ -17,7 +17,7 @@ class GetUserFoldersAndFiles
     public function handle(Request $request, Closure $next)
     {
         $folders = Folder::where('user_id', Auth::id())->get();
-        $files = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->get();
+        $files = File::with(['extension', 'mimeType', 'accessTokens.usersWithAccess.user'])->where('user_id', Auth::id())->get();
 
         $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files);
         Inertia::share('FoldersAndFiles', $FoldersFilesTree);

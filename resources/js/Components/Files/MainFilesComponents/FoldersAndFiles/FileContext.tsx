@@ -39,6 +39,8 @@ export default function FileContext({
     shared?: boolean
     accessLink?: string
 }) {
+    // console.log(file.access_tokens)
+
     const [isEditing, setIsEditing] = useState(false)
 
     const handleRenameCancel = () => {
@@ -104,6 +106,9 @@ export default function FileContext({
                         {canEdit && <FileEdit file={file} />}
                         {isImageFile && <FilePhotoView file={file} />}
                         {isVideoFile && <FileVideoView file={file} />}
+                        {file.access_tokens ? (
+                            <FileInfo file={file} role={'Sender'} />
+                        ) : null}
                         <ContextMenuItem
                             onClick={() => setIsEditing(true)}
                             disabled={false}>

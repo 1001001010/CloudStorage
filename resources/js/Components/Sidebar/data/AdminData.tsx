@@ -14,6 +14,7 @@ import {
     CollapsibleTrigger,
 } from '@/Components/ui/collapsible'
 import { PageProps } from '@/types'
+import { Link } from '@inertiajs/react'
 export const iframeHeight = '800px'
 
 const data = {
@@ -57,14 +58,14 @@ export default function AdminDataLink({ auth }: PageProps<{}>) {
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem
                                                 key={subItem.title}>
-                                                <a href={subItem.url}>
+                                                <Link href={subItem.url}>
                                                     <SidebarMenuSubButton
                                                         asChild>
                                                         <span>
                                                             {subItem.title}
                                                         </span>
                                                     </SidebarMenuSubButton>
-                                                </a>
+                                                </Link>
                                             </SidebarMenuSubItem>
                                         ))}
                                     </SidebarMenuSub>
