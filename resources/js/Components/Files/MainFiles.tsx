@@ -32,6 +32,8 @@ export default function MainFiles({
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
 
+    // console.log(FoldersFilesTree)
+
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
         files: FileTypes[] | undefined,
@@ -90,11 +92,18 @@ export default function MainFiles({
         if (data.files && data.files[0]['name'].length < 20) {
             post(route('file.upload'), {
                 onSuccess: () => {
-                    // window.location.reload()
+                    // toast()
                 },
             })
         }
     }, [data.files, data.folder_id])
+
+    //Переренлеринг списка файлов на 1 уровне
+    useEffect(() => {
+        if (currentPath.length === 1) {
+            setCurrentPath([FoldersFilesTree])
+        }
+    }, [FoldersFilesTree])
 
     return (
         <>
