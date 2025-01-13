@@ -25,12 +25,12 @@ export default function UserDataLink({
     const navData = {
         navMain: [
             {
-                title: 'Все файлы',
+                title: 'Файлы',
                 url: '#',
                 icon: Files,
                 isActive: false,
                 items: [
-                    { title: 'Недавнее', url: '/recent' },
+                    { title: 'Все файлы', url: '/' },
                     { title: 'Фото', url: '/photos' },
                     { title: 'Видео', url: '/videos' },
                     { title: 'Архивы', url: '/archives' },

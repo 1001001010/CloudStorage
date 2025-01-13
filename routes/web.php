@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
 
+require __DIR__.'/auth.php';
 
 Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
     Route::middleware('auth')->group(function () {
@@ -50,5 +51,3 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
     });
 
 });
-
-require __DIR__.'/auth.php';

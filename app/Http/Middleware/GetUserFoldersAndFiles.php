@@ -62,19 +62,27 @@ class GetUserFoldersAndFiles
     {
         $branch = [];
 
-        // Добавляем файлы, которые не принадлежат папкам (или выводим только файлы при исключении папок)
-        if ($parentId === null || $excludeFolders) {
-            $filteredFiles = $files->where('folder_id', $parentId);
-            foreach ($filteredFiles as $file) {
+        // Если папки исключены, добавляем все файлы, игнорируя связь с папками
+        if ($excludeFolders) {
+            foreach ($files as $file) {
                 $branch[] = array_merge(
                     $file->toArray(),
                     ['is_file' => true]
                 );
             }
-        }
+        } else {
+            // Добавляем файлы, которые не принадлежат папкам
+            if ($parentId === null) {
+                $filteredFiles = $files->where('folder_id', $parentId);
+                foreach ($filteredFiles as $file) {
+                    $branch[] = array_merge(
+                        $file->toArray(),
+                        ['is_file' => true]
+                    );
+                }
+            }
 
-        // Если папки не исключены, строим дерево папок
-        if (!$excludeFolders) {
+            // Если папки не исключены, строим дерево папок
             foreach ($folders as $folder) {
                 if ($folder->parent_id == $parentId) {
                     $children = $this->buildFolderTreeWithFiles($folders, $files, $folder->id, $excludeFolders);
