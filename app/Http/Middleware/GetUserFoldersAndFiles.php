@@ -16,10 +16,40 @@ class GetUserFoldersAndFiles
      */
     public function handle(Request $request, Closure $next)
     {
-        $folders = Folder::where('user_id', Auth::id())->get();
-        $files = File::with(['extension', 'mimeType', 'accessTokens.usersWithAccess.user'])->where('user_id', Auth::id())->get();
+        $category = $request->route('category');
 
-        $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files);
+        $categoriesMap = [
+            'photos' => [
+                'mimeTypes' => ['image/jpeg'],
+            ],
+            'documents' => [
+                'mimeTypes' => ['application/pdf'],
+            ],
+            'videos' => [
+                'mimeTypes' => ['video/mp4'],
+            ],
+            'archives' => [
+                'mimeTypes' => ['application/zip', 'application/x-rar-compressed'],
+            ],
+        ];
+
+        $filesQuery = File::with(['extension', 'mimeType', 'accessTokens.usersWithAccess.user'])
+            ->where('user_id', Auth::id());
+
+        if ($category && isset($categoriesMap[$category])) {
+            $filters = $categoriesMap[$category];
+
+            $filesQuery->whereHas('mimeType', function ($query) use ($filters) {
+                $query->whereIn('mime_type', $filters['mimeTypes']);
+            });
+        }
+
+        $files = $filesQuery->get();
+
+        $folders = $category ? collect([]) : Folder::where('user_id', Auth::id())->get();
+
+        $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files, null, $excludeFolders = (bool) $category);
+
         Inertia::share('FoldersAndFiles', $FoldersFilesTree);
 
         return $next($request);
@@ -28,12 +58,14 @@ class GetUserFoldersAndFiles
     /**
      * Преобразование списка папок в древовидную структуру с файлами
      */
-    public function buildFolderTreeWithFiles($folders, $files, $parentId = null)
+    public function buildFolderTreeWithFiles($folders, $files, $parentId = null, $excludeFolders = false)
     {
         $branch = [];
-        if ($parentId === null) {
-            $orphanFiles = $files->where('folder_id', null);
-            foreach ($orphanFiles as $file) {
+
+        // Добавляем файлы, которые не принадлежат папкам (или выводим только файлы при исключении папок)
+        if ($parentId === null || $excludeFolders) {
+            $filteredFiles = $files->where('folder_id', $parentId);
+            foreach ($filteredFiles as $file) {
                 $branch[] = array_merge(
                     $file->toArray(),
                     ['is_file' => true]
@@ -41,20 +73,25 @@ class GetUserFoldersAndFiles
             }
         }
 
-        foreach ($folders as $folder) {
-            if ($folder->parent_id == $parentId) {
-                $children = $this->buildFolderTreeWithFiles($folders, $files, $folder->id);
-                $folderFiles = $files->where('folder_id', $folder->id);
-                if ($folderFiles->isNotEmpty()) {
-                    $folder->files = $folderFiles;
-                }
-                if ($children) {
-                    $folder->children = $children;
-                }
+        // Если папки не исключены, строим дерево папок
+        if (!$excludeFolders) {
+            foreach ($folders as $folder) {
+                if ($folder->parent_id == $parentId) {
+                    $children = $this->buildFolderTreeWithFiles($folders, $files, $folder->id, $excludeFolders);
+                    $folderFiles = $files->where('folder_id', $folder->id);
 
-                $branch[] = $folder;
+                    if ($folderFiles->isNotEmpty()) {
+                        $folder->files = $folderFiles;
+                    }
+                    if ($children) {
+                        $folder->children = $children;
+                    }
+
+                    $branch[] = $folder;
+                }
             }
         }
+
         return $branch;
     }
 }

@@ -13,73 +13,46 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from '@/Components/ui/collapsible'
+import { Folder as FolderType } from '@/types'
+import { Link } from '@inertiajs/react'
 export const iframeHeight = '800px'
 
-const data = {
-    navMain: [
-        {
-            title: 'Все файлы',
-            url: '#',
-            icon: Files,
-            isActive: false,
-            items: [
-                {
-                    title: 'Недавнее',
-                    url: '#',
-                },
-                {
-                    title: 'Фото',
-                    url: '#',
-                },
-                {
-                    title: 'Видео',
-                    url: '#',
-                },
-                {
-                    title: 'Архивы',
-                    url: '#',
-                },
-                {
-                    title: 'Документы',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Папки',
-            url: '#',
-            icon: Folder,
-            isActive: false,
-            items: [
-                {
-                    title: 'Папка 1',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 2',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 3',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 4',
-                    url: '#',
-                },
-                {
-                    title: 'Папка 5',
-                    url: '#',
-                },
-            ],
-        },
-    ],
-}
+export default function UserDataLink({
+    FoldersTree,
+}: {
+    FoldersTree: FolderType[]
+}) {
+    const navData = {
+        navMain: [
+            {
+                title: 'Все файлы',
+                url: '#',
+                icon: Files,
+                isActive: false,
+                items: [
+                    { title: 'Недавнее', url: '/recent' },
+                    { title: 'Фото', url: '/photos' },
+                    { title: 'Видео', url: '/videos' },
+                    { title: 'Архивы', url: '/archives' },
+                    { title: 'Документы', url: '/documents' },
+                ],
+            },
+            {
+                title: 'Папки',
+                url: '#',
+                icon: Folder,
+                isActive: false,
+                items: FoldersTree.map((folder) => ({
+                    title: folder.title,
+                    url: folder.id.toString() || '#',
+                })),
+            },
+        ],
+    }
 
-export default function UserDataLink() {
     return (
         <>
-            {data.navMain.map((item) => (
+            {navData.navMain.map((item) => (
                 <Collapsible
                     key={item.title}
                     asChild
@@ -97,11 +70,11 @@ export default function UserDataLink() {
                             <SidebarMenuSub>
                                 {item.items?.map((subItem) => (
                                     <SidebarMenuSubItem key={subItem.title}>
-                                        <a href={subItem.url}>
+                                        <Link href={subItem.url}>
                                             <SidebarMenuSubButton asChild>
                                                 <span>{subItem.title}</span>
                                             </SidebarMenuSubButton>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuSubItem>
                                 ))}
                             </SidebarMenuSub>

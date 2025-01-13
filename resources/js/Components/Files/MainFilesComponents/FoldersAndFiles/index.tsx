@@ -14,10 +14,10 @@ export default function FoldersAndFiles({
 }) {
     return (
         <>
-            <div className="grids grid min-h-[200px] items-center justify-center gap-5">
-                {currentPath[currentPath.length - 1] &&
-                currentPath[currentPath.length - 1].length > 0 ? (
-                    currentPath[currentPath.length - 1].map((item, index) => (
+            {currentPath[currentPath.length - 1] &&
+            currentPath[currentPath.length - 1].length > 0 ? (
+                <div className="grids grid min-h-[200px] items-center justify-center gap-5">
+                    {currentPath[currentPath.length - 1].map((item, index) => (
                         <div key={index}>
                             {item.hasOwnProperty('name') ? (
                                 <FileContext
@@ -31,13 +31,11 @@ export default function FoldersAndFiles({
                                 />
                             )}
                         </div>
-                    ))
-                ) : (
-                    <div className="col-span-7 text-center">
-                        <h1 className="text-lg">Папка пуста</h1>
-                    </div>
-                )}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <h1 className="text-center text-lg">Файлов не найдено</h1>
+            )}
         </>
     )
 }

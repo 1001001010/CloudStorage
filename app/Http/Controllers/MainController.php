@@ -14,7 +14,12 @@ class MainController extends Controller
     /**
      * Отображение главной страницы.
      */
-    public function index(): Response {
-        return Inertia::render('Welcome');
+    public function index($category = null): Response {
+        if ($category) {
+            // dd($category);
+            return Inertia::render('Welcome');
+        } else {
+            return Inertia::render('Welcome');
+        }
     }
 }

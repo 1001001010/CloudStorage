@@ -9,8 +9,6 @@ use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
 
 
 Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
-    Route::get('/', [MainController::class, 'index'])->name('index');
-
     Route::middleware('auth')->group(function () {
         Route::controller(ProfileController::class)->group(function () {
             Route::get('/profile', 'index')->name('profile.index');
@@ -42,6 +40,8 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::get('/access/{token}', 'invite')->name('access.user.upload');
         });
     });
+
+    Route::get('/{category?}', [MainController::class, 'index'])->name('index');
 
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {

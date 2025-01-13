@@ -107,7 +107,7 @@ export default function SideBarComponent({
                                     <span>Корзина</span>
                                 </SidebarMenuButton>
                             </Link>
-                            <UserDataLink />
+                            <UserDataLink FoldersTree={FoldersTree} />
                             <AdminDataLink auth={auth} />
                         </SidebarMenu>
                     </SidebarGroup>

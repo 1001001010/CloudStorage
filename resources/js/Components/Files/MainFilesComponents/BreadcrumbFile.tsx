@@ -16,7 +16,7 @@ export default function BreadcrumbFile({
     setCurrentFolderId,
 }: {
     breadcrumbPath: string[]
-    currentPath: any
+    currentPath: FolderOrFile[][]
     setCurrentPath: React.Dispatch<React.SetStateAction<FolderOrFile[][]>>
     setBreadcrumbPath: React.Dispatch<React.SetStateAction<string[]>>
     setCurrentFolderId: React.Dispatch<React.SetStateAction<number>>
