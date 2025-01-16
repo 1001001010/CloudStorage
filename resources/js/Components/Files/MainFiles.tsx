@@ -66,9 +66,10 @@ export default function MainFiles({
         setDrag(true)
     }
 
-    function dragLeaveHandler(e: any) {
-        e.preventDefault()
-        setDrag(false)
+    const dragLeaveHandler = (e: any) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+            setDrag(false)
+        }
     }
 
     const onDrophandler = (e: any) => {
