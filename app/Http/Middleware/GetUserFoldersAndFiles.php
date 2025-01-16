@@ -20,16 +20,62 @@ class GetUserFoldersAndFiles
 
         $categoriesMap = [
             'photos' => [
-                'mimeTypes' => ['image/jpeg'],
+                'mimeTypes' => [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'image/webp',
+                    'image/bmp',
+                    'image/svg+xml',
+                ],
             ],
             'documents' => [
-                'mimeTypes' => ['application/pdf'],
+                'mimeTypes' => [
+                    'application/pdf',
+                    'text/plain',
+                    'text/csv',
+                    'text/html',
+                    'application/json',
+                    'application/xml',
+                    'text/yaml',
+                    'text/x-script.python', // Python
+                    'application/javascript', // JS
+                    'application/x-sh', // Shell scripts
+                    'text/x-c', // C, C++
+                    'text/x-java-source', // Java
+                    'application/x-yaml',
+                    'application/x-httpd-php', // PHP
+                    'application/x-ruby', // Ruby
+                    'text/x-go', // Go
+                    'text/x-lua', // Lua
+                ],
             ],
             'videos' => [
-                'mimeTypes' => ['video/mp4'],
+                'mimeTypes' => [
+                    'video/mp4',
+                    'video/x-matroska',
+                    'video/webm',
+                    'video/avi',
+                    'video/quicktime',
+                    'video/x-flv',
+                    'video/x-ms-wmv',
+                    'video/mpeg',
+                    'video/3gpp',
+                    'video/ogg',
+                    'video/x-ms-asf',
+                    'video/x-m4v',
+                    'video/x-msvideo',
+                    'application/vnd.rn-realmedia',
+                ],
             ],
             'archives' => [
-                'mimeTypes' => ['application/zip', 'application/x-rar-compressed'],
+                'mimeTypes' => [
+                    'application/zip',
+                    'application/x-rar-compressed',
+                    'application/x-7z-compressed', // 7z archives
+                    'application/x-tar', // Tarballs
+                    'application/gzip', // Gzipped files
+                ],
             ],
         ];
 
