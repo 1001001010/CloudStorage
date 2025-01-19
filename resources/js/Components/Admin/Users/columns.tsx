@@ -15,6 +15,9 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, User2Icon } from 'lucide-react'
 import { MoreHorizontal } from 'lucide-react'
 import moment from 'moment'
+import EditRole from './EditRole'
+import { usePage } from '@inertiajs/react'
+import { useState } from 'react'
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -87,28 +90,21 @@ export const columns: ColumnDef<User>[] = [
         id: 'actions',
         cell: ({ row }) => {
             const user = row.original
+            const { auth } = usePage().props
 
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                            <span className="sr-only">Открыть меню</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() =>
-                                navigator.clipboard.writeText(user.email)
-                            }>
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>
-                            View payment details
-                        </DropdownMenuItem>
+                        <DropdownMenuLabel>Действия</DropdownMenuLabel>
+                        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
+                            <EditRole auth={auth} user={user} />
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
