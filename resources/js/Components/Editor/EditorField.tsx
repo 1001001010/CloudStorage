@@ -28,39 +28,36 @@ export default function EditorField({
                         <Separator />
                         <Tabs defaultValue="complete" className="flex-1">
                             <div className="h-full w-full pb-3 pt-6">
-                                <div className="grid h-full w-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
-                                    <div className="hidden flex-col space-y-4 sm:flex md:order-2">
-                                        <div className="grid gap-2">
-                                            <HoverCard openDelay={200}>
-                                                <HoverCardTrigger asChild>
-                                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                        Режим
-                                                    </span>
-                                                </HoverCardTrigger>
-                                                <HoverCardContent
-                                                    className="w-[320px] text-sm"
-                                                    side="left">
-                                                    Более удобное и
-                                                    структурирование отображение
-                                                    кода
-                                                </HoverCardContent>
-                                            </HoverCard>
-                                            <TabsList className="grid grid-cols-2">
-                                                <TabsTrigger value="complete">
-                                                    <span className="sr-only">
-                                                        Текст
-                                                    </span>
-                                                    <TextIcon className="h-5 w-5" />
-                                                </TabsTrigger>
-                                                <TabsTrigger value="insert">
-                                                    <span className="sr-only">
-                                                        Code
-                                                    </span>
-                                                    <Code2 className="h-5 w-5" />
-                                                </TabsTrigger>
-                                            </TabsList>
-                                        </div>
-                                    </div>
+                                <div className="grid w-full gap-2 pb-4">
+                                    <HoverCard openDelay={200}>
+                                        <HoverCardTrigger asChild>
+                                            <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                Режим
+                                            </span>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent
+                                            className="w-[320px] text-sm"
+                                            side="left">
+                                            Более удобное и структурирование
+                                            отображение кода
+                                        </HoverCardContent>
+                                    </HoverCard>
+                                    <TabsList className="grid w-[320px] grid-cols-2">
+                                        <TabsTrigger value="complete">
+                                            <span className="sr-only">
+                                                Текст
+                                            </span>
+                                            <TextIcon className="h-5 w-5" />
+                                        </TabsTrigger>
+                                        <TabsTrigger value="insert">
+                                            <span className="sr-only">
+                                                Code
+                                            </span>
+                                            <Code2 className="h-5 w-5" />
+                                        </TabsTrigger>
+                                    </TabsList>
+                                </div>
+                                <div className="grid h-full w-full items-stretch gap-6">
                                     <div className="md:order-1">
                                         <TextTabs auth={auth} file={file} />
                                         <CodeTabs

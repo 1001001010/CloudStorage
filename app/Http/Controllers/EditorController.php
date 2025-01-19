@@ -12,7 +12,7 @@ class EditorController extends Controller
     /**
      * Рендеринг страницы Editor (Редактирование файла)
      */
-    public function index($fileId): RedirectResponse|InertiaResponse {
+    public function index($fileId): RedirectResponse|Response {
         $allowedExtensions = [
             'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
             'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
