@@ -99,7 +99,6 @@ export default function MainFiles({
         }
     }, [data.files, data.folder_id])
 
-    //Переренлеринг списка файлов на 1 уровне
     useEffect(() => {
         if (currentPath.length === 1) {
             setCurrentPath([FoldersFilesTree])
