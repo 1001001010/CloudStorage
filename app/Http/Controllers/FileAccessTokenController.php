@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\AccessUploadRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\{Request, RedirectResponse};
 use Inertia\{Inertia, Response};
 use App\Models\{File, FileAccessToken, FileUserAccess};
 
 class FileAccessTokenController extends Controller
 {
-    public function index(): Response
-    {
+    /**
+     * Рендеринг страницы Shared
+     */
+    public function index(): Response {
         $user = Auth::user();
 
         $files = FileUserAccess::with(['accessToken.file',
@@ -27,6 +28,9 @@ class FileAccessTokenController extends Controller
         ]);
     }
 
+    /**
+     * Создание токена доступа к файлу
+     */
     public function upload(AccessUploadRequest $request): RedirectResponse {
         $file = File::findOrFail($request->file_id);
 
@@ -49,7 +53,10 @@ class FileAccessTokenController extends Controller
         ]);
     }
 
-    public function invite($token) {
+    /**
+     * Получение файла по ссылке
+     */
+    public function invite($token): RedirectResponse {
         $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
         if($access->file->user_id == Auth::id()) {
             return redirect()->back()->with('msg', [

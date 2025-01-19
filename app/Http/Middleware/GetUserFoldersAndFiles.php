@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Folder;
-use App\Models\File;
 use Illuminate\Support\Facades\Auth;
+use App\Models\{Folder, File};
 
 class GetUserFoldersAndFiles
 {

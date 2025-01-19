@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, RedirectResponse};
 use Inertia\{Inertia, Response};
 use App\Models\User;
 
@@ -20,7 +20,7 @@ class AdminController extends Controller
     /**
      * Обновление роли пользователя
      */
-    public function update_role($id, Request $request) {
+    public function update_role($id, Request $request): RedirectResponse {
         $request->merge([
             'is_admin' => filter_var($request->input('is_admin'), FILTER_VALIDATE_BOOLEAN),
         ]);

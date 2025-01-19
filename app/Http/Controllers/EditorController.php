@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, RedirectResponse, InertiaResponse};
 use Inertia\{Inertia, Response};
 use Illuminate\Support\Facades\Auth;
 use App\Models\File;
 
 class EditorController extends Controller
 {
-    public function index($fileId)
-    {
+    /**
+     * Рендеринг страницы Editor (Редактирование файла)
+     */
+    public function index($fileId): RedirectResponse|InertiaResponse {
         $allowedExtensions = [
             'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
             'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
@@ -20,7 +22,6 @@ class EditorController extends Controller
             'pl', 'pm', 'lua', 'hs',
             'ex', 'exs'
         ];
-
 
         $allowedMimeTypes = [
             'text/plain',
@@ -45,7 +46,6 @@ class EditorController extends Controller
            ['application/xml','text/xml'],
         ];
 
-
         $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($fileId);
         if ($file) {
             if (in_array($file->extension->extension, $allowedExtensions) && in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
@@ -64,8 +64,10 @@ class EditorController extends Controller
         }
     }
 
-    private function getLanguageByExtension($extension)
-    {
+    /**
+     * Получение языка программирования по расширению файла
+     */
+    private function getLanguageByExtension($extension): string {
         $languageMap = [
             'py' => 'python',
             'js' => 'javascript',
@@ -98,8 +100,10 @@ class EditorController extends Controller
         return $languageMap[$extension] ?? 'text';
     }
 
-    public function upload(Request $request, $fileId)
-    {
+    /**
+     * Сохранение изменений в файле
+     */
+    public function upload(Request $request, $fileId): RedirectResponse {
         $file = File::where('user_id', Auth::id())->find($fileId);
         if ($file) {
             $filePath = storage_path('app/public/' . $file->path);
@@ -125,6 +129,4 @@ class EditorController extends Controller
             'title' => 'Файл не найден',
         ]);
     }
-
-
 }

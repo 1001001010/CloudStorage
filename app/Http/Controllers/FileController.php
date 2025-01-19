@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Auth};
 use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\{File, Folder, FileExtension,
     MimeType, FileUserAccess};
-use Illuminate\Http\RedirectResponse;
 
 class FileController extends Controller
 {
     /**
      * Загрузка файла
      */
-    public function upload(FileUploadRequest $request) {
+    public function upload(FileUploadRequest $request): RedirectResponse {
         // Проверка существования папки
         if ($request->folder_id && $request->folder_id != 0) {
             $folder = Folder::where('id', $request->folder_id)

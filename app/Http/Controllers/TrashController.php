@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
-use App\Models\File;
 use Illuminate\Support\Facades\Auth;
+use Inertia\{Response, Inertia};
+use App\Models\File;
 
 class TrashController extends Controller
 {
