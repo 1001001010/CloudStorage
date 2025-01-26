@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\{Request, RedirectResponse};
 use Inertia\{Inertia, Response};
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -44,4 +46,29 @@ class AdminController extends Controller
             'title' => "Роль пользователя $user->name изменена",
         ]);
     }
+
+    public function stats(): Response
+    {
+        $endDate = Carbon::now();
+        $startDate = $endDate->copy()->subDays(90);
+
+        $userStats = DB::table('users')
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'date' => $row->date, // дата
+                    'desktop' => $row->count, // количество пользователей
+                ];
+            })
+            ->values();  // Сброс индексов массива
+
+        return Inertia::render('Admin/Stats', [
+            'chartData' => $userStats->toArray(),  // Преобразуем коллекцию в массив
+        ]);
+    }
+
 }

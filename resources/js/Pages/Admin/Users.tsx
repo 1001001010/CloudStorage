@@ -4,7 +4,7 @@ import Layout from '@/Layouts/Layout'
 import { DataTable } from '@/Components/Admin/Users/data-table'
 import { columns } from '@/Components/Admin/Users/columns'
 
-export default function Welcome({
+export default function UsersList({
     FoldersTree,
     totalSize,
     msg,

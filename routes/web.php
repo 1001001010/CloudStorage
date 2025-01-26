@@ -47,6 +47,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
     Route::middleware(IsAdmin::class)->group(function () {
         Route::controller(AdminController::class)->group(function () {
             Route::get('/admin/users', 'index')->name('admin.users');
+            Route::get('/admin/stats', 'stats')->name('admin.stats');
             Route::patch('/admin/user/{id}/role/update', 'update_role')->name('admin.role.update')->whereNumber('id');
         });
     });

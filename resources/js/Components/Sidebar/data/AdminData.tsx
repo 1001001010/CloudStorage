@@ -29,6 +29,10 @@ const data = {
                     title: 'Пользователи',
                     url: route('admin.users'),
                 },
+                {
+                    title: 'Статистика',
+                    url: route('admin.stats'),
+                },
             ],
         },
     ],
