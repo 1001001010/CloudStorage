@@ -1,8 +1,6 @@
-import { useState } from 'react'
-import { FileAccessToken, File as FileType } from '@/types'
+import { File as FileType } from '@/types'
 import { Dialog, DialogTrigger, DialogContent } from '@/Components/ui/dialog'
 import { Info } from 'lucide-react'
-import { Button } from '@/Components/ui/button'
 import UserAccessList from './UserAccessList'
 
 const formatFileSize = (bytes: number) => {
@@ -62,57 +60,23 @@ export default function FileInfo({
                             </p>
                         </div>
                     )}
-
-                    <div>
-                        <h4 className="font-bold">Список токенов доступа:</h4>
-                        <div className="grid grid-cols-4 gap-2">
-                            {file.access_tokens.slice(0, 5).map((token) => (
-                                <UserAccessList token={token} />
-                                // <Button
-                                //     variant={'outline'}
-                                //     key={token.id}
-                                //     onClick={() => handleTokenClick(token)}>
-                                //     <span>
-                                //         {token.access_token.substring(0, 10)}...
-                                //     </span>
-                                // </Button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* {selectedToken && (
+                    {file.access_tokens.length > 0 ? (
                         <div>
-                            <h5>Информация о токене:</h5>
-                            <p>
-                                <strong>Токен:</strong>{' '}
-                                {selectedToken.access_token}
-                            </p>
-                            <p>
-                                <strong>Лимит пользователей:</strong>{' '}
-                                {selectedToken.user_limit}
-                            </p>
-                            <div>
-                                <h6>Пользователи с доступом:</h6>
-                                <ul>
-                                    {Array.isArray(
-                                        selectedToken.users_with_access
-                                    ) &&
-                                    selectedToken.users_with_access.length >
-                                        0 ? (
-                                        selectedToken.users_with_access.map(
-                                            (userAccess, index) => (
-                                                <li key={index}>
-                                                    {userAccess.user.name}
-                                                </li>
-                                            )
-                                        )
-                                    ) : (
-                                        <li>Нет пользователей с доступом</li>
-                                    )}
-                                </ul>
+                            <h4 className="font-bold">
+                                Список токенов доступа:
+                            </h4>
+                            <div className="grid grid-cols-4 gap-2">
+                                {file.access_tokens
+                                    .slice(0, 5)
+                                    .map((token, index) => (
+                                        <UserAccessList
+                                            token={token}
+                                            key={index}
+                                        />
+                                    ))}
                             </div>
                         </div>
-                    )} */}
+                    ) : null}
                 </DialogContent>
             ) : null}
         </Dialog>
