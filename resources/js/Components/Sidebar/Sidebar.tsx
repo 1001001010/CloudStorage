@@ -69,7 +69,7 @@ export default function SideBarComponent({
                                     </div>
                                     <div className="flex flex-col gap-0.5 leading-none">
                                         <span className="font-semibold">
-                                            Файловое хранилище
+                                            Облачное хранилище
                                         </span>
                                         <span className="">v1.0.0</span>
                                     </div>

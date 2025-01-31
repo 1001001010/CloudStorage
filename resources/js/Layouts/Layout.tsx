@@ -97,7 +97,7 @@ export default function Layout({
                                 <BreadcrumbItem className="hidden md:block">
                                     <Link href={route('index')}>
                                         <BreadcrumbLink>
-                                            Файловое хранилище
+                                            Облачное хранилище
                                         </BreadcrumbLink>
                                     </Link>
                                 </BreadcrumbItem>

@@ -5,7 +5,6 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { RotateCcw } from 'lucide-react'
 import { CodeViewer } from '../components/code-viewer'
-import { TabsContent } from '@/Components/ui/tabs'
 
 export default function CodeTabs({
     file,
@@ -52,32 +51,30 @@ export default function CodeTabs({
     }
 
     return (
-        <TabsContent value="insert" className="mt-0 border-0 p-0">
-            <div className="flex flex-col space-y-4">
-                <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
-                    <Textarea
-                        placeholder="Содержимое документа"
-                        value={content ?? ''}
-                        onChange={(e) => {
-                            const newText = e.target.value
-                            setContent(newText)
-                            setData('fileText', newText)
-                        }}
-                        onKeyDown={handleKeyDown}
-                        className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
-                    />
-                    <div className="rounded-md border bg-muted">
-                        <CodeViewer code={content ?? ''} language={language} />
-                    </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Button onClick={saveText}>Сохранить</Button>
-                    <Button variant="secondary" onClick={restoreText}>
-                        <span className="sr-only">Сбросить</span>
-                        <RotateCcw />
-                    </Button>
+        <div className="flex flex-col space-y-4">
+            <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
+                <Textarea
+                    placeholder="Содержимое документа"
+                    value={content ?? ''}
+                    onChange={(e) => {
+                        const newText = e.target.value
+                        setContent(newText)
+                        setData('fileText', newText)
+                    }}
+                    onKeyDown={handleKeyDown}
+                    className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
+                />
+                <div className="rounded-md border bg-muted">
+                    <CodeViewer code={content ?? ''} language={language} />
                 </div>
             </div>
-        </TabsContent>
+            <div className="flex items-center space-x-2">
+                <Button onClick={saveText}>Сохранить</Button>
+                <Button variant="secondary" onClick={restoreText}>
+                    <span className="sr-only">Сбросить</span>
+                    <RotateCcw />
+                </Button>
+            </div>
+        </div>
     )
 }

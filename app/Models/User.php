@@ -25,7 +25,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Атрибуты, которые следует скрыть для сериализации.
+     * Атрибуты, которые следует скрыть для сериализация.
      *
      * @var array<int, string>
      */
@@ -62,7 +62,7 @@ class User extends Authenticatable
         return $this->hasMany(Folder::class);
     }
 
-    public function folderCount(): int // Подсчет кол-ва созданных файлов : int
+    public function folderCount(): int // Подсчет кол-ва созданных папок: int
     {
         return $this->folders()->count();
     }
@@ -75,7 +75,7 @@ class User extends Authenticatable
         return $this->hasMany(File::class);
     }
 
-    public function fileCount(): int // Подсчет кол-ва загруженных файлов : int
+    public function fileCount(): int // Подсчет кол-ва загруженных файлов: int
     {
         return $this->files()->count();
     }
