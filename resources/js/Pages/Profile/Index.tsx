@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useProfileStore } from '@/store/store'
 import { Folder, PageProps, Session } from '@/types'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
@@ -15,6 +17,13 @@ export default function Dashboard({
     FoldersTree: Folder[]
     totalSize: number
 }>) {
+    const { setActiveSession, setUserAgent } = useProfileStore()
+
+    useEffect(() => {
+        setActiveSession(activeSession)
+        setUserAgent(userAgent)
+    }, [activeSession, userAgent, setActiveSession, setUserAgent])
+
     return (
         <Layout
             FoldersTree={FoldersTree}
@@ -34,10 +43,7 @@ export default function Dashboard({
                         <h2 className="mb-4 text-lg font-medium">
                             Активные сессии
                         </h2>
-                        <ActiveSession
-                            activeSessions={activeSession}
-                            userAgent={userAgent}
-                        />
+                        <ActiveSession />
                     </div>
                 </div>
             </div>

@@ -1,15 +1,10 @@
 import React, { FormEventHandler } from 'react'
 import { Button } from '@/Components/ui/button'
-import type { Session } from '@/types'
 import { useForm } from '@inertiajs/react'
+import { useProfileStore } from '@/store/store'
 
-export default function ActiveSession({
-    activeSessions,
-    userAgent,
-}: {
-    activeSessions: Session[]
-    userAgent: string
-}) {
+export default function ActiveSession() {
+    const { activeSession, userAgent } = useProfileStore()
     const {
         delete: destroy,
         processing,
@@ -26,13 +21,13 @@ export default function ActiveSession({
     return (
         <div>
             <ul>
-                {activeSessions.map((session, index) => (
+                {activeSession.map((session, index) => (
                     <form
                         onSubmit={handleDestroySession}
                         key={index}
                         id={`form-${index}`}>
                         <li className="mb-4 w-full rounded-lg border p-4 shadow">
-                            {userAgent == session.user_agent ? (
+                            {userAgent === session.user_agent && (
                                 <div className="flex items-center gap-3">
                                     <span className="relative flex h-3 w-3">
                                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
@@ -42,7 +37,7 @@ export default function ActiveSession({
                                         Текущая сессия
                                     </p>
                                 </div>
-                            ) : null}
+                            )}
                             <p>IP адрес: {session.ip_address}</p>
                             <p>
                                 Последняя активность:{' '}
