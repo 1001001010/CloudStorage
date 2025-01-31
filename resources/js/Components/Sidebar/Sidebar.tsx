@@ -28,6 +28,7 @@ import NewFolder from '../Folder/NewFolder'
 import { Folder as FolderType } from '@/types'
 import UserDataLink from './data/UsersData'
 import AdminDataLink from './data/AdminData'
+import FileUploadButton from '@/Components/Sidebar/FileUploadButton'
 export const iframeHeight = '800px'
 
 const formatFileSize = (bytes: number) => {
@@ -77,10 +78,7 @@ export default function SideBarComponent({
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem className="pb-1">
-                            <Button className="flex w-full">
-                                <Upload></Upload>
-                                {open == false ? null : <p>Загрузить</p>}
-                            </Button>
+                            <FileUploadButton auth={auth} open={open} />
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <NewFolder
