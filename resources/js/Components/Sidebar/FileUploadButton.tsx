@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { PageProps } from "@/types";
@@ -6,7 +6,7 @@ import { useForm } from "@inertiajs/react";
 
 export default function FileUploadButton({ open }: PageProps<{ open: boolean }>) {
     const { data, setData, post } = useForm({
-        folder_id: 0,
+        folder_id:  null,
         files: null as File[] | null,
     });
 

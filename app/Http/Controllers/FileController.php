@@ -15,7 +15,7 @@ class FileController extends Controller
      * Загрузка файла
      */
     public function upload(FileUploadRequest $request): RedirectResponse {
-        // dd($request->all());
+//         dd($request->all());
         // Проверка существования папки
         if ($request->folder_id && $request->folder_id != 0) {
             $folder = Folder::where('id', $request->folder_id)
