@@ -1,10 +1,12 @@
 import { Folder as FolderTypes, PageProps, File as FileTypes } from '@/types'
 import { useForm } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RenameLoadFile from './MainFilesComponents/RenameLoadFile'
 import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
-import { Upload } from 'lucide-react'
+import { Search, Upload } from 'lucide-react'
+import { Input } from '@/Components/ui/input'
+import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
 
 export type FolderOrFile = any
 
@@ -31,6 +33,7 @@ export default function MainFiles({
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
+    const [searchFileName, setSearchFileName] = useState('')
 
     // console.log(FoldersFilesTree)
 
@@ -105,6 +108,16 @@ export default function MainFiles({
         }
     }, [FoldersFilesTree])
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchFileName(e.target.value)
+    }
+
+    const filteredItems = currentPath[currentPath.length - 1]?.filter((item) =>
+        (item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
+            item.title?.toLowerCase().includes(searchFileName.toLowerCase()))
+    );
+
+
     return (
         <>
             {drag ? (
@@ -140,14 +153,21 @@ export default function MainFiles({
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
-                        <BreadcrumbFile
-                            breadcrumbPath={breadcrumbPath}
-                            currentPath={currentPath}
-                            setCurrentPath={setCurrentPath}
-                            setBreadcrumbPath={setBreadcrumbPath}
-                            setCurrentFolderId={setCurrentFolderId}
-                        />
+                        <div className="min-w-max flex flex-start gap-5 items-center">
+                            <SearchFileInput
+                                searchFileName={searchFileName}
+                                handleSearchChange={handleSearchChange}
+                            />
+                            <BreadcrumbFile
+                                breadcrumbPath={breadcrumbPath}
+                                currentPath={currentPath}
+                                setCurrentPath={setCurrentPath}
+                                setBreadcrumbPath={setBreadcrumbPath}
+                                setCurrentFolderId={setCurrentFolderId}
+                            />
+                        </div>
                         <FoldersAndFiles
+                            filteredItems={filteredItems}
                             currentPath={currentPath}
                             handleFolderClick={handleFolderClick}
                             accessLink={accessLink}

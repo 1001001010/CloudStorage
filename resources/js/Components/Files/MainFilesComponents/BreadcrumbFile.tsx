@@ -5,6 +5,7 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from '@/Components/ui/breadcrumb'
+import React from 'react'
 
 export type FolderOrFile = any
 
@@ -28,7 +29,7 @@ export default function BreadcrumbFile({
     }
     return (
         <>
-            <Breadcrumb className="pb-2">
+            <Breadcrumb>
                 <BreadcrumbList>
                     {breadcrumbPath.map((title, index) => (
                         <BreadcrumbItem key={index}>

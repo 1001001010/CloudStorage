@@ -1,5 +1,7 @@
 import FileContext from './FileContext'
 import FolderContext from './FolderContext'
+import { Input } from '@/Components/ui/input'
+import { useState } from 'react'
 
 export type FolderOrFile = any
 
@@ -7,17 +9,18 @@ export default function FoldersAndFiles({
     currentPath,
     handleFolderClick,
     accessLink,
+    filteredItems,
 }: {
     currentPath: FolderOrFile[][]
     handleFolderClick: any
     accessLink?: string
+    filteredItems: any
 }) {
     return (
         <>
-            {currentPath[currentPath.length - 1] &&
-            currentPath[currentPath.length - 1].length > 0 ? (
+            {filteredItems && filteredItems.length > 0 ? (
                 <div className="grids grid min-h-[200px] items-center justify-center gap-5">
-                    {currentPath[currentPath.length - 1].map((item, index) => (
+                    {filteredItems.map((item: any, index: number) => (
                         <div key={index}>
                             {item.hasOwnProperty('name') ? (
                                 <FileContext

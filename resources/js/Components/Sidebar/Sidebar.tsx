@@ -4,7 +4,6 @@ import {
     AlignEndVerticalIcon,
     GalleryVerticalEnd,
     Trash2,
-    Upload,
 } from 'lucide-react'
 import {
     Sidebar,
