@@ -7,6 +7,7 @@ import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
 import { Search, Upload } from 'lucide-react'
 import { Input } from '@/Components/ui/input'
 import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
+import { Separator } from '@/Components/ui/separator'
 
 export type FolderOrFile = any
 
@@ -157,6 +158,10 @@ export default function MainFiles({
                             <SearchFileInput
                                 searchFileName={searchFileName}
                                 handleSearchChange={handleSearchChange}
+                            />
+                            <Separator
+                                orientation="vertical"
+                                className="h-4"
                             />
                             <BreadcrumbFile
                                 breadcrumbPath={breadcrumbPath}
