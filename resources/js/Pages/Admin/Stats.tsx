@@ -2,7 +2,7 @@
 import { Folder, PageProps, ToastMessage } from '@/types'
 import Layout from '@/Layouts/Layout'
 import * as React from 'react'
-import Chart from '@/Components/Admin/Stats/Chart'
+import { UserChart, FileChart, ExportButtons } from '@/Components/Admin/Stats/index'
 
 export default function Stats({
     auth,
@@ -22,7 +22,11 @@ export default function Stats({
         <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize} breadcrumbs={['Панель администратора', 'Статистика']}>
             <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-5">
-                    <Chart chartData={chartData} auth={auth} />
+                    <UserChart chartData={chartData} auth={auth} />
+                    <div className="grid grid-cols-2 pt-3 gap-3">
+                        <FileChart/>
+                        <ExportButtons />
+                    </div>
                 </div>
             </div>
         </Layout>

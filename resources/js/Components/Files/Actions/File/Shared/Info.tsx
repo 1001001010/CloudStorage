@@ -36,7 +36,10 @@ export default function FileInfo({
             {role === 'Receiver' || role === 'Sender' ? (
                 <DialogContent className="">
                     <h3>
-                        Свойства {file.name}.{file.extension.extension}
+                        Свойства{' '}
+                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            {file.name}.{file.extension.extension}
+                        </code>
                     </h3>
                     <div>
                         <p>
@@ -50,6 +53,16 @@ export default function FileInfo({
                         <p>
                             <span className="font-bold">Вес: </span>
                             {formatFileSize(file.size)}
+                        </p>
+                        <p>
+                            <span className="font-bold">Дата обновления: </span>
+                            {new Date(file.updated_at).toLocaleString('ru-RU', {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            })}
                         </p>
                     </div>
                     {role === 'Receiver' && (

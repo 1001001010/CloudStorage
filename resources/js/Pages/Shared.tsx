@@ -2,6 +2,7 @@ import { File, Folder, PageProps, ToastMessage } from '@/types'
 import Layout from '@/Layouts/Layout'
 import AuthAlert from './Auth/AuthAlert'
 import FileContext from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FileContext'
+import { FileQuestion } from 'lucide-react'
 
 export default function Welcome({
     auth,
@@ -41,9 +42,11 @@ export default function Welcome({
                                     ))}
                                 </div>
                             ) : (
-                                <h1 className="text-center text-lg">
-                                    Файлов не найдено
-                                </h1>
+                                <div className="flex flex-col items-center justify-center h-64">
+                                    <FileQuestion className="h-16 w-16 text-muted-foreground mb-4" />
+                                    <h1 className="text-xl font-semibold text-primary">Файлов не найдено</h1>
+                                    <p className="text-muted-foreground mt-2">У вас нет файлов с общим доступом</p>
+                                </div>
                             )}
                         </div>
                     </div>

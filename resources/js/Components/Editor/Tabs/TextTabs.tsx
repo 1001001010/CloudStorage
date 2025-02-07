@@ -14,7 +14,8 @@ export default function TextTabs({ file }: PageProps<{ file: File }>) {
     const [content, setContent] = useState(file.content)
 
     const restoreText = () => {
-        setContent(initialContent)
+        setContent(file.content)
+        setData('fileText', file.content ?? '')
     }
 
     const saveText = () => {
@@ -27,10 +28,11 @@ export default function TextTabs({ file }: PageProps<{ file: File }>) {
             <div className="flex h-full flex-col space-y-4">
                 <Textarea
                     placeholder="Содержимое документа"
-                    defaultValue={content ?? ''}
+                    value={data.fileText} // Используем value вместо defaultValue
                     onChange={(e) => setData('fileText', e.target.value)}
                     className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
                 />
+
 
                 <div className="flex items-center space-x-2">
                     <Button onClick={saveText}>Сохранить</Button>

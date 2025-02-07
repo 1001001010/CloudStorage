@@ -1,6 +1,7 @@
 import { PageProps, File as FileTypes } from '@/types'
 
 import FileContext from './MainFilesComponents/FoldersAndFiles/FileContext'
+import { Trash2 } from 'lucide-react'
 
 export type FolderOrFile = any
 
@@ -25,7 +26,11 @@ export default function TrashFiles({
                             ))}
                         </div>
                     ) : (
-                        <h1 className="text-center text-lg">Корзина пуста</h1>
+                        <div className="flex flex-col items-center justify-center h-64">
+                            <Trash2 className="h-16 w-16 text-muted-foreground mb-4" />
+                            <h1 className="text-xl font-semibold text-primary">Корзина пуста</h1>
+                            <p className="text-muted-foreground mt-2">Здесь будут отображаться удаленные файлы</p>
+                        </div>
                     )}
                 </div>
             </div>

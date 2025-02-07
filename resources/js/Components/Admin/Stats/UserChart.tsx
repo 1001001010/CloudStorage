@@ -37,7 +37,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export default function Chart({
+export default function UserChart({
     chartData,
 }: PageProps<{
     chartData: ChartData[]

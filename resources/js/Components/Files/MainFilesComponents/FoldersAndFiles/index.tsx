@@ -1,7 +1,6 @@
 import FileContext from './FileContext'
 import FolderContext from './FolderContext'
-import { Input } from '@/Components/ui/input'
-import { useState } from 'react'
+import { FolderX } from 'lucide-react'
 
 export type FolderOrFile = any
 
@@ -37,7 +36,15 @@ export default function FoldersAndFiles({
                     ))}
                 </div>
             ) : (
-                <h1 className="text-center text-lg">Файлов не найдено</h1>
+                <div className="flex min-h-[200px] flex-col items-center justify-center text-center">
+                    <FolderX className="mb-4 h-16 w-16 text-muted-foreground" />
+                    <h1 className="text-2xl font-semibold text-primary">
+                        Файлов не найдено
+                    </h1>
+                    <p className="mt-2 text-muted-foreground">
+                        В этой папке нет файлов или папок.
+                    </p>
+                </div>
             )}
         </>
     )
