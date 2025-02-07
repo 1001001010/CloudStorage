@@ -92,11 +92,7 @@ export default function MainFiles({
 
     useEffect(() => {
         if (data.files && data.files[0]['name'].length < 20) {
-            post(route('file.upload'), {
-                onSuccess: () => {
-                    // toast()
-                },
-            })
+            post(route('file.upload'))
         }
     }, [data.files, data.folder_id])
 
@@ -114,7 +110,6 @@ export default function MainFiles({
         (item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
             item.title?.toLowerCase().includes(searchFileName.toLowerCase()))
     );
-
 
     return (
         <>

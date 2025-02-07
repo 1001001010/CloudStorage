@@ -46,4 +46,19 @@ class FolderController extends Controller
             'title' => 'Папка успешно удалена',
         ]);
     }
+
+    public function rename(Request $request, Folder $folder) : RedirectResponse
+    {
+        $validate = $request->validate([
+            'name' => 'string|required',
+        ]);
+
+        $folder = Folder::where('user_id', Auth::id())->find($folder->id);
+        $folder->update([
+            'title' => $validate['name']
+        ]);
+        return redirect()->back()->with('msg', [
+            'title' => 'Папка успешно переименована'
+        ]);
+    }
 }

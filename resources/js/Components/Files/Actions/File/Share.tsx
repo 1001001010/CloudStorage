@@ -72,8 +72,8 @@ export default function FileShare({
                 <DialogContent className="min-w-fit">
                     <DialogHeader className="h-min">
                         <DialogTitle>
-                            Поделиться файлом {file.name}.
-                            {file.extension.extension}
+                            Поделиться файлом <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">{file.name}.
+                            {file.extension.extension}</code>
                         </DialogTitle>
                         <DialogDescription>
                             Выберите кол-во человек, которые получат доступ к

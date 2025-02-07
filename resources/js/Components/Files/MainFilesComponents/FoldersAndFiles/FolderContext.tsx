@@ -7,6 +7,7 @@ import { Folder as FolderType } from '@/types'
 import { Folder } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 import FolderDelete from '../../Actions/Folder/Delete'
+import { FolderRename } from '@/Components/Files/Actions/Folder'
 
 export default function FolderContext({
     folder,
@@ -35,6 +36,7 @@ export default function FolderContext({
             </ContextMenuTrigger>
             <ContextMenuContent>
                 <FolderDelete folder={folder} />
+                <FolderRename folder={folder} />
             </ContextMenuContent>
         </ContextMenu>
     )
