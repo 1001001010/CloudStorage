@@ -8,7 +8,6 @@ export default function EditorField({
     auth,
     language,
 }: PageProps<{ file: File; language: string }>) {
-    console.log(language)
     return (
         <>
             <div className="expend-h mx-4 my-2 flex min-h-screen flex-wrap rounded-lg border shadow">

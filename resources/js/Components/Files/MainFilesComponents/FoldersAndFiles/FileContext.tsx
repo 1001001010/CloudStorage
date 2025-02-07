@@ -39,8 +39,6 @@ export default function FileContext({
     shared?: boolean
     accessLink?: string
 }) {
-    // console.log(file.access_tokens)
-
     const [isEditing, setIsEditing] = useState(false)
 
     const handleRenameCancel = () => {

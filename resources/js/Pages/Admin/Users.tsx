@@ -18,7 +18,7 @@ export default function UsersList({
     users: User[]
 }>) {
     return (
-        <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize}>
+        <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize} breadcrumbs={['Панель администратора', 'Пользователи']}>
             <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-5">
                     <DataTable columns={columns} data={users} />

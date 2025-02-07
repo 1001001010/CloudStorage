@@ -2,7 +2,7 @@
 
 import {
     AlignEndVerticalIcon,
-    GalleryVerticalEnd,
+    GalleryVerticalEnd, Home,
     Trash2,
 } from 'lucide-react'
 import {
@@ -92,6 +92,12 @@ export default function SideBarComponent({
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarMenu>
+                            <Link href={route('index')}>
+                                <SidebarMenuButton>
+                                    <Home className="mr-2 h-4 w-4" />
+                                    <span>Главная</span>
+                                </SidebarMenuButton>
+                            </Link>
                             <Link href={route('shared.index')}>
                                 <SidebarMenuButton>
                                     <AlignEndVerticalIcon className="mr-2 h-4 w-4" />

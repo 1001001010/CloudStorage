@@ -67,6 +67,11 @@ export interface MimeType {
     mime_type: string
 }
 
+export interface ChartData {
+    date: string
+    desktop: number
+}
+
 interface ToastAction {
     label: string
     onClick: () => void

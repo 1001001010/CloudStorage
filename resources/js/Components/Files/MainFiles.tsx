@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react'
 import RenameLoadFile from './MainFilesComponents/RenameLoadFile'
 import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
-import { Search, Upload } from 'lucide-react'
-import { Input } from '@/Components/ui/input'
+import { Upload } from 'lucide-react'
 import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
 import { Separator } from '@/Components/ui/separator'
 
@@ -35,8 +34,6 @@ export default function MainFiles({
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
-
-    // console.log(FoldersFilesTree)
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,
