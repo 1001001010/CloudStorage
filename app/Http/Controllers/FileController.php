@@ -15,20 +15,29 @@ class FileController extends Controller
      * Загрузка файла
      */
     public function upload(FileUploadRequest $request): RedirectResponse {
-//         dd($request->all());
         // Проверка существования папки
         if ($request->folder_id && $request->folder_id != 0) {
             $folder = Folder::where('id', $request->folder_id)
-                            ->where('user_id', Auth::id())
-                            ->first();
+                ->where('user_id', Auth::id())
+                ->first();
 
             if (!$folder) {
                 return redirect()->back()->with('msg', 'Папка не найдена');
             }
         }
 
+        $disallowedExtensions = ['exe', 'bat', 'sh']; // Запрещенные расширения
+        $messages = []; // Для сообщений о пропущенных или загруженных файлах
+
         foreach ($request->file('files') as $file) {
             $fileExtension = $file->getClientOriginalExtension(); // Расширение файла
+
+            // Проверка на запрещенные расширения
+            if (in_array(strtolower($fileExtension), $disallowedExtensions)) {
+                $messages[] = "Файл с расширением .{$fileExtension} не был загружен, так как это запрещено.";
+                continue;
+            }
+
             $mimeType = $file->getMimeType();  // MIME тип файла
             $fileHash = hash_file('sha256', $file->getRealPath()); // Генерируем хэш файла
 
@@ -50,9 +59,8 @@ class FileController extends Controller
 
             $existingFile = File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first(); // Проверка на существование такого файла
             if ($existingFile) {
-                return redirect()->back()->with('msg', [
-                    'title' => "Файл уже существует - $existingFile->name.$fileExtension",
-                ]);
+                $messages[] = "Файл уже существует - {$existingFile->name}.{$fileExtension}";
+                continue;
             }
 
             $path = $file->storeAs('files', $newPath, 'public');
@@ -67,13 +75,15 @@ class FileController extends Controller
                 'user_id' => Auth::id(),
                 'size' => $file->getSize()
             ]);
+
+            $messages[] = "Файл \"{$file->getClientOriginalName()}\" успешно загружен.";
         }
 
         return redirect()->route('index')->with('msg', [
-            'title' => 'Файлы успешно загружены',
+            'title' => 'Загрузка завершена',
+            'details' => $messages,
         ]);
     }
-
 
     /**
      * Логика скачивания файла

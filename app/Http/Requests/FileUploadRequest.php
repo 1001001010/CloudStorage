@@ -24,21 +24,11 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'folder_id' => 'nullable|numeric',
-            'files' => 'required|array|min:1|max:5',
+            'files' => 'required|array|min:1',
             'files.*' => [
                 'file',
-                'max:2048000',
-                function($attribute, $value, $fail) {
-                    $disallowedExtensions = ['exe', 'bat', 'sh'];
-                    $extension = $value->getClientOriginalExtension();
-
-                    if (in_array(strtolower($extension), $disallowedExtensions)) {
-                        session()->flash('msg', 'Загрузка файлов с расширением .'.$extension.' запрещена');
-                        $fail('Загрузка файлов с расширением .'.$extension.' запрещена');
-                    }
-                },
+                'max:2048000'
             ],
         ];
     }
-
 }

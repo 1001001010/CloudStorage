@@ -57,14 +57,6 @@ export default function UserChart({
         return date >= startDate
     })
 
-    const handleDownloadPDF = () => {
-        console.log('Downloading PDF report')
-    }
-
-    const handleDownloadExcel = () => {
-        console.log('Downloading Excel report')
-    }
-
     return (
         <Card>
             <CardHeader className="flex flex-col items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -75,22 +67,22 @@ export default function UserChart({
                     </CardDescription>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownloadPDF}
-                        className="flex items-center gap-2">
-                        <FileDown size={16} />
-                        PDF
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownloadExcel}
-                        className="flex items-center gap-2">
-                        <FileDown size={16} />
-                        Excel
-                    </Button>
+                    {/*<Button*/}
+                    {/*    variant="outline"*/}
+                    {/*    size="sm"*/}
+                    {/*    onClick={handleDownloadPDF}*/}
+                    {/*    className="flex items-center gap-2">*/}
+                    {/*    <FileDown size={16} />*/}
+                    {/*    PDF*/}
+                    {/*</Button>*/}
+                    {/*<Button*/}
+                    {/*    variant="outline"*/}
+                    {/*    size="sm"*/}
+                    {/*    onClick={handleDownloadExcel}*/}
+                    {/*    className="flex items-center gap-2">*/}
+                    {/*    <FileDown size={16} />*/}
+                    {/*    Excel*/}
+                    {/*</Button>*/}
                     <Select value={timeRange} onValueChange={setTimeRange}>
                         <SelectTrigger
                             className="w-[160px] rounded-lg sm:ml-auto"

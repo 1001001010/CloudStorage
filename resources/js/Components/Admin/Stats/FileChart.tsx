@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
+import { HardDrive, TrendingUp } from 'lucide-react'
 import { Label, Pie, PieChart } from "recharts"
 
 import {
@@ -19,35 +19,35 @@ import {
     ChartTooltipContent,
 } from "@/Components/ui/chart"
 const chartData = [
-    { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-    { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "other", visitors: 190, fill: "var(--color-other)" },
+    { browser: "документы", visitors: 275, fill: "var(--color-chrome)" },
+    { browser: "фото", visitors: 200, fill: "var(--color-safari)" },
+    { browser: "видео", visitors: 287, fill: "var(--color-firefox)" },
+    { browser: "архивы", visitors: 173, fill: "var(--color-edge)" },
+    { browser: "другое", visitors: 190, fill: "var(--color-other)" },
 ]
 
 const chartConfig = {
     visitors: {
-        label: "Visitors",
+        label: "Количество файлов",
     },
     chrome: {
-        label: "Chrome",
+        label: "Документы",
         color: "hsl(var(--chart-1))",
     },
     safari: {
-        label: "Safari",
+        label: "Фото",
         color: "hsl(var(--chart-2))",
     },
     firefox: {
-        label: "Firefox",
+        label: "Видео",
         color: "hsl(var(--chart-3))",
     },
     edge: {
-        label: "Edge",
+        label: "Архивы",
         color: "hsl(var(--chart-4))",
     },
     other: {
-        label: "Other",
+        label: "Другое",
         color: "hsl(var(--chart-5))",
     },
 } satisfies ChartConfig
@@ -60,8 +60,8 @@ export default function FileChart() {
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-0">
-                <CardTitle>Pie Chart - Donut with Text</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>Обзор файлового хранилища</CardTitle>
+                <CardDescription>Распределение типов файлов</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
@@ -102,7 +102,7 @@ export default function FileChart() {
                                                     y={(viewBox.cy || 0) + 24}
                                                     className="fill-muted-foreground"
                                                 >
-                                                    Visitors
+                                                    Всего файлов
                                                 </tspan>
                                             </text>
                                         )
@@ -115,11 +115,9 @@ export default function FileChart() {
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                    Использование хранилища: 75% <HardDrive className="h-4 w-4" />
                 </div>
-                <div className="leading-none text-muted-foreground">
-                    Showing total visitors for the last 6 months
-                </div>
+                <div className="leading-none text-muted-foreground">Показано распределение файлов по всему хранилищу</div>
             </CardFooter>
         </Card>
     )
