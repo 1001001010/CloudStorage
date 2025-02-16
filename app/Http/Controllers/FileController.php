@@ -12,7 +12,10 @@ use App\Models\{File, Folder, FileExtension,
 class FileController extends Controller
 {
     /**
-     * Загрузка файла
+     * Обработка загрузки файлов на сервер.
+     *
+     * @param FileUploadRequest $request Объект запроса с данными загружаемых файлов.
+     * @return RedirectResponse
      */
     public function upload(FileUploadRequest $request): RedirectResponse {
         // Проверка существования папки
@@ -86,11 +89,14 @@ class FileController extends Controller
     }
 
     /**
-     * Логика скачивания файла
+     * Скачивает файл, принадлежащий текущему пользователю, или проверяет доступ к нему.
+     *
+     * @param File $file Объект файла для скачивания.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse Возвращает файл для скачивания или редирект с сообщением об ошибке.
      */
-    public function download($file)
+    public function download(File $file)
     {
-        $fileRecord = File::with('extension')->find($file);
+        $fileRecord = File::with('extension')->find($file->id);
 
         if ($fileRecord) {
             if ($fileRecord->user_id == Auth::id()) {
@@ -113,7 +119,11 @@ class FileController extends Controller
     }
 
     /**
-     * Проверка наличия токена доступа у пользователя
+     * Проверяет наличие у пользователя прав доступа к файлу.
+     *
+     * @param int $fileId Идентификатор файла.
+     * @param int $userId Идентификатор пользователя.
+     * @return bool
      */
     protected function userHasAccessToFile($fileId, $userId)
     {
@@ -123,7 +133,10 @@ class FileController extends Controller
     }
 
     /**
-     * Скачивание файла
+     * Подготовка и отправка файла для скачивания.
+     *
+     * @param \App\Models\File $fileRecord Запись файла из базы данных.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
      */
     protected function serveFile($fileRecord)
     {
@@ -140,14 +153,18 @@ class FileController extends Controller
     }
 
     /**
-     * Переименование файлов
+     * Переименование файла.
+     *
+     * @param Request $request Объект запроса с новыми данными.
+     * @param File $file Идентификатор файла, который нужно переименовать.
+     * @return RedirectResponse
      */
-    public function rename(Request $request, $file): RedirectResponse {
+    public function rename(Request $request, File $file): RedirectResponse {
         $validate_data = $request->validate([
             'name' => 'string|min:1'
         ]);
 
-        $file = File::findOrFail($file);
+        $file = File::findOrFail($file->id);
         if ($file) {
             $file->update(['name' => $request->name]);
         }
@@ -157,10 +174,13 @@ class FileController extends Controller
     }
 
     /**
-     * Мягкое удаление файла
+     * Мягкое удаление файла текущего пользователя.
+     *
+     * @param File $file Идентификатор файла, который нужно удалить.
+     * @return RedirectResponse
      */
-    public function delete($file): RedirectResponse {
-        $file = File::where('user_id', Auth::id())->find($file);
+    public function delete(File $file): RedirectResponse {
+        $file = File::where('user_id', Auth::id())->find($file->id);
 
         if(!$file) {
             return redirect()->back()->with('msg', [
@@ -175,10 +195,13 @@ class FileController extends Controller
     }
 
     /**
-     * Восстановление удаленного файла
+     * Восстановление мягко удаленного файла текущего пользователя.
+     *
+     * @param File $file Идентификатор файла, который нужно восстановить.
+     * @return RedirectResponse
      */
     public function restore($file): RedirectResponse {
-        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
+        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file->id);
         if (!$file) {
             return redirect()->back()->with('msg', [
                 'title' => 'Файл не найден',
@@ -191,10 +214,13 @@ class FileController extends Controller
     }
 
     /**
-     * Удаление файла
+     * Полное удаление файла (без возможности восстановления).
+     *
+     * @param File $file Идентификатор файла, который нужно полностью удалить.
+     * @return RedirectResponse
      */
-    public function forceDelete($file): RedirectResponse {
-        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file);
+    public function forceDelete(File $file): RedirectResponse {
+        $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file->id);
         if (!$file) {
             return redirect()->back()->with('msg', [
                 'title' => 'Файл не найден',

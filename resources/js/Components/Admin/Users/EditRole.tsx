@@ -41,7 +41,7 @@ export default function EditRole({ user }: PageProps<{ user: User }>) {
             is_admin: data.is_admin === 'true',
         }
 
-        patch(route('admin.role.update', { id: user.id }), {
+        patch(route('admin.role.update', { user: user.id }), {
             data: payload,
             onSuccess: () => {
                 setDialogOpen(false)

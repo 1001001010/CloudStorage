@@ -10,9 +10,12 @@ use App\Models\File;
 class EditorController extends Controller
 {
     /**
-     * Рендеринг страницы Editor (Редактирование файла)
+     * Отображает страницу текстового редактора для редактирования содержимого файла.
+     *
+     * @param File $file Объект файла, который нужно открыть в редакторе.
+     * @return RedirectResponse|Response Редирект при ошибке или страница редактора.
      */
-    public function index($fileId): RedirectResponse|Response {
+    public function index(File $file): RedirectResponse|Response {
         $allowedExtensions = [
             'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
             'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
@@ -46,7 +49,7 @@ class EditorController extends Controller
            ['application/xml','text/xml'],
         ];
 
-        $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($fileId);
+        $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($file->id);
         if ($file) {
             if (in_array($file->extension->extension, $allowedExtensions) && in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
                 $language = $this->getLanguageByExtension($file->extension->extension);
@@ -60,12 +63,15 @@ class EditorController extends Controller
         } else {
             return redirect()->back()->with('msg', [
                 'title' => 'Файл не найден',
-            ]);;
+            ]);
         }
     }
 
     /**
-     * Получение языка программирования по расширению файла
+     * Определение языка программирования на основе расширения файла.
+     *
+     * @param string $extension Расширение файла.
+     * @return string Название языка программирования.
      */
     private function getLanguageByExtension($extension): string {
         $languageMap = [
@@ -101,10 +107,14 @@ class EditorController extends Controller
     }
 
     /**
-     * Сохранение изменений в файле
+     * Сохраняет изменения в файле.
+     *
+     * @param Request $request Объект HTTP-запроса с данными о новом содержимом файла.
+     * @param File $file Объект файла, который нужно обновить.
+     * @return RedirectResponse Редирект с сообщением об успешном сохранении или ошибке.
      */
-    public function upload(Request $request, $fileId): RedirectResponse {
-        $file = File::where('user_id', Auth::id())->find($fileId);
+    public function upload(Request $request, File $file): RedirectResponse {
+        $file = File::where('user_id', Auth::id())->find($file->id);
         if ($file) {
             $filePath = storage_path('app/public/' . $file->path);
             if (file_exists($filePath)) {

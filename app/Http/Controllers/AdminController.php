@@ -11,7 +11,9 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
     /**
-     * Рендеринг страницы Admin/Users
+     * Отображает страницу списка пользователей в админке.
+     *
+     * @return Response
      */
     public function index(): Response {
         return Inertia::render('Admin/Users', [
@@ -20,9 +22,13 @@ class AdminController extends Controller
     }
 
     /**
-     * Обновление роли пользователя
+     * Обновляет роль пользователя (администратор или пользователь) на основе данных из тела запроса.
+     *
+     * @param User $user Объект пользователя, роль которого нужно изменить.
+     * @param Request $request HTTP-запрос с данными о новой роли.
+     * @return RedirectResponse
      */
-    public function update_role($id, Request $request): RedirectResponse {
+    public function update_role(User $user, Request $request): RedirectResponse {
         $request->merge([
             'is_admin' => filter_var($request->input('is_admin'), FILTER_VALIDATE_BOOLEAN),
         ]);
@@ -31,7 +37,7 @@ class AdminController extends Controller
             'is_admin' => 'required|boolean',
         ]);
 
-        $user = User::find($id);
+        $user = User::find($user->id);
 
         if (!$user) {
             return redirect()->back()->with('msg', [
@@ -47,6 +53,11 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Генерирует статистику регистрации пользователей за последние 90 дней.
+     *
+     * @return Response
+     */
     public function stats(): Response
     {
         $endDate = Carbon::now();

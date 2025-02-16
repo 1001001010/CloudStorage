@@ -23,7 +23,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         });
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
-            Route::get('/file/download/{file}', 'download')->name('file.download');
+            Route::get('/file/download/{file}', 'download')->name('file.download')->whereNumber('file');
             Route::patch('/file/rename/{file}', 'rename')->name('file.rename')->whereNumber('file');
             Route::patch('/file/restore/{file}', 'restore')->name('file.restore')->whereNumber('file');
             Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
@@ -49,7 +49,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         Route::controller(AdminController::class)->group(function () {
             Route::get('/admin/users', 'index')->name('admin.users');
             Route::get('/admin/stats', 'stats')->name('admin.stats');
-            Route::patch('/admin/user/{id}/role/update', 'update_role')->name('admin.role.update')->whereNumber('id');
+            Route::patch('/admin/user/{user}/role/update', 'update_role')->name('admin.role.update')->whereNumber('user');
         });
     });
 

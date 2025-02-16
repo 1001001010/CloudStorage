@@ -13,7 +13,7 @@ export default function ExportButtons() {
     }
 
     return (
-        <Card className="flex h-full flex-col">
+        <Card className="flex h-full w-full flex-col">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Download className="h-5 w-5" />

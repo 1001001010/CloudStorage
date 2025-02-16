@@ -11,7 +11,10 @@ use App\Http\Requests\FolderUploadRequest;
 class FolderController extends Controller
 {
     /**
-     * Создание папки
+     * Создаёт новую папку для текущего пользователя.
+     *
+     * @param FolderUploadRequest $request Валидированный запрос с данными для создания папки.
+     * @return RedirectResponse Редирект обратно после создания папки.
      */
     public function upload(FolderUploadRequest $request) : RedirectResponse
     {
@@ -30,11 +33,14 @@ class FolderController extends Controller
     }
 
     /**
-     * Мягкое удаление папки
+     * Выполняет удаление папки, принадлежащей текущему пользователю.
+     *
+     * @param Folder $folder Объект папки для удаления.
+     * @return RedirectResponse Редирект на главную страницу или обратно с сообщением об успешном удалении или ошибке.
      */
-    public function delete($folder) : RedirectResponse
+    public function delete(Folder $folder) : RedirectResponse
     {
-        $folder = Folder::where('user_id', Auth::id())->find($folder);
+        $folder = Folder::where('user_id', Auth::id())->find($folder->id);
 
         if(!$folder) {
             return redirect()->back()->with('msg', [
@@ -47,6 +53,13 @@ class FolderController extends Controller
         ]);
     }
 
+    /**
+     * Переименовывает папку, принадлежащую текущему пользователю.
+     *
+     * @param Request $request HTTP-запрос с данными для переименования.
+     * @param Folder $folder Объект папки для переименования.
+     * @return RedirectResponse Редирект обратно с сообщением об успешном переименовании.
+     */
     public function rename(Request $request, Folder $folder) : RedirectResponse
     {
         $validate = $request->validate([

@@ -19,11 +19,11 @@ import {
     ChartTooltipContent,
 } from "@/Components/ui/chart"
 const chartData = [
-    { browser: "документы", visitors: 275, fill: "var(--color-chrome)" },
+    { browser: "Документы", visitors: 275, fill: "var(--color-chrome)" },
     { browser: "фото", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "видео", visitors: 287, fill: "var(--color-firefox)" },
-    { browser: "архивы", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "другое", visitors: 190, fill: "var(--color-other)" },
+    { browser: "Видео", visitors: 287, fill: "var(--color-firefox)" },
+    { browser: "Архивы", visitors: 173, fill: "var(--color-edge)" },
+    { browser: "Другое", visitors: 190, fill: "var(--color-other)" },
 ]
 
 const chartConfig = {
@@ -58,7 +58,7 @@ export default function FileChart() {
     }, [])
 
     return (
-        <Card className="flex flex-col">
+        <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Обзор файлового хранилища</CardTitle>
                 <CardDescription>Распределение типов файлов</CardDescription>

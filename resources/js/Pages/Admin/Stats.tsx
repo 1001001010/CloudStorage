@@ -16,14 +16,14 @@ export default function Stats({
     FoldersAndFiles: any
     totalSize: number
     msg: ToastMessage
-    chartData: any
-}>) {
+    chartData: { date: string, desktop: number }[] }
+>) {
     return (
         <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize} breadcrumbs={['Панель администратора', 'Статистика']}>
             <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-5">
                     <UserChart chartData={chartData} auth={auth} />
-                    <div className="grid grid-cols-2 pt-3 gap-3">
+                    <div className="flex justify-between flex-row max-md:flex-col w-full pt-3 gap-3">
                         <FileChart/>
                         <ExportButtons />
                     </div>

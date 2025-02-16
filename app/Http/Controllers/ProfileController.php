@@ -11,7 +11,10 @@ use App\Models\{User, Session};
 class ProfileController extends Controller
 {
     /**
-     * Рендер страницы профиля
+     * Отображает страницу профиля пользователя.
+     *
+     * @param Request $request HTTP-запрос, позволяющий получить заголовки и данные пользователя.
+     * @return Response Возвращает ответ с визуализацией страницы профиля, включая активные сессии и информацию об устройстве.
      */
     public function index(Request $request): Response
     {
@@ -25,7 +28,10 @@ class ProfileController extends Controller
     }
 
     /**
-     * Рендер страницы изменения данных
+     * Отображает страницу редактирования данных пользователя.
+     *
+     * @param Request $request HTTP-запрос для получения данных.
+     * @return Response
      */
     public function edit(Request $request): Response
     {
