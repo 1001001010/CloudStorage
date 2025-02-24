@@ -47,7 +47,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function FileChart({
-    storage,
+   storage,
    fileStats
 } :PageProps<{
     storage: StoragePercentageType

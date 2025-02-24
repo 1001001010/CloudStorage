@@ -53,18 +53,36 @@ class AdminController extends Controller
         ]);
     }
 
+
     /**
-     * Генерирует статистику регистрации пользователей за последние 90 дней.
+     * Возвращает статистику для отображения на странице администратора.
      *
      * @return Response
      */
     public function stats(): Response
     {
+        $userStats = $this->getUserStats();
+        $storageStats = $this->getStorageStats();
+        $fileStats = $this->getFileStats();
+
+        return Inertia::render('Admin/Stats', [
+            'chartData' => $userStats,
+            'storage' => $storageStats,
+            'fileStats' => $fileStats,
+        ]);
+    }
+
+    /**
+     * Получает статистику пользователей за последний 90 дней.
+     *
+     * @return array
+     */
+    private function getUserStats()
+    {
         $endDate = Carbon::now();
         $startDate = $endDate->copy()->subDays(90);
 
-        // Статистика пользователей
-        $userStats = DB::table('users')
+        return DB::table('users')
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date')
@@ -76,15 +94,37 @@ class AdminController extends Controller
                     'desktop' => $row->count,
                 ];
             })
-            ->values();
+            ->values()
+            ->toArray();
+    }
 
-        // Получаем информацию о хранилище
-        $totalSpace = disk_total_space(storage_path()) / 1024 / 1024 / 1024; // Общий объем (GB)
-        $freeSpace = disk_free_space(storage_path()) / 1024 / 1024 / 1024; // Свободное место (GB)
-        $usedSpace = $totalSpace - $freeSpace; // Использованное место (GB)
-        $storageUsage = ($usedSpace / $totalSpace) * 100; // В процентах
+    /**
+     * Получает статистику использования дискового пространства.
+     *
+     * @return array
+     */
+    private function getStorageStats()
+    {
+        $totalSpace = disk_total_space(storage_path()) / 1024 / 1024 / 1024;
+        $freeSpace = disk_free_space(storage_path()) / 1024 / 1024 / 1024;
+        $usedSpace = $totalSpace - $freeSpace;
+        $storageUsage = ($usedSpace / $totalSpace) * 100;
 
-        // Категории файлов и соответствующие расширения
+        return [
+            'total' => round($totalSpace, 2),
+            'used' => round($usedSpace, 2),
+            'free' => round($freeSpace, 2),
+            'percentage' => round($storageUsage, 2),
+        ];
+    }
+
+    /**
+     * Получает детализацию файлов по категориям.
+     *
+     * @return Collection
+     */
+    private function getFileStats()
+    {
         $fileCategories = [
             'Документы' => ['docx', 'xlsx', 'pdf', 'pptx', 'txt'],
             'Фото' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'],
@@ -97,11 +137,10 @@ class AdminController extends Controller
             'Таблицы' => ['xls', 'csv'],
         ];
 
-        // Получаем статистику по файлам
-        $fileStats = DB::table('files')
+        return DB::table('files')
             ->join('file_extensions', 'files.extension_id', '=', 'file_extensions.id')
             ->select('file_extensions.extension', DB::raw('SUM(files.size) as total_size'), DB::raw('COUNT(files.id) as count'))
-            ->whereNull('files.deleted_at') // Учитываем мягко удаленные файлы
+            ->whereNull('files.deleted_at')
             ->groupBy('file_extensions.extension')
             ->get()
             ->groupBy(function ($file) use ($fileCategories) {
@@ -118,20 +157,5 @@ class AdminController extends Controller
                     'count' => $files->sum('count'),
                 ];
             });
-
-        return Inertia::render('Admin/Stats', [
-            'chartData' => $userStats->toArray(),
-            'storage' => [
-                'total' => round($totalSpace, 2),
-                'used' => round($usedSpace, 2),
-                'free' => round($freeSpace, 2),
-                'percentage' => round($storageUsage, 2),
-            ],
-            'fileStats' => $fileStats, // передаем статистику файлов
-        ]);
-
     }
-
-
-
 }
