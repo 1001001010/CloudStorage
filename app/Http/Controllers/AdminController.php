@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
     /**
-     * Отображает страницу списка пользователей в админке.
+     * Отображает список пользователей в админке
      *
      * @return Response
      */
@@ -22,7 +22,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Обновляет роль пользователя (администратор или пользователь) на основе данных из тела запроса.
+     * Обновляет роль пользователя
      *
      * @param User $user Объект пользователя, роль которого нужно изменить.
      * @param Request $request HTTP-запрос с данными о новой роли.
@@ -63,6 +63,7 @@ class AdminController extends Controller
         $endDate = Carbon::now();
         $startDate = $endDate->copy()->subDays(90);
 
+        // Статистика пользователей
         $userStats = DB::table('users')
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->whereBetween('created_at', [$startDate, $endDate])
@@ -71,15 +72,66 @@ class AdminController extends Controller
             ->get()
             ->map(function ($row) {
                 return [
-                    'date' => $row->date, // дата
-                    'desktop' => $row->count, // количество пользователей
+                    'date' => $row->date,
+                    'desktop' => $row->count,
                 ];
             })
-            ->values();  // Сброс индексов массива
+            ->values();
+
+        // Получаем информацию о хранилище
+        $totalSpace = disk_total_space(storage_path()) / 1024 / 1024 / 1024; // Общий объем (GB)
+        $freeSpace = disk_free_space(storage_path()) / 1024 / 1024 / 1024; // Свободное место (GB)
+        $usedSpace = $totalSpace - $freeSpace; // Использованное место (GB)
+        $storageUsage = ($usedSpace / $totalSpace) * 100; // В процентах
+
+        // Категории файлов и соответствующие расширения
+        $fileCategories = [
+            'Документы' => ['docx', 'xlsx', 'pdf', 'pptx', 'txt'],
+            'Фото' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'],
+            'Видео' => ['mp4', 'avi', 'mov', 'webm', 'mkv'],
+            'Архивы' => ['zip', 'rar', 'tar', 'gz', '7z'],
+            'Базы данных' => ['sql', 'db', 'sqlite', 'mdb', 'accdb'],
+            'Код' => ['js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'h', 'php', 'html', 'css'],
+            'Аудио' => ['mp3', 'wav', 'flac'],
+            'Презентации' => ['ppt', 'key'],
+            'Таблицы' => ['xls', 'csv'],
+        ];
+
+        // Получаем статистику по файлам
+        $fileStats = DB::table('files')
+            ->join('file_extensions', 'files.extension_id', '=', 'file_extensions.id')
+            ->select('file_extensions.extension', DB::raw('SUM(files.size) as total_size'), DB::raw('COUNT(files.id) as count'))
+            ->whereNull('files.deleted_at') // Учитываем мягко удаленные файлы
+            ->groupBy('file_extensions.extension')
+            ->get()
+            ->groupBy(function ($file) use ($fileCategories) {
+                foreach ($fileCategories as $category => $extensions) {
+                    if (in_array($file->extension, $extensions)) {
+                        return $category;
+                    }
+                }
+                return 'Другое';
+            })
+            ->map(function ($files) {
+                return [
+                    'size' => $files->sum('total_size'),
+                    'count' => $files->sum('count'),
+                ];
+            });
 
         return Inertia::render('Admin/Stats', [
-            'chartData' => $userStats->toArray(),  // Преобразуем коллекцию в массив
+            'chartData' => $userStats->toArray(),
+            'storage' => [
+                'total' => round($totalSpace, 2),
+                'used' => round($usedSpace, 2),
+                'free' => round($freeSpace, 2),
+                'percentage' => round($storageUsage, 2),
+            ],
+            'fileStats' => $fileStats, // передаем статистику файлов
         ]);
+
     }
+
+
 
 }

@@ -18,13 +18,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/Components/ui/chart"
-const chartData = [
-    { browser: "Документы", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "фото", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "Видео", visitors: 287, fill: "var(--color-firefox)" },
-    { browser: "Архивы", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "Другое", visitors: 190, fill: "var(--color-other)" },
-]
+import { FileStatsType, PageProps, StoragePercentageType } from '@/types'
 
 const chartConfig = {
     visitors: {
@@ -52,7 +46,21 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export default function FileChart() {
+export default function FileChart({
+    storage,
+   fileStats
+} :PageProps<{
+    storage: StoragePercentageType
+    fileStats: FileStatsType
+}>) {
+    const chartData = [
+        { browser: "Документы", visitors: fileStats['Документы']?.count || 0, fill: "var(--color-chrome)" },
+        { browser: "Фото", visitors: fileStats['Фото']?.count || 0, fill: "var(--color-safari)" },
+        { browser: "Видео", visitors: fileStats['Видео']?.count || 0, fill: "var(--color-firefox)" },
+        { browser: "Архивы", visitors: fileStats['Архивы']?.count || 0, fill: "var(--color-edge)" },
+        { browser: "Другое", visitors: fileStats['Другое']?.count || 0, fill: "var(--color-other)" },
+    ]
+
     const totalVisitors = React.useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
     }, [])
@@ -115,9 +123,11 @@ export default function FileChart() {
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none">
-                    Использование хранилища: 75% <HardDrive className="h-4 w-4" />
+                    Использование хранилища: {storage.percentage}% (занято {storage.used} ГБ из {storage.total} ГБ) <HardDrive className="h-4 w-4" />
                 </div>
-                <div className="leading-none text-muted-foreground">Показано распределение файлов по всему хранилищу</div>
+                <div className="leading-none text-muted-foreground">
+                    Показано распределение файлов по всему хранилищу
+                </div>
             </CardFooter>
         </Card>
     )

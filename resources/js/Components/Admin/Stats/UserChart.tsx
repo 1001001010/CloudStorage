@@ -159,13 +159,6 @@ export default function UserChart({
                             }
                         />
                         <Area
-                            dataKey="mobile"
-                            type="natural"
-                            fill="url(#fillMobile)"
-                            stroke="var(--color-mobile)"
-                            stackId="a"
-                        />
-                        <Area
                             dataKey="desktop"
                             type="natural"
                             fill="url(#fillDesktop)"

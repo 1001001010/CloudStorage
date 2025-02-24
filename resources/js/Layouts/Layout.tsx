@@ -61,16 +61,7 @@ export default function Layout({
     useEffect(() => {
         if (msg && !hasShownMessage.current) {
             toast(msg.title, {
-                description: msg.description ? msg.description : undefined,
-
-                // action: msg.action
-                //     ? {
-                //           label: msg.action?.label,
-                //           onClick: () => {
-                //               navigator.clipboard.writeText(textToCopy)
-                //           },
-                //       }
-                //     : null,
+                description: msg.description ? msg.description : undefined
             })
             hasShownMessage.current = true
         }
