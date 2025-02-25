@@ -3,88 +3,111 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Support\Facades\{Storage, Auth};
+use Illuminate\Support\Facades\{Storage, Crypt, Auth};
 use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\{File, Folder, FileExtension,
     MimeType, FileUserAccess};
+use App\Services\FileEncryptionService;
+
 
 class FileController extends Controller
 {
+    protected $encryptionService;
+
+    public function __construct(FileEncryptionService $encryptionService)
+    {
+        $this->encryptionService = $encryptionService;
+    }
+
     /**
      * Обработка загрузки файлов на сервер.
      *
      * @param FileUploadRequest $request Объект запроса с данными загружаемых файлов.
      * @return RedirectResponse
      */
-    public function upload(FileUploadRequest $request): RedirectResponse {
-        // Проверка существования папки
-        if ($request->folder_id && $request->folder_id != 0) {
-            $folder = Folder::where('id', $request->folder_id)
-                ->where('user_id', Auth::id())
-                ->first();
-
-            if (!$folder) {
-                return redirect()->back()->with('msg', 'Папка не найдена');
-            }
+    public function upload(FileUploadRequest $request): RedirectResponse
+    {
+        $folder = $this->getFolder($request->folder_id);
+        if ($request->folder_id && !$folder) {
+            return redirect()->back()->with('msg', 'Папка не найдена');
         }
 
-        $disallowedExtensions = ['exe', 'bat', 'sh']; // Запрещенные расширения
-        $messages = []; // Для сообщений о пропущенных или загруженных файлах
+        $disallowedExtensions = ['exe', 'bat', 'sh'];
+        $messages = [];
+        $encryptionKey = config('app.key');
 
         foreach ($request->file('files') as $file) {
-            $fileExtension = $file->getClientOriginalExtension(); // Расширение файла
+            $fileExtension = strtolower($file->getClientOriginalExtension());
 
-            // Проверка на запрещенные расширения
-            if (in_array(strtolower($fileExtension), $disallowedExtensions)) {
-                $messages[] = "Файл с расширением .{$fileExtension} не был загружен, так как это запрещено.";
+            if ($this->isDisallowedExtension($fileExtension, $disallowedExtensions)) {
+                $messages[] = "Загрузка файла с расширением .{$fileExtension} запрещена";
                 continue;
             }
 
-            $mimeType = $file->getMimeType();  // MIME тип файла
-            $fileHash = hash_file('sha256', $file->getRealPath()); // Генерируем хэш файла
-
-            // Генерация уникального имени для файла
-            $timePart = time();
-            $randomPart = Str::random(20);
-            $newPath = $timePart . '_' . $randomPart . '.' . $fileExtension;
-            if (strlen($newPath) > 40) { // Проверка на итоговую длину
-                $newPath = substr($newPath, 0, 40 - strlen($fileExtension) - 1) . '.' . $fileExtension;
-            }
-
-            $extension = FileExtension::firstOrCreate(
-                ['extension' => $fileExtension]
-            );
-
-            $mime = MimeType::firstOrCreate(
-                ['mime_type' => $mimeType]
-            );
-
-            $existingFile = File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first(); // Проверка на существование такого файла
-            if ($existingFile) {
+            $fileHash = hash_file('sha256', $file->getRealPath());
+            if ($existingFile = $this->checkExistingFile($fileHash)) {
                 $messages[] = "Файл уже существует - {$existingFile->name}.{$fileExtension}";
                 continue;
             }
 
-            $path = $file->storeAs('files', $newPath, 'public');
+            $newFileName = $this->generateUniqueFileName($fileExtension);
+            $path = $file->storeAs('private_files', $newFileName);
+            $fullPath = storage_path("app/private/private_files/{$newFileName}");
 
-            File::create([
-                'name' => $request->file_name ?? pathinfo($file->getClientOriginalName())['filename'],
-                'path' => $path,
-                'extension_id' => $extension->id,
-                'mime_type_id' => $mime->id,
-                'file_hash' => $fileHash,
-                'folder_id' => $request->folder_id ?? null,
-                'user_id' => Auth::id(),
-                'size' => $file->getSize()
-            ]);
+            // Шифруем файл
+            $this->encryptionService->encryptFile($fullPath, $encryptionKey);
 
+            $this->storeFileRecord($file, $fileExtension, $path, $fileHash, $request->folder_id);
             $messages[] = "Файл \"{$file->getClientOriginalName()}\" успешно загружен.";
         }
 
         return redirect()->route('index')->with('msg', [
-            'title' => 'Загрузка завершена',
-            'details' => $messages,
+            'title' => $messages,
+        ]);
+    }
+
+    private function getFolder($folderId) {
+        return $folderId && $folderId != 0
+            ? Folder::where('id', $folderId)->where('user_id', Auth::id())->first()
+            : null;
+    }
+
+    private function isDisallowedExtension($extension, $disallowedExtensions): bool {
+        return in_array($extension, $disallowedExtensions);
+    }
+
+    private function checkExistingFile($fileHash) {
+        return File::where('file_hash', $fileHash)->where('user_id', Auth::id())->first();
+    }
+
+    private function generateUniqueFileName($fileExtension): string {
+        do {
+            $timePart = time();
+            $randomPart = Str::random(20);
+            $newFileName = $timePart . '_' . $randomPart . '.' . $fileExtension;
+
+            if (strlen($newFileName) > 40) {
+                $newFileName = substr($newFileName, 0, 40 - strlen($fileExtension) - 1) . '.' . $fileExtension;
+            }
+        } while (File::where('name', $newFileName)->where('user_id', Auth::id())->exists());
+
+        return $newFileName;
+    }
+
+    private function storeFileRecord($file, $fileExtension, $path, $fileHash, $folderId): void {
+        $extension = FileExtension::firstOrCreate(['extension' => $fileExtension]);
+        $mime = MimeType::firstOrCreate(['mime_type' => $file->getMimeType()]);
+
+        File::create([
+            'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+            'path' => $path,
+            'extension_id' => $extension->id,
+            'mime_type_id' => $mime->id,
+            'file_hash' => $fileHash,
+            'folder_id' => $folderId ?? null,
+            'user_id' => Auth::id(),
+            'size' => $file->getSize(),
         ]);
     }
 
@@ -98,24 +121,17 @@ class FileController extends Controller
     {
         $fileRecord = File::with('extension')->find($file->id);
 
-        if ($fileRecord) {
-            if ($fileRecord->user_id == Auth::id()) {
-                return $this->serveFile($fileRecord); // Проверка на владельца файла
-            }
-
-            $hasAccess = $this->userHasAccessToFile($fileRecord->id, Auth::id());
-            if ($hasAccess) {
-                return $this->serveFile($fileRecord);
-            }
-
-            return redirect()->back()->with('msg', [
-                'title' => 'У вас нет прав на просмотр этого файла',
-            ]);
+        if (!$fileRecord) {
+            return redirect()->back()->with('msg', ['title' => 'Файл не найден']);
         }
 
-        return redirect()->back()->with('msg', [
-            'title' => 'Файл не найден',
-        ]);
+        // Проверяем, есть ли доступ у пользователя
+        if ($fileRecord->user_id !== Auth::id() && !$this->userHasAccessToFile($fileRecord->id, Auth::id())) {
+            return redirect()->back()->with('msg', ['title' => 'У вас нет прав на просмотр этого файла']);
+        }
+
+        // Вызываем метод скачивания
+        return $this->serveFile($fileRecord);
     }
 
     /**
@@ -125,7 +141,7 @@ class FileController extends Controller
      * @param int $userId Идентификатор пользователя.
      * @return bool
      */
-    protected function userHasAccessToFile($fileId, $userId)
+    protected function userHasAccessToFile($fileId, $userId): bool
     {
         return FileUserAccess::whereHas('accessToken', function ($query) use ($fileId) {
             $query->where('file_id', $fileId);
@@ -135,21 +151,23 @@ class FileController extends Controller
     /**
      * Подготовка и отправка файла для скачивания.
      *
-     * @param \App\Models\File $fileRecord Запись файла из базы данных.
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
+     * @param \App\Models\File $fileRecord
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     protected function serveFile($fileRecord)
     {
-        $filePath = storage_path('/app/public/' . $fileRecord->path);
-
-        if (file_exists($filePath)) {
-            $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
-            return response()->download($filePath, $fileName);
-        } else {
-            return redirect()->back()->with('msg', [
-                'title' => 'Файл не найден на сервере',
-            ]);
+        $filePath = storage_path("app/private/{$fileRecord->path}");
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('msg', ['title' => 'Файл не найден на сервере']);
         }
+
+        $fileName = $fileRecord->name . '.' . $fileRecord->extension->extension;
+        $encryptionKey = config('app.key');
+
+        // Расшифровываем файл перед отправкой
+        $decryptedFilePath = $this->encryptionService->decryptFile($filePath, $encryptionKey);
+
+        return response()->download($decryptedFilePath, $fileName)->deleteFileAfterSend(true);
     }
 
     /**

@@ -144,7 +144,6 @@ class GetUserFoldersAndFiles
                 }
             }
         }
-
         return $branch;
     }
 }
