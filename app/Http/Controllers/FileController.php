@@ -12,9 +12,9 @@ use App\Models\{File, Folder, FileExtension,
 class FileController extends Controller
 {
     /**
-     * Обработка загрузки файлов на сервер.
+     * Обработка загрузки файлов на сервер
      *
-     * @param FileUploadRequest $request Объект запроса с данными загружаемых файлов.
+     * @param FileUploadRequest $request
      * @return RedirectResponse
      */
     public function upload(FileUploadRequest $request): RedirectResponse {
@@ -89,10 +89,10 @@ class FileController extends Controller
     }
 
     /**
-     * Скачивает файл, принадлежащий текущему пользователю, или проверяет доступ к нему.
+     * Скачивает файл, принадлежащий текущему пользователю
      *
-     * @param File $file Объект файла для скачивания.
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse Возвращает файл для скачивания или редирект с сообщением об ошибке.
+     * @param File $file
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
      */
     public function download(File $file)
     {
@@ -119,10 +119,10 @@ class FileController extends Controller
     }
 
     /**
-     * Проверяет наличие у пользователя прав доступа к файлу.
+     * Проверяет наличие у пользователя прав доступа к файлу
      *
-     * @param int $fileId Идентификатор файла.
-     * @param int $userId Идентификатор пользователя.
+     * @param int $fileId
+     * @param int $userId
      * @return bool
      */
     protected function userHasAccessToFile($fileId, $userId)
@@ -133,9 +133,9 @@ class FileController extends Controller
     }
 
     /**
-     * Подготовка и отправка файла для скачивания.
+     * Подготовка и отправка файла для скачивания
      *
-     * @param \App\Models\File $fileRecord Запись файла из базы данных.
+     * @param \App\Models\File $fileRecord
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
      */
     protected function serveFile($fileRecord)
@@ -153,10 +153,10 @@ class FileController extends Controller
     }
 
     /**
-     * Переименование файла.
+     * Переименование файла
      *
-     * @param Request $request Объект запроса с новыми данными.
-     * @param File $file Идентификатор файла, который нужно переименовать.
+     * @param Request $request
+     * @param File $file
      * @return RedirectResponse
      */
     public function rename(Request $request, File $file): RedirectResponse {
@@ -174,9 +174,9 @@ class FileController extends Controller
     }
 
     /**
-     * Мягкое удаление файла текущего пользователя.
+     * Мягкое удаление файла текущего пользователя
      *
-     * @param File $file Идентификатор файла, который нужно удалить.
+     * @param File $file
      * @return RedirectResponse
      */
     public function delete(File $file): RedirectResponse {
@@ -195,9 +195,9 @@ class FileController extends Controller
     }
 
     /**
-     * Восстановление мягко удаленного файла текущего пользователя.
+     * Восстановление мягко удаленного файла текущего пользователя
      *
-     * @param File $file Идентификатор файла, который нужно восстановить.
+     * @param File $file
      * @return RedirectResponse
      */
     public function restore($file): RedirectResponse {
@@ -214,9 +214,9 @@ class FileController extends Controller
     }
 
     /**
-     * Полное удаление файла (без возможности восстановления).
+     * Полное удаление файла (без возможности восстановления)
      *
-     * @param File $file Идентификатор файла, который нужно полностью удалить.
+     * @param File $file
      * @return RedirectResponse
      */
     public function forceDelete(File $file): RedirectResponse {

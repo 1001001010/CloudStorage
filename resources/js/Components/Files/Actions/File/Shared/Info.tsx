@@ -65,31 +65,34 @@ export default function FileInfo({
                             })}
                         </p>
                     </div>
-                    {role === 'Receiver' && (
+                    {role === 'Receiver' ? (
                         <div>
                             <p>
                                 <span className="font-bold">Отправитель: </span>
                                 {file.user.name}
                             </p>
                         </div>
+                    ) : (
+                        <>
+                        {file.access_tokens.length > 0 ? (
+                                <div>
+                                    <h4 className="font-bold">
+                                        Список токенов доступа:
+                                    </h4>
+                                    <div className="flex justify-between gap-2 pt-2">
+                                        {file.access_tokens
+                                            .slice(0, 5)
+                                            .map((token, index) => (
+                                                <UserAccessList
+                                                    token={token}
+                                                    key={index}
+                                                />
+                                            ))}
+                                    </div>
+                                </div>
+                            ) : null}
+                        </>
                     )}
-                    {file.access_tokens.length > 0 ? (
-                        <div>
-                            <h4 className="font-bold">
-                                Список токенов доступа:
-                            </h4>
-                            <div className="grid grid-cols-4 gap-2">
-                                {file.access_tokens
-                                    .slice(0, 5)
-                                    .map((token, index) => (
-                                        <UserAccessList
-                                            token={token}
-                                            key={index}
-                                        />
-                                    ))}
-                            </div>
-                        </div>
-                    ) : null}
                 </DialogContent>
             ) : null}
         </Dialog>

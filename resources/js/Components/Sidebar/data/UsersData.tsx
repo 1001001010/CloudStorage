@@ -37,16 +37,6 @@ export default function UserDataLink({
                     { title: 'Документы', url: '/documents' },
                 ],
             },
-            {
-                title: 'Папки',
-                url: '#',
-                icon: Folder,
-                isActive: false,
-                items: FoldersTree.map((folder) => ({
-                    title: folder.title,
-                    url: folder.id.toString() || '#',
-                })),
-            },
         ],
     }
 
