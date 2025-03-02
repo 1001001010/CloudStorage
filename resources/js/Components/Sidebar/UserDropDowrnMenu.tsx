@@ -12,10 +12,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { SidebarMenuButton } from '../ui/sidebar'
 import {
     BadgeCheck,
-    Bell,
     ChevronsUpDown,
     LogOut,
-    Sparkles,
 } from 'lucide-react'
 import { FormEventHandler } from 'react'
 import { Link } from '@inertiajs/react'
@@ -82,23 +80,12 @@ export default function UserDropDownMenu({
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                            <Sparkles />
-                            Upgrade to Pro
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
                         <Link href={route('profile.index')} className="w-full">
                             <DropdownMenuItem>
                                 <BadgeCheck />
                                 Профиль
                             </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem>
-                            <Bell />
-                            Notifications
-                        </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <form onSubmit={submit}>

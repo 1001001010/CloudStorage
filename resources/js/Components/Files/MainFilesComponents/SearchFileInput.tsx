@@ -19,7 +19,6 @@ export default function SearchFileInput({
                 value={searchFileName}
                 onChange={handleSearchChange}
             />
-
         </>
     )
 }
