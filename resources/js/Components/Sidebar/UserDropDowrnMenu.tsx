@@ -10,11 +10,7 @@ import {
 } from '@/Components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { SidebarMenuButton } from '../ui/sidebar'
-import {
-    BadgeCheck,
-    ChevronsUpDown,
-    LogOut,
-} from 'lucide-react'
+import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react'
 import { FormEventHandler } from 'react'
 import { Link } from '@inertiajs/react'
 

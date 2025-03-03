@@ -2,7 +2,8 @@
 
 import {
     AlignEndVerticalIcon,
-    GalleryVerticalEnd, Home,
+    GalleryVerticalEnd,
+    Home,
     Trash2,
 } from 'lucide-react'
 import {

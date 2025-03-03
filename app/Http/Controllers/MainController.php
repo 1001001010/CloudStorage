@@ -12,12 +12,12 @@ use App\Models\Folder;
 class MainController extends Controller
 {
     /**
-     * Отображает главную страницу приложения.
+     * Рендеринг главной страницы
      *
-     * @param string|null $category Категория для отображения (необязательный параметр).
-     * @return Response Возвращает ответ с визуализацией главной страницы.
+     * @param string|null $category
+     * @return Response
      */
-    public function index($category = null): Response {
+    public function index($category = null) : Response {
         return Inertia::render('Welcome');
     }
 }

@@ -10,10 +10,10 @@ use App\Models\File;
 class EditorController extends Controller
 {
     /**
-     * Отображает страницу текстового редактора для редактирования содержимого файла.
+     * Отображение страницы редактирования текстовых файлов
      *
-     * @param File $file Объект файла, который нужно открыть в редакторе.
-     * @return RedirectResponse|Response Редирект при ошибке или страница редактора.
+     * @param File $file
+     * @return RedirectResponse|Response
      */
     public function index(File $file): RedirectResponse|Response {
         $allowedExtensions = [
@@ -68,10 +68,10 @@ class EditorController extends Controller
     }
 
     /**
-     * Определение языка программирования на основе расширения файла.
+     * Определение языка программирования на основе расширения файла
      *
-     * @param string $extension Расширение файла.
-     * @return string Название языка программирования.
+     * @param string $extension
+     * @return string
      */
     private function getLanguageByExtension($extension): string {
         $languageMap = [
@@ -102,16 +102,15 @@ class EditorController extends Controller
             'json' => 'json'
         ];
 
-
         return $languageMap[$extension] ?? 'text';
     }
 
     /**
-     * Сохраняет изменения в файле.
+     * Сохраняет изменения в файле
      *
-     * @param Request $request Объект HTTP-запроса с данными о новом содержимом файла.
-     * @param File $file Объект файла, который нужно обновить.
-     * @return RedirectResponse Редирект с сообщением об успешном сохранении или ошибке.
+     * @param Request $request
+     * @param File $file
+     * @return RedirectResponse
      */
     public function upload(Request $request, File $file): RedirectResponse {
         $file = File::where('user_id', Auth::id())->find($file->id);

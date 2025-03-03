@@ -85,21 +85,19 @@ interface ToastMessage {
 }
 
 export interface StoragePercentageType {
-    total: number; // Общий объем хранилища (в ГБ)
-    used: number; // Использованное пространство (в ГБ)
-    free: number; // Свободное место (в ГБ)
-    percentage: number; // Использование в процентах
+    total: number // Общий объем хранилища (в ГБ)
+    used: number // Использованное пространство (в ГБ)
+    free: number // Свободное место (в ГБ)
+    percentage: number // Использование в процентах
 }
 
 interface FileStatsType {
-    'Документы'?: { count: number };
-    'Фото'?: { count: number };
-    'Видео'?: { count: number };
-    'Архивы'?: { count: number };
-    'Другое'?: { count: number };
+    Документы?: { count: number }
+    Фото?: { count: number }
+    Видео?: { count: number }
+    Архивы?: { count: number }
+    Другое?: { count: number }
 }
-
-
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,

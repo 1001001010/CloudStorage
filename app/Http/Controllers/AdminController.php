@@ -22,10 +22,10 @@ class AdminController extends Controller
     }
 
     /**
-     * Обновляет роль пользователя
+     * Обновление роли пользователя
      *
-     * @param User $user Объект пользователя, роль которого нужно изменить.
-     * @param Request $request HTTP-запрос с данными о новой роли.
+     * @param User $user
+     * @param Request $request
      * @return RedirectResponse
      */
     public function update_role(User $user, Request $request): RedirectResponse {
@@ -53,9 +53,8 @@ class AdminController extends Controller
         ]);
     }
 
-
     /**
-     * Возвращает статистику для отображения на странице администратора.
+     * Отображение статистики
      *
      * @return Response
      */
@@ -73,11 +72,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Получает статистику пользователей за последний 90 дней.
+     * Статистика регистраций пользователей за 90 дней
      *
      * @return array
      */
-    private function getUserStats()
+    private function getUserStats(): array
     {
         $endDate = Carbon::now();
         $startDate = $endDate->copy()->subDays(90);
@@ -99,11 +98,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Получает статистику использования дискового пространства.
+     * Статистика использования хранилища
      *
      * @return array
      */
-    private function getStorageStats()
+    private function getStorageStats(): array
     {
         $totalSpace = disk_total_space(storage_path()) / 1024 / 1024 / 1024;
         $freeSpace = disk_free_space(storage_path()) / 1024 / 1024 / 1024;
@@ -119,11 +118,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Получает детализацию файлов по категориям.
+     * Статистика детализации файлов по категориям
      *
-     * @return Collection
+     * @return array
      */
-    private function getFileStats()
+    private function getFileStats(): array
     {
         $fileCategories = [
             'Документы' => ['docx', 'xlsx', 'pdf', 'pptx', 'txt'],
@@ -156,6 +155,7 @@ class AdminController extends Controller
                     'size' => $files->sum('total_size'),
                     'count' => $files->sum('count'),
                 ];
-            });
+            })
+            ->toArray();
     }
 }

@@ -106,10 +106,11 @@ export default function MainFiles({
         setSearchFileName(e.target.value)
     }
 
-    const filteredItems = currentPath[currentPath.length - 1]?.filter((item) =>
-        (item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
-            item.title?.toLowerCase().includes(searchFileName.toLowerCase()))
-    );
+    const filteredItems = currentPath[currentPath.length - 1]?.filter(
+        (item) =>
+            item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
+            item.title?.toLowerCase().includes(searchFileName.toLowerCase())
+    )
 
     return (
         <>
@@ -146,15 +147,12 @@ export default function MainFiles({
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
-                        <div className="min-w-max flex flex-start gap-5 items-center">
+                        <div className="flex-start flex min-w-max items-center gap-5">
                             <SearchFileInput
                                 searchFileName={searchFileName}
                                 handleSearchChange={handleSearchChange}
                             />
-                            <Separator
-                                orientation="vertical"
-                                className="h-4"
-                            />
+                            <Separator orientation="vertical" className="h-4" />
                             <BreadcrumbFile
                                 breadcrumbPath={breadcrumbPath}
                                 currentPath={currentPath}

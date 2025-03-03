@@ -42,10 +42,14 @@ export default function Welcome({
                                     ))}
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-64">
-                                    <FileQuestion className="h-16 w-16 text-muted-foreground mb-4" />
-                                    <h1 className="text-xl font-semibold text-primary">Файлов не найдено</h1>
-                                    <p className="text-muted-foreground mt-2">У вас нет файлов с общим доступом</p>
+                                <div className="flex h-64 flex-col items-center justify-center">
+                                    <FileQuestion className="mb-4 h-16 w-16 text-muted-foreground" />
+                                    <h1 className="text-xl font-semibold text-primary">
+                                        Файлов не найдено
+                                    </h1>
+                                    <p className="mt-2 text-muted-foreground">
+                                        У вас нет файлов с общим доступом
+                                    </p>
                                 </div>
                             )}
                         </div>

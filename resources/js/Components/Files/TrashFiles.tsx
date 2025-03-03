@@ -26,10 +26,14 @@ export default function TrashFiles({
                             ))}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-64">
-                            <Trash2 className="h-16 w-16 text-muted-foreground mb-4" />
-                            <h1 className="text-xl font-semibold text-primary">Корзина пуста</h1>
-                            <p className="text-muted-foreground mt-2">Здесь будут отображаться удаленные файлы</p>
+                        <div className="flex h-64 flex-col items-center justify-center">
+                            <Trash2 className="mb-4 h-16 w-16 text-muted-foreground" />
+                            <h1 className="text-xl font-semibold text-primary">
+                                Корзина пуста
+                            </h1>
+                            <p className="mt-2 text-muted-foreground">
+                                Здесь будут отображаться удаленные файлы
+                            </p>
                         </div>
                     )}
                 </div>

@@ -24,8 +24,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select'
-import { Button } from '@/Components/ui/button'
-import { FileDown } from 'lucide-react'
 
 const chartConfig = {
     visitors: {
@@ -67,22 +65,6 @@ export default function UserChart({
                     </CardDescription>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                    {/*<Button*/}
-                    {/*    variant="outline"*/}
-                    {/*    size="sm"*/}
-                    {/*    onClick={handleDownloadPDF}*/}
-                    {/*    className="flex items-center gap-2">*/}
-                    {/*    <FileDown size={16} />*/}
-                    {/*    PDF*/}
-                    {/*</Button>*/}
-                    {/*<Button*/}
-                    {/*    variant="outline"*/}
-                    {/*    size="sm"*/}
-                    {/*    onClick={handleDownloadExcel}*/}
-                    {/*    className="flex items-center gap-2">*/}
-                    {/*    <FileDown size={16} />*/}
-                    {/*    Excel*/}
-                    {/*</Button>*/}
                     <Select value={timeRange} onValueChange={setTimeRange}>
                         <SelectTrigger
                             className="w-[160px] rounded-lg sm:ml-auto"

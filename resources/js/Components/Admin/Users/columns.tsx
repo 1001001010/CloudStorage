@@ -4,9 +4,7 @@ import { Button } from '@/Components/ui/button'
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
 import { User } from '@/types'
@@ -17,7 +15,6 @@ import { MoreHorizontal } from 'lucide-react'
 import moment from 'moment'
 import EditRole from './EditRole'
 import { usePage } from '@inertiajs/react'
-import { useState } from 'react'
 
 export const columns: ColumnDef<User>[] = [
     {

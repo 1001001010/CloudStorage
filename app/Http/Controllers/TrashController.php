@@ -10,10 +10,9 @@ use App\Models\File;
 class TrashController extends Controller
 {
     /**
-     * Отображение страницы корзины.
+     * Отображение корзины
      */
-    public function index(): Response
-    {
+    public function index(): Response {
         return Inertia::render('Trash', [
             'files' => File::onlyTrashed()->with(['extension', 'mimeType'])->where('user_id', Auth::id())->get()
         ]);

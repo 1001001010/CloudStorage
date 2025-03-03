@@ -33,7 +33,6 @@ export default function TextTabs({ file }: PageProps<{ file: File }>) {
                     className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
                 />
 
-
                 <div className="flex items-center space-x-2">
                     <Button onClick={saveText}>Сохранить</Button>
                     <Button variant="secondary" onClick={restoreText}>

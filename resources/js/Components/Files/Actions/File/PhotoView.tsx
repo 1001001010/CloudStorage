@@ -18,8 +18,10 @@ export default function FilePhotoView({ file }: { file: FileType }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Просмотр изображения <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">{file.name}.
-                        {file.extension.extension} </code>
+                        Просмотр изображения
+                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            {file.name}.{file.extension.extension}
+                        </code>
                     </DialogTitle>
                 </DialogHeader>
                 <div className="flex h-full w-full items-center justify-center">

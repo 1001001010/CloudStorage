@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\{File, Folder, FileExtension,
     MimeType, FileUserAccess};
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
@@ -17,8 +18,7 @@ class FileController extends Controller
      * @param FileUploadRequest $request
      * @return RedirectResponse
      */
-    public function upload(FileUploadRequest $request): RedirectResponse
-    {
+    public function upload(FileUploadRequest $request): RedirectResponse {
         $folder = $this->validateFolder($request->folder_id);
         if ($folder === false) {
             return $this->redirectWithError('Ошибка', 'Папка не найдена');
@@ -54,8 +54,7 @@ class FileController extends Controller
      * @param int|null $folderId
      * @return Folder|null
      */
-    protected function validateFolder($folderId)
-    {
+    protected function validateFolder($folderId) : Folder|null {
         if ($folderId === null || $folderId == 0) {
             return null;
         }
@@ -64,7 +63,6 @@ class FileController extends Controller
             ->where('user_id', Auth::id())
             ->first();
     }
-
 
     /**
      * Процесс загрузки и валидации файла
@@ -77,8 +75,7 @@ class FileController extends Controller
      * @param int|null $folderId
      * @return array
      */
-    protected function processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folderId)
-    {
+    protected function processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folderId) : array {
         $fileSize = $file->getSize();
         $messages = [];
         $success = false;
@@ -135,8 +132,7 @@ class FileController extends Controller
      * @param string $description
      * @return RedirectResponse
      */
-    protected function redirectWithError($title, $description): RedirectResponse
-    {
+    protected function redirectWithError($title, $description): RedirectResponse {
         return redirect()->back()->with('msg', [
             'title' => $title,
             'description' => $description,
@@ -147,10 +143,9 @@ class FileController extends Controller
      * Скачивает файл, принадлежащий текущему пользователю
      *
      * @param File $file
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
+     * @return BinaryFileResponse|RedirectResponse
      */
-    public function download(File $file)
-    {
+    public function download(File $file) : BinaryFileResponse|RedirectResponse {
         if ($this->checkUserFileAccess($file)) {
             return $this->serveFile($file);
         }
@@ -163,11 +158,9 @@ class FileController extends Controller
      * @param File $file
      * @return bool
      */
-    protected function checkUserFileAccess(File $file)
-    {
+    protected function checkUserFileAccess(File $file) : bool {
         return $file->user_id == Auth::id() || $this->userHasAccessToFile($file->id, Auth::id());
     }
-
 
     /**
      * Проверяет наличие у пользователя прав доступа к файлу
@@ -176,8 +169,7 @@ class FileController extends Controller
      * @param int $userId
      * @return bool
      */
-    protected function userHasAccessToFile($fileId, $userId)
-    {
+    protected function userHasAccessToFile($fileId, $userId) : bool {
         return FileUserAccess::whereHas('accessToken', function ($query) use ($fileId) {
             $query->where('file_id', $fileId);
         })->where('user_id', $userId)->exists();
@@ -189,8 +181,7 @@ class FileController extends Controller
      * @param File $file
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
      */
-    protected function serveFile(File $file)
-    {
+    protected function serveFile(File $file) : BinaryFileResponse|RedirectResponse {
         $filePath = storage_path('/app/public/' . $file->path);
 
         if (file_exists($filePath)) {

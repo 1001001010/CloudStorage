@@ -11,13 +11,12 @@ use App\Models\{User, Session};
 class ProfileController extends Controller
 {
     /**
-     * Отображает страницу профиля пользователя.
+     * Отображает профиль пользователя
      *
-     * @param Request $request HTTP-запрос, позволяющий получить заголовки и данные пользователя.
-     * @return Response Возвращает ответ с визуализацией страницы профиля, включая активные сессии и информацию об устройстве.
+     * @param Request $request
+     * @return Response
      */
-    public function index(Request $request): Response
-    {
+    public function index(Request $request): Response {
         $userAgent = $request->header('User-Agent');
 
         return Inertia::render('Profile/Index', [
@@ -28,23 +27,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * Отображает страницу редактирования данных пользователя.
-     *
-     * @param Request $request HTTP-запрос для получения данных.
-     * @return Response
-     */
-    public function edit(Request $request): Response
-    {
-        return Inertia::render('Profile/Index', [
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
      * Обновление данных пользователя
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
+    public function update(ProfileUpdateRequest $request): RedirectResponse {
         $request->user()->fill($request->validated());
 
         $request->user()->save();
@@ -55,8 +40,7 @@ class ProfileController extends Controller
     /**
      * Удаление сессии пользователя
      */
-    public function destroy(Request $request): RedirectResponse
-    {
+    public function destroy(Request $request): RedirectResponse {
         Session::where('payload', $request->payload)->delete();
         return redirect()->back();
     }

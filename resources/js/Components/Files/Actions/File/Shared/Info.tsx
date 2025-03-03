@@ -74,7 +74,7 @@ export default function FileInfo({
                         </div>
                     ) : (
                         <>
-                        {file.access_tokens.length > 0 ? (
+                            {file.access_tokens.length > 0 ? (
                                 <div>
                                     <h4 className="font-bold">
                                         Список токенов доступа:

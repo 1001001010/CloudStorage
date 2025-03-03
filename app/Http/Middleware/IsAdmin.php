@@ -9,12 +9,15 @@ use Symfony\Component\HttpFoundation\Response;
 class IsAdmin
 {
     /**
-     * Проверка на администратора
+     * Обработка входящего запроса и проверка на администратора
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request
+     * @param Closure $next
+     * @return Response
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
-    public function handle(Request $request, Closure $next): Response
-    {
+    public function handle(Request $request, Closure $next): Response {
         if ($request->user() && $request->user()->is_admin == true) {
             return $next($request);
         }

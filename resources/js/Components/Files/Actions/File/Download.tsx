@@ -1,7 +1,6 @@
 import { ContextMenuItem } from '@/Components/ui/context-menu'
 import { File as FileType } from '@/types'
-import { Download, Trash2 } from 'lucide-react'
-import { useForm } from '@inertiajs/react'
+import { Download } from 'lucide-react'
 
 export default function FileDownload({ file }: { file: FileType }) {
     return (

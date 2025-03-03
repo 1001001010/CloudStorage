@@ -58,7 +58,9 @@ export default function FolderRename({ folder }: { folder: FolderType }) {
                         onChange={(e) => setData('name', e.target.value)}
                     />
                     <DialogFooter>
-                        <Button className={"mt-3"} type="submit">Сохранить</Button>
+                        <Button className={'mt-3'} type="submit">
+                            Сохранить
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

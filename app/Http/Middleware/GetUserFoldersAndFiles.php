@@ -12,9 +12,11 @@ class GetUserFoldersAndFiles
     /**
      * Получение папок и файлов, которые создал/загрузил пользователь
      *
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
-    {
+    public function handle(Request $request, Closure $next): mixed {
         $category = $request->route('category');
 
         $categoriesMap = [
@@ -37,16 +39,16 @@ class GetUserFoldersAndFiles
                     'application/json',
                     'application/xml',
                     'text/yaml',
-                    'text/x-script.python', // Python
-                    'application/javascript', // JS
-                    'application/x-sh', // Shell scripts
-                    'text/x-c', // C, C++
-                    'text/x-java-source', // Java
+                    'text/x-script.python',
+                    'application/javascript',
+                    'application/x-sh',
+                    'text/x-c',
+                    'text/x-java-source',
                     'application/x-yaml',
-                    'application/x-httpd-php', // PHP
-                    'application/x-ruby', // Ruby
-                    'text/x-go', // Go
-                    'text/x-lua', // Lua
+                    'application/x-httpd-php',
+                    'application/x-ruby',
+                    'text/x-go',
+                    'text/x-lua',
                 ],
             ],
             'videos' => [
@@ -71,9 +73,9 @@ class GetUserFoldersAndFiles
                 'mimeTypes' => [
                     'application/zip',
                     'application/x-rar-compressed',
-                    'application/x-7z-compressed', // 7z archives
-                    'application/x-tar', // Tarballs
-                    'application/gzip', // Gzipped files
+                    'application/x-7z-compressed',
+                    'application/x-tar',
+                    'application/gzip',
                 ],
             ],
         ];
@@ -93,7 +95,7 @@ class GetUserFoldersAndFiles
 
         $folders = $category ? collect([]) : Folder::where('user_id', Auth::id())->get();
 
-        $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files, null, $excludeFolders = (bool) $category);
+        $FoldersFilesTree = $this->buildFolderTreeWithFiles($folders, $files, null, $excludeFolders = (bool)$category);
 
         Inertia::share('FoldersAndFiles', $FoldersFilesTree);
 
@@ -102,9 +104,14 @@ class GetUserFoldersAndFiles
 
     /**
      * Преобразование списка папок в древовидную структуру с файлами
+     *
+     * @param Collection|array $folders
+     * @param Collection|array $files
+     * @param int|null $parentId
+     * @param bool $excludeFolders
+     * @return array
      */
-    public function buildFolderTreeWithFiles($folders, $files, $parentId = null, $excludeFolders = false)
-    {
+    public function buildFolderTreeWithFiles($folders, $files, $parentId = null, $excludeFolders = false): array {
         $branch = [];
 
         // Если папки исключены, добавляем все файлы, игнорируя связь с папками

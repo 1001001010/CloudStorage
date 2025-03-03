@@ -11,17 +11,16 @@ use App\Models\{File, FileAccessToken, FileUserAccess};
 class FileAccessTokenController extends Controller
 {
     /**
-     * Отображение страницы списка файлов с общим доступом (Shared).
+     * Отображение страницы со списком файлов с общим доступом
      *
      * @return Response
      */
     public function index(): Response {
-        $user = Auth::user();
 
         $files = FileUserAccess::with(['accessToken.file',
                                         'accessToken.file.extension',
                                         'accessToken.file.user',
-                                        'accessToken.file.mimeType'])->where('user_id', $user->id)->get()
+                                        'accessToken.file.mimeType'])->where('user_id', Auth::id())->get()
         ->map(function ($fileUserAccess) {
             return $fileUserAccess->accessToken->file;
         })->unique();
@@ -31,9 +30,9 @@ class FileAccessTokenController extends Controller
     }
 
     /**
-     * Создание токена для предоставления доступа к файлу.
+     * Создание токена для предоставления доступа к файлу
      *
-     * @param AccessUploadRequest $request Объект запроса с данными для создания токена.
+     * @param AccessUploadRequest $request
      * @return RedirectResponse
      */
     public function upload(AccessUploadRequest $request): RedirectResponse {
@@ -59,9 +58,9 @@ class FileAccessTokenController extends Controller
     }
 
     /**
-     * Получение доступа к файлу по предоставленной ссылке с токеном.
+     * Получение доступа к файлу по предоставленной ссылке с токеном
      *
-     * @param string $token Токен доступа к файлу.
+     * @param string $token
      * @return RedirectResponse
      */
     public function invite($token): RedirectResponse {

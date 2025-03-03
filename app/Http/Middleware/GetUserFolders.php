@@ -12,11 +12,13 @@ use App\Models\{Folder, File};
 class GetUserFolders
 {
     /**
-     * Получение папок и файлов, которые создал/загрузил пользователь
+     * Обработка входящего запроса, построение древовидной структуры папок
      *
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
-    {
+    public function handle(Request $request, Closure $next): mixed {
         $folders = Folder::where('user_id', Auth::id())->get();
         $files = File::where('user_id', Auth::id())->get();
         $totalSize = $files->sum('size');
@@ -29,10 +31,13 @@ class GetUserFolders
     }
 
     /**
-     * Преобразование список папок в древовидную структуру
+     * Преобразование списка папок в древовидную структуру
+     *
+     * @param Collection|array $folders
+     * @param int|null $parentId
+     * @return array
      */
-    public function buildFolderTree($folders, $parentId = null)
-    {
+    public function buildFolderTree($folders, $parentId = null) : array {
         $branch = [];
         foreach ($folders as $folder) {
             if ($folder->parent_id == $parentId) {
