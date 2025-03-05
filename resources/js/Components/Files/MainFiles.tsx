@@ -1,24 +1,31 @@
-"use client"
+'use client'
 
-import type { Folder as FolderTypes, PageProps, File as FileTypes } from "@/types"
-import { useForm } from "@inertiajs/react"
-import type React from "react"
-import { useEffect, useState } from "react"
-import FoldersAndFiles from "./MainFilesComponents/FoldersAndFiles"
-import BreadcrumbFile from "./MainFilesComponents/BreadcrumbFile"
-import { Upload } from "lucide-react"
-import SearchFileInput from "@/Components/Files/MainFilesComponents/SearchFileInput"
-import { Separator } from "@/Components/ui/separator"
-import FilterControls, { FilterType, SortDirection } from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
-import { router, usePage } from "@inertiajs/react"
+import type {
+    Folder as FolderTypes,
+    PageProps,
+    File as FileTypes,
+} from '@/types'
+import { useForm } from '@inertiajs/react'
+import type React from 'react'
+import { useEffect, useState } from 'react'
+import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
+import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
+import { Upload } from 'lucide-react'
+import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
+import { Separator } from '@/Components/ui/separator'
+import FilterControls, {
+    FilterType,
+    SortDirection,
+} from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
+import { router, usePage } from '@inertiajs/react'
 
 export type FolderOrFile = any
 
 export default function MainFiles({
-  FoldersFilesTree,
-  accessLink,
+    FoldersFilesTree,
+    accessLink,
 }: {
-    auth: PageProps["auth"]
+    auth: PageProps['auth']
     FoldersTree: FolderTypes[]
     FoldersFilesTree: any[]
     accessLink?: string
@@ -30,14 +37,15 @@ export default function MainFiles({
     })
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([FoldersFilesTree])
-    const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(["Файлы"])
+    const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
+        FoldersFilesTree,
+    ])
+    const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
-    const [searchFileName, setSearchFileName] = useState("")
-    const [filterType, setFilterType] = useState<FilterType>("name")
-    const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
+    const [searchFileName, setSearchFileName] = useState('')
+    const [filterType, setFilterType] = useState<FilterType>('name')
+    const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
 
     const { url } = usePage()
 
@@ -45,7 +53,7 @@ export default function MainFiles({
         children: FolderTypes[] | undefined,
         files: FileTypes[] | undefined,
         title: string,
-        folderId: number,
+        folderId: number
     ) => {
         const combinedItems: FolderOrFile[] = []
 
@@ -88,14 +96,14 @@ export default function MainFiles({
             file_name: null,
         })
         const fileName = files[0].name
-        const fileExt = fileName.slice(fileName.lastIndexOf(".") + 1)
+        const fileExt = fileName.slice(fileName.lastIndexOf('.') + 1)
         setFileExtension(fileExt)
         setDrag(false)
     }
 
     useEffect(() => {
         if (data.files) {
-            router.post(route("file.upload"), data)
+            router.post(route('file.upload'), data)
         }
     }, [data])
 
@@ -109,36 +117,34 @@ export default function MainFiles({
         setSearchFileName(e.target.value)
     }
 
-    // Filter and sort items based on current filter settings
     const getFilteredItems = () => {
         const currentItems = currentPath[currentPath.length - 1] || []
 
-        // First filter by name search
         const filtered = currentItems.filter(
             (item) =>
-                item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
-                item.title?.toLowerCase().includes(searchFileName.toLowerCase()),
+                item.name
+                    ?.toLowerCase()
+                    .includes(searchFileName.toLowerCase()) ||
+                item.title?.toLowerCase().includes(searchFileName.toLowerCase())
         )
 
-        // Then sort based on filter type and direction
         return filtered.sort((a, b) => {
-            // Handle folders vs files - always show folders first
-            const aIsFolder = a.hasOwnProperty("title")
-            const bIsFolder = b.hasOwnProperty("title")
+            const aIsFolder = a.hasOwnProperty('title')
+            const bIsFolder = b.hasOwnProperty('title')
 
             if (aIsFolder && !bIsFolder) return -1
             if (!aIsFolder && bIsFolder) return 1
 
-            // If both are the same type (folder or file), sort by the selected filter
-            if (filterType === "name") {
-                const aName = (a.name || a.title || "").toLowerCase()
-                const bName = (b.name || b.title || "").toLowerCase()
-                return sortDirection === "asc" ? aName.localeCompare(bName) : bName.localeCompare(aName)
+            if (filterType === 'name') {
+                const aName = (a.name || a.title || '').toLowerCase()
+                const bName = (b.name || b.title || '').toLowerCase()
+                return sortDirection === 'asc'
+                    ? aName.localeCompare(bName)
+                    : bName.localeCompare(aName)
             } else {
-                // For date fields
                 const aDate = new Date(a[filterType] || 0).getTime()
                 const bDate = new Date(b[filterType] || 0).getTime()
-                return sortDirection === "asc" ? aDate - bDate : bDate - aDate
+                return sortDirection === 'asc' ? aDate - bDate : bDate - aDate
             }
         })
     }
@@ -146,9 +152,9 @@ export default function MainFiles({
     const filteredItems = getFilteredItems()
 
     const resetFilters = () => {
-        setFilterType("name")
-        setSortDirection("asc")
-        setSearchFileName("")
+        setFilterType('name')
+        setSortDirection('asc')
+        setSearchFileName('')
     }
 
     return (
@@ -160,17 +166,21 @@ export default function MainFiles({
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}
-                        onDrop={(e) => onDrophandler(e)}
-                    >
+                        onDrop={(e) => onDrophandler(e)}>
                         <div className="flex h-[33vh] flex-col items-center justify-center gap-4 sm:px-5">
                             <div className="rounded-full border border-dashed p-3">
-                                <Upload className="size-7 text-muted-foreground" aria-hidden="true" />
+                                <Upload
+                                    className="size-7 text-muted-foreground"
+                                    aria-hidden="true"
+                                />
                             </div>
                             <div className="flex flex-col gap-px">
                                 <p className="text-center text-xl font-medium text-muted-foreground">
                                     Перетащите файлы, чтобы загрузить
                                 </p>
-                                <p className="text-m text-center text-muted-foreground/70">Максимальный размер одного файла - 2ГБ</p>
+                                <p className="text-m text-center text-muted-foreground/70">
+                                    Максимальный размер одного файла - 2ГБ
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -181,12 +191,17 @@ export default function MainFiles({
                         className="h-full w-full p-5"
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
-                        onDragOver={(e) => dragStartHandler(e)}
-                    >
+                        onDragOver={(e) => dragStartHandler(e)}>
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex flex-1 items-center gap-5">
-                                <SearchFileInput searchFileName={searchFileName} handleSearchChange={handleSearchChange} />
-                                <Separator orientation="vertical" className="h-4" />
+                                <SearchFileInput
+                                    searchFileName={searchFileName}
+                                    handleSearchChange={handleSearchChange}
+                                />
+                                <Separator
+                                    orientation="vertical"
+                                    className="h-4"
+                                />
                                 <BreadcrumbFile
                                     breadcrumbPath={breadcrumbPath}
                                     currentPath={currentPath}
@@ -215,4 +230,3 @@ export default function MainFiles({
         </>
     )
 }
-
