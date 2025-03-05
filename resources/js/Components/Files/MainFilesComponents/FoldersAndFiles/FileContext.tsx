@@ -63,6 +63,19 @@ export default function FileContext({
         videoExtensions.includes(file.extension.extension) ||
         file.mime_type.mime_type.startsWith('video/')
 
+    const truncateFileName = (
+        name: string,
+        extension: string,
+        maxLength: number = 20
+    ) => {
+        if (name.length + extension.length + 1 > maxLength) {
+            const truncatedName =
+                name.slice(0, maxLength - extension.length - 5) + '...'
+            return `${truncatedName}.${extension}`
+        }
+        return `${name}.${extension}`
+    }
+
     return (
         <ContextMenu>
             <ContextMenuTrigger>
@@ -79,7 +92,10 @@ export default function FileContext({
                         />
                     ) : (
                         <p>
-                            {file.name}.{file.extension.extension}
+                            {truncateFileName(
+                                file.name,
+                                file.extension.extension
+                            )}
                         </p>
                     )}
                 </Button>
