@@ -136,15 +136,15 @@ export default function SideBarComponent({
                                     />
                                     <AlertTitle className="pt-2 text-center">
                                         <p className="text-nowrap">
-                                            Занято {formatFileSize(totalSize)}{' '}
+                                            Занято {formatFileSize(totalSize)}
                                             из 5 ГБ
                                         </p>
                                     </AlertTitle>
-                                    <AlertDescription className="flex justify-center pt-2">
-                                        <Button className="w-full">
-                                            Увеличить
-                                        </Button>
-                                    </AlertDescription>
+                                    {/*<AlertDescription className="flex justify-center pt-2">*/}
+                                    {/*    <Button className="w-full">*/}
+                                    {/*        Увеличить*/}
+                                    {/*    </Button>*/}
+                                    {/*</AlertDescription>*/}
                                 </Alert>
                             </motion.div>
                         )}
