@@ -50,6 +50,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::get('/admin/users', 'index')->name('admin.users');
             Route::get('/admin/stats', 'stats')->name('admin.stats');
             Route::patch('/admin/user/{user}/role/update', 'update_role')->name('admin.role.update')->whereNumber('user');
+            Route::get('/statistics/export', 'excel')->middleware('auth')->name('statistics.export');
         });
     });
 

@@ -10,14 +10,6 @@ import {
 } from '@/Components/ui/card'
 
 export default function ExportButtons() {
-    const handleDownloadPDF = () => {
-        console.log('Downloading PDF report')
-    }
-
-    const handleDownloadExcel = () => {
-        console.log('Downloading Excel report')
-    }
-
     return (
         <Card className="flex h-full w-full flex-col">
             <CardHeader>
@@ -44,20 +36,19 @@ export default function ExportButtons() {
                     </ul>
                 </div>
                 <div className="mt-6 flex justify-between gap-4">
-                    <Button
-                        variant="outline"
-                        onClick={handleDownloadPDF}
-                        className="flex-1">
+                    <Button variant="outline" className="flex-1">
                         <FilePdf className="mr-2 h-4 w-4" />
                         PDF
                     </Button>
-                    <Button
-                        variant="outline"
-                        onClick={handleDownloadExcel}
-                        className="flex-1">
-                        <FileSpreadsheet className="mr-2 h-4 w-4" />
-                        Excel
-                    </Button>
+                    <a
+                        href={route('statistics.export')}
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        <Button variant="outline" className="flex-1">
+                            <FileSpreadsheet className="mr-2 h-4 w-4" />
+                            Excel
+                        </Button>
+                    </a>
                 </div>
             </CardContent>
         </Card>

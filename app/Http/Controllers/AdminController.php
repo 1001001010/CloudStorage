@@ -7,6 +7,8 @@ use Inertia\{Inertia, Response};
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Exports\StorageStatisticsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -157,5 +159,27 @@ class AdminController extends Controller
                 ];
             })
             ->toArray();
+    }
+
+    /**
+     * Экспорт статистики хранилища в Excel
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function excel(Request $request)
+    {
+        // Валидация запроса
+        $request->validate([
+            'period' => 'nullable|in:week,month,year',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        $period = $request->input('period', 'month');
+        $userId = $request->input('user_id');
+
+        $filename = 'статистика_хранилища_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new StorageStatisticsExport($period, $userId), $filename);
     }
 }

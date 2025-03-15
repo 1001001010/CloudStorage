@@ -10,6 +10,7 @@ import {
 } from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
+import { AtSign, Lock } from 'lucide-react'
 
 export default function Login() {
     const { data, setData, post, errors, reset } = useForm({
@@ -33,10 +34,12 @@ export default function Login() {
                     <CardHeader>
                         <CardTitle>Вход в аккаунт</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Email</Label>
+                    <CardContent className="space-y-4 pb-6">
+                        <div className="space-y-4">
+                            <div className="relative">
+                                <div className="absolute left-3 top-3 text-muted-foreground">
+                                    <AtSign size={18} />
+                                </div>
                                 <Input
                                     id="email"
                                     type="email"
@@ -48,15 +51,19 @@ export default function Login() {
                                     }
                                     placeholder="Введите вашу почту"
                                     required
+                                    className="pl-10"
                                 />
                                 {errors.email && (
-                                    <p className="text-sm text-red-500">
+                                    <p className="mt-1 text-sm text-red-500">
                                         {errors.email}
                                     </p>
                                 )}
                             </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Пароль</Label>
+
+                            <div className="relative">
+                                <div className="absolute left-3 top-3 text-muted-foreground">
+                                    <Lock size={18} />
+                                </div>
                                 <Input
                                     id="password"
                                     name="password"
@@ -68,9 +75,10 @@ export default function Login() {
                                         setData('password', e.target.value)
                                     }
                                     required
+                                    className="pl-10"
                                 />
                                 {errors.password && (
-                                    <p className="text-sm text-red-500">
+                                    <p className="mt-1 text-sm text-red-500">
                                         {errors.password}
                                     </p>
                                 )}

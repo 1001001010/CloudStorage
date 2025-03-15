@@ -10,6 +10,7 @@ import {
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Button } from '@/Components/ui/button'
+import { AtSign, KeyRound, Lock, User } from 'lucide-react'
 
 export default function Register() {
     const { data, setData, post, errors, reset } = useForm({
@@ -34,10 +35,12 @@ export default function Register() {
                     <CardHeader>
                         <CardTitle>Регистрация</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Имя</Label>
+                    <CardContent className="space-y-4 pb-6">
+                        <div className="space-y-4">
+                            <div className="relative">
+                                <div className="absolute left-3 top-3 text-muted-foreground">
+                                    <User size={18} />
+                                </div>
                                 <Input
                                     id="name"
                                     name="name"
@@ -48,15 +51,19 @@ export default function Register() {
                                         setData('name', e.target.value)
                                     }
                                     required
+                                    className="pl-10"
                                 />
                                 {errors.name && (
-                                    <p className="text-sm text-red-500">
+                                    <p className="mt-1 text-sm text-red-500">
                                         {errors.name}
                                     </p>
                                 )}
                             </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Email</Label>
+
+                            <div className="relative">
+                                <div className="absolute left-3 top-3 text-muted-foreground">
+                                    <AtSign size={18} />
+                                </div>
                                 <Input
                                     id="email"
                                     type="email"
@@ -68,16 +75,20 @@ export default function Register() {
                                         setData('email', e.target.value)
                                     }
                                     required
+                                    className="pl-10"
                                 />
                                 {errors.email && (
-                                    <p className="text-sm text-red-500">
+                                    <p className="mt-1 text-sm text-red-500">
                                         {errors.email}
                                     </p>
                                 )}
                             </div>
-                            <div className="flex w-full gap-3">
-                                <div className="flex w-full flex-col space-y-1.5">
-                                    <Label htmlFor="name">Пароль</Label>
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="relative">
+                                    <div className="absolute left-3 top-3 text-muted-foreground">
+                                        <Lock size={18} />
+                                    </div>
                                     <Input
                                         id="password"
                                         type="password"
@@ -89,17 +100,19 @@ export default function Register() {
                                             setData('password', e.target.value)
                                         }
                                         required
+                                        className="pl-10"
                                     />
                                     {errors.password && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="mt-1 text-sm text-red-500">
                                             {errors.password}
                                         </p>
                                     )}
                                 </div>
-                                <div className="flex w-full flex-col space-y-1.5">
-                                    <Label htmlFor="name">
-                                        Подтверждение пароля
-                                    </Label>
+
+                                <div className="relative">
+                                    <div className="absolute left-3 top-3 text-muted-foreground">
+                                        <KeyRound size={18} />
+                                    </div>
                                     <Input
                                         id="password_confirmation"
                                         type="password"
@@ -114,9 +127,10 @@ export default function Register() {
                                             )
                                         }
                                         required
+                                        className="pl-10"
                                     />
                                     {errors.password_confirmation && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="mt-1 text-sm text-red-500">
                                             {errors.password_confirmation}
                                         </p>
                                     )}
@@ -135,98 +149,5 @@ export default function Register() {
                 </form>
             </Card>
         </div>
-        // <GuestLayout>
-        //     <Head title="Register" />
-
-        //     <form onSubmit={submit}>
-        //         <div>
-        //             <InputLabel htmlFor="name" value="Name" />
-
-        //             <TextInput
-        //                 id="name"
-        //                 name="name"
-        //                 value={data.name}
-        //                 className="mt-1 block w-full"
-        //                 autoComplete="name"
-        //                 isFocused={true}
-        //                 onChange={(e) => setData('name', e.target.value)}
-        //                 required
-        //             />
-
-        //             <InputError message={errors.name} className="mt-2" />
-        //         </div>
-
-        //         <div className="mt-4">
-        //             <InputLabel htmlFor="email" value="Email" />
-
-        //             <TextInput
-        //                 id="email"
-        //                 type="email"
-        //                 name="email"
-        //                 value={data.email}
-        //                 className="mt-1 block w-full"
-        //                 autoComplete="username"
-        //                 onChange={(e) => setData('email', e.target.value)}
-        //                 required
-        //             />
-
-        //             <InputError message={errors.email} className="mt-2" />
-        //         </div>
-
-        //         <div className="mt-4">
-        //             <InputLabel htmlFor="password" value="Password" />
-
-        //             <TextInput
-        //                 id="password"
-        //                 type="password"
-        //                 name="password"
-        //                 value={data.password}
-        //                 className="mt-1 block w-full"
-        //                 autoComplete="new-password"
-        //                 onChange={(e) => setData('password', e.target.value)}
-        //                 required
-        //             />
-
-        //             <InputError message={errors.password} className="mt-2" />
-        //         </div>
-
-        //         <div className="mt-4">
-        //             <InputLabel
-        //                 htmlFor="password_confirmation"
-        //                 value="Confirm Password"
-        //             />
-
-        //             <TextInput
-        //                 id="password_confirmation"
-        //                 type="password"
-        //                 name="password_confirmation"
-        //                 value={data.password_confirmation}
-        //                 className="mt-1 block w-full"
-        //                 autoComplete="new-password"
-        //                 onChange={(e) =>
-        //                     setData('password_confirmation', e.target.value)
-        //                 }
-        //                 required
-        //             />
-
-        //             <InputError
-        //                 message={errors.password_confirmation}
-        //                 className="mt-2"
-        //             />
-        //         </div>
-
-        //         <div className="mt-4 flex items-center justify-end">
-        //             <Link
-        //                 href={route('login')}
-        //                 className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-        //                 Already registered?
-        //             </Link>
-
-        //             <PrimaryButton className="ms-4" disabled={processing}>
-        //                 Register
-        //             </PrimaryButton>
-        //         </div>
-        //     </form>
-        // </GuestLayout>
     )
 }
