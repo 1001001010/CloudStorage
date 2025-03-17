@@ -1,19 +1,11 @@
 import { Link, useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
 import { Button } from '@/Components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
-import { Label } from '@/Components/ui/label'
-import { AtSign, Lock } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function Login() {
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, processing, post, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
@@ -29,72 +21,75 @@ export default function Login() {
 
     return (
         <div className="flex h-screen items-center justify-center">
-            <Card className="w-[450px]">
-                <form onSubmit={submit}>
-                    <CardHeader>
-                        <CardTitle>Вход в аккаунт</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4 pb-6">
-                        <div className="space-y-4">
-                            <div className="relative">
-                                <div className="absolute left-3 top-3 text-muted-foreground">
-                                    <AtSign size={18} />
-                                </div>
+            <div className="lg:p-8">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] lg:w-[450px]">
+                    <div className="flex flex-col space-y-2 text-center">
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            Вход
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            Укажите данные для входа в учетную запись
+                        </p>
+                    </div>
+                    <div className={cn('grid gap-6')}>
+                        <form onSubmit={submit}>
+                            <div className="grid gap-2">
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    autoComplete="username"
+                                    placeholder="Введите вашу почту"
+                                    autoCapitalize="none"
+                                    autoComplete="email"
+                                    autoCorrect="off"
+                                    disabled={processing}
                                     onChange={(e) =>
                                         setData('email', e.target.value)
                                     }
-                                    placeholder="Введите вашу почту"
                                     required
-                                    className="pl-10"
                                 />
                                 {errors.email && (
                                     <p className="mt-1 text-sm text-red-500">
                                         {errors.email}
                                     </p>
                                 )}
-                            </div>
-
-                            <div className="relative">
-                                <div className="absolute left-3 top-3 text-muted-foreground">
-                                    <Lock size={18} />
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        value={data.password}
+                                        placeholder="Введите пароль"
+                                        autoCapitalize="none"
+                                        autoComplete="new-password"
+                                        autoCorrect="off"
+                                        disabled={processing}
+                                        onChange={(e) =>
+                                            setData('password', e.target.value)
+                                        }
+                                        required
+                                    />
+                                    {errors.password && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {errors.password}
+                                        </p>
+                                    )}
                                 </div>
-                                <Input
-                                    id="password"
-                                    name="password"
-                                    placeholder="Введите ваш пароль"
-                                    type="password"
-                                    value={data.password}
-                                    autoComplete="current-password"
-                                    onChange={(e) =>
-                                        setData('password', e.target.value)
-                                    }
-                                    required
-                                    className="pl-10"
-                                />
-                                {errors.password && (
-                                    <p className="mt-1 text-sm text-red-500">
-                                        {errors.password}
-                                    </p>
-                                )}
+                                <Button disabled={processing}>Вход</Button>
                             </div>
-                        </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Link href={route('register')}>
-                            <p className="text-center text-sm text-muted-foreground">
-                                Регистрация
-                            </p>
+                        </form>
+                    </div>
+                    <p className="px-8 text-center text-sm text-muted-foreground">
+                        Нет аккаунта?{' '}
+                        <Link
+                            href={'register'}
+                            className="underline underline-offset-4 hover:text-primary">
+                            Регистрация
                         </Link>
-                        <Button>Вход</Button>
-                    </CardFooter>
-                </form>
-            </Card>
+                    </p>
+                </div>
+            </div>
         </div>
     )
 }

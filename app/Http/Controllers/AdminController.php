@@ -169,17 +169,9 @@ class AdminController extends Controller
      */
     public function excel(Request $request)
     {
-        // Валидация запроса
-        $request->validate([
-            'period' => 'nullable|in:week,month,year',
-            'user_id' => 'nullable|exists:users,id',
-        ]);
-
-        $period = $request->input('period', 'month');
-        $userId = $request->input('user_id');
 
         $filename = 'статистика_хранилища_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
 
-        return Excel::download(new StorageStatisticsExport($period, $userId), $filename);
+        return Excel::download(new StorageStatisticsExport(), $filename);
     }
 }
