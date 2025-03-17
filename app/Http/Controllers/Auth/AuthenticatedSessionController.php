@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Support\Facades\{Auth, Route, Hash};
+use Laravel\Socialite\Facades\Socialite;
+use Inertia\{Inertia, Response};
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Рендер страницы входа
+     *
      */
     public function create(): Response
     {
@@ -26,6 +26,7 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Обробатываем запрос входа
+     *
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -38,6 +39,7 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Удаление сессии
+     *
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -48,5 +50,42 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect(route('index'));
+    }
+
+    /**
+     * Редирект на GitHub
+     *
+     */
+    public function RedirectGithub()
+    {
+        return Socialite::driver('github')->redirect();
+    }
+
+    /**
+     * Получение пользователя GitHub
+     *
+     */
+    public function CallbackGithub() {
+        $user = Socialite::driver('github')->user();
+        $existingUser = User::where('email', $user->email)->first();
+
+        if (!$existingUser) {
+            $newUser = User::create([
+                'name' => $user->nickname,
+                'email' => $user->email,
+                'provider' => 'github',
+                'password' => Hash::make(env('APP_KEY')),
+            ]);
+
+            Auth::login($newUser);
+            return redirect(route('profile'));
+        } else {
+            if ($existingUser->provider === 'github') {
+                Auth::login($existingUser);
+                return redirect(route('profile.index'));
+            } else {
+                return redirect(route('login'))->with('error', 'Используйте логин-пароль для входа');
+            }
+        }
     }
 }

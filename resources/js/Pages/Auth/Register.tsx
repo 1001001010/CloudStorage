@@ -143,13 +143,16 @@ export default function Register() {
                                 </span>
                             </div>
                         </div>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            disabled={processing}>
-                            <Icons.gitHub className="mr-2 h-4 w-4" />
-                            GitHub
-                        </Button>
+                        <a href={route('login.github')} className="w-full">
+                            <Button
+                                variant="outline"
+                                type="button"
+                                className="w-full"
+                                disabled={processing}>
+                                <Icons.gitHub className="mr-2 h-4 w-4" />
+                                GitHub
+                            </Button>
+                        </a>
                     </div>
                     <p className="px-8 text-center text-sm text-muted-foreground">
                         Уже есть аккаунт?{' '}

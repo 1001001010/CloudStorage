@@ -49,13 +49,21 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Проверка подлености учетных данных запроса
+     * Проверка подлинности учетных данных запроса
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+
+        $user = User::where('email', $this->input('email'))->first();
+
+        if ($user && $user->provider === 'github') {
+            throw ValidationException::withMessages([
+                'email' => 'Используйте GitHub для авторизации',
+            ]);
+        }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
@@ -67,6 +75,7 @@ class LoginRequest extends FormRequest
 
         RateLimiter::clear($this->throttleKey());
     }
+
 
     /**
      * Проверка скорости запроса на вход
@@ -92,7 +101,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Получение ключа ограничения скорости для запроса
+     *
+     * @return string
      */
     public function throttleKey(): string
     {

@@ -3,6 +3,7 @@ import { FormEventHandler } from 'react'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { cn } from '@/lib/utils'
+import { Icons } from '@/Components/ui/icons'
 
 export default function Login() {
     const { data, setData, processing, post, errors, reset } = useForm({
@@ -79,6 +80,26 @@ export default function Login() {
                                 <Button disabled={processing}>Вход</Button>
                             </div>
                         </form>
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-background px-2 text-muted-foreground">
+                                    ИЛИ
+                                </span>
+                            </div>
+                        </div>
+                        <a href={route('login.github')} className="w-full">
+                            <Button
+                                variant="outline"
+                                type="button"
+                                className="w-full"
+                                disabled={processing}>
+                                <Icons.gitHub className="mr-2 h-4 w-4" />
+                                GitHub
+                            </Button>
+                        </a>
                     </div>
                     <p className="px-8 text-center text-sm text-muted-foreground">
                         Нет аккаунта?{' '}
