@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\{Auth, Route, Hash};
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Inertia\{Inertia, Response};
 use App\Models\User;
@@ -55,17 +56,18 @@ class AuthenticatedSessionController extends Controller
     /**
      * Редирект на GitHub
      *
+     * @return RedirectResponse
      */
-    public function RedirectGithub()
-    {
+    public function RedirectGithub() : RedirectResponse {
         return Socialite::driver('github')->redirect();
     }
 
     /**
      * Получение пользователя GitHub
      *
+     * @return RedirectResponse
      */
-    public function CallbackGithub() {
+    public function CallbackGithub() : RedirectResponse {
         $user = Socialite::driver('github')->user();
         $existingUser = User::where('email', $user->email)->first();
 
@@ -74,11 +76,11 @@ class AuthenticatedSessionController extends Controller
                 'name' => $user->nickname,
                 'email' => $user->email,
                 'provider' => 'github',
-                'password' => Hash::make(env('APP_KEY')),
+                'password' => Hash::make(Str::random(16))
             ]);
 
             Auth::login($newUser);
-            return redirect(route('profile'));
+            return redirect(route('profile.index'));
         } else {
             if ($existingUser->provider === 'github') {
                 Auth::login($existingUser);
