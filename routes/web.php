@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\{ProfileController, MainController,
     FolderController, FileController, TrashController, EditorController,
-    AdminController, FileAccessTokenController};
+    AdminController, FileAccessTokenController, PrivateFileController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
@@ -25,9 +25,14 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::post('/file', 'upload')->name('file.upload');
             Route::get('/file/download/{file}', 'download')->name('file.download')->whereNumber('file');
             Route::patch('/file/rename/{file}', 'rename')->name('file.rename')->whereNumber('file');
-            Route::patch('/file/restore/{file}', 'restore')->name('file.restore')->whereNumber('file');
             Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
-            Route::delete('/file/delete/force/{file}', 'forceDelete')->name('file.force.delete')->whereNumber('file');
+            Route::put('/file/restore/{file}', 'restore')->name('file.restore')->withTrashed()->whereNumber('file');
+            Route::delete('/file/delete/force/{file}', 'forceDelete')->withTrashed()->name('file.force.delete')->whereNumber('file');
+        });
+        Route::controller(PrivateFileController::class)->group(function () {
+            Route::get('/api/file-url/{id}', 'getFileUrl');
+            Route::get('/private/file/photo/{id}', 'showImage')->name('private.file');
+            Route::get('/private/file/video/{id}', 'showVideo')->name('private.video');
         });
         Route::controller(EditorController::class)->group(function () {
             Route::get('/editor/{file}', 'index')->name('file.edit')->whereNumber('file');

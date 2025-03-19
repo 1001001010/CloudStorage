@@ -42,7 +42,7 @@ export default function FoldersAndFiles({
                         Файлов не найдено
                     </h1>
                     <p className="mt-2 text-muted-foreground">
-                        В этой папке нет файлов или папок.
+                        В этой папке нет файлов или папок
                     </p>
                 </div>
             )}

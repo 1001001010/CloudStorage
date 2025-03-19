@@ -6,14 +6,13 @@ use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\{Storage, Auth};
 use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
-use App\Models\{File, Folder, FileExtension,
-    MimeType, FileUserAccess};
+use App\Models\{File, Folder, FileExtension, MimeType, FileUserAccess};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
     /**
-     * Обработка загрузки файлов на сервер
+     * Обработка загрузки файлов
      *
      * @param FileUploadRequest $request
      * @return RedirectResponse
@@ -54,7 +53,7 @@ class FileController extends Controller
      * @param int|null $folderId
      * @return Folder|null
      */
-    protected function validateFolder($folderId) : Folder|null {
+    protected function validateFolder($folderId): Folder|null {
         if ($folderId === null || $folderId == 0) {
             return null;
         }
@@ -65,7 +64,7 @@ class FileController extends Controller
     }
 
     /**
-     * Процесс загрузки и валидации файла
+     * Процесс загрузки файла
      *
      * @param \Illuminate\Http\UploadedFile $file
      * @param int $totalSize
@@ -75,18 +74,20 @@ class FileController extends Controller
      * @param int|null $folderId
      * @return array
      */
-    protected function processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folderId) : array {
+    protected function processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folderId): array
+    {
         $fileSize = $file->getSize();
         $messages = [];
         $success = false;
 
         if (($totalSize + $fileSize) > $maxSize) {
-            return ['message' => 'Превышен лимит хранения файлов (5 ГБ)', 'totalSize' => $totalSize, 'success' => false];
+            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false];
         }
 
         $fileExtension = strtolower($file->getClientOriginalExtension());
+
         if (in_array($fileExtension, $disallowedExtensions)) {
-            return ['message' => "Файл с расширением .{$fileExtension} не был загружен, так как это запрещено.", 'totalSize' => $totalSize, 'success' => false];
+            return ['message' => "Файл с расширением .{$fileExtension} запрещен.", 'totalSize' => $totalSize, 'success' => false];
         }
 
         $mimeType = $file->getMimeType();
@@ -99,6 +100,7 @@ class FileController extends Controller
         $timePart = time();
         $randomPart = Str::random(20);
         $newPath = "{$timePart}_{$randomPart}.{$fileExtension}";
+
         if (strlen($newPath) > 40) {
             $newPath = substr($newPath, 0, 40 - strlen($fileExtension) - 1) . ".{$fileExtension}";
         }
@@ -106,7 +108,8 @@ class FileController extends Controller
         $extension = FileExtension::firstOrCreate(['extension' => $fileExtension]);
         $mime = MimeType::firstOrCreate(['mime_type' => $mimeType]);
 
-        $path = $file->storeAs('files', $newPath, 'public');
+        $path = $file->storeAs('files', $newPath, 'private');
+
         File::create([
             'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
             'path' => $path,
@@ -126,68 +129,66 @@ class FileController extends Controller
     }
 
     /**
-     * Обработка редиректа с ошибкой
-     *
-     * @param string $title
-     * @param string $description
-     * @return RedirectResponse
-     */
-    protected function redirectWithError($title, $description): RedirectResponse {
-        return redirect()->back()->with('msg', [
-            'title' => $title,
-            'description' => $description,
-        ]);
-    }
-
-    /**
-     * Скачивает файл, принадлежащий текущему пользователю
+     * Скачивание файла
      *
      * @param File $file
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function download(File $file) : BinaryFileResponse|RedirectResponse {
+    public function download(File $file): BinaryFileResponse|RedirectResponse {
         if ($this->checkUserFileAccess($file)) {
             return $this->serveFile($file);
         }
-        return $this->redirectWithError('У вас нет прав на просмотр этого файла', '');
+        return $this->redirectWithError('Нет прав на скачивание файла', '');
     }
 
     /**
-     * Проверка прав доступа пользователя к файлу
+     * Проверка прав доступа
      *
      * @param File $file
      * @return bool
      */
-    protected function checkUserFileAccess(File $file) : bool {
+    protected function checkUserFileAccess(File $file): bool {
         return $file->user_id == Auth::id() || $this->userHasAccessToFile($file->id, Auth::id());
     }
 
     /**
-     * Проверяет наличие у пользователя прав доступа к файлу
+     * Скачивание файла
      *
-     * @param int $fileId
-     * @param int $userId
-     * @return bool
+     * @param File $file
+     * @return BinaryFileResponse|RedirectResponse
      */
-    protected function userHasAccessToFile($fileId, $userId) : bool {
-        return FileUserAccess::whereHas('accessToken', function ($query) use ($fileId) {
-            $query->where('file_id', $fileId);
-        })->where('user_id', $userId)->exists();
+    protected function serveFile(File $file): BinaryFileResponse|RedirectResponse {
+        $filePath = $file->path;
+
+        if (Storage::disk('private')->exists($filePath)) {
+            return response()->file(Storage::path($filePath), [
+                'Content-Disposition' => 'attachment; filename="' . $file->name . '.' . $file->extension->extension . '"'
+            ]);
+
+        }
+
+        return $this->redirectWithError('Файл не найден', '');
     }
 
     /**
-     * Подготовка и отправка файла для скачивания
+     * Мягкое удаление файла
      *
      * @param File $file
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
+     * @return RedirectResponse
      */
-    protected function serveFile(File $file) : BinaryFileResponse|RedirectResponse {
-        $filePath = storage_path('/app/public/' . $file->path);
+    public function delete(File $file): RedirectResponse {
+        $file = File::where('user_id', Auth::id())->find($file->id);
 
-        if (file_exists($filePath)) {
-            return response()->download($filePath, $file->name . '.' . $file->extension->extension);
+        if(!$file) {
+            return redirect()->back()->with('msg', [
+                'title' => 'Файлы не найден',
+            ]);
         }
-        return $this->redirectWithError('Файл не найден на сервере', '');
+        $file->delete();
+        return redirect()->route('index')->with('msg', [
+            'title' => 'Файл перемещён в корзину',
+            'description' => 'Вы можете его восставновить из корзины'
+        ]);
     }
 
     /**
@@ -211,34 +212,14 @@ class FileController extends Controller
         ]);
     }
 
+
     /**
-     * Мягкое удаление файла текущего пользователя
+     * Восстановление мягко удаленного файла
      *
      * @param File $file
      * @return RedirectResponse
      */
-    public function delete(File $file): RedirectResponse {
-        $file = File::where('user_id', Auth::id())->find($file->id);
-
-        if(!$file) {
-            return redirect()->back()->with('msg', [
-                'title' => 'Файлы не найден',
-            ]);
-        }
-        $file->delete();
-        return redirect()->route('index')->with('msg', [
-            'title' => 'Файл перемещён в корзину',
-            'description' => 'Вы можете его восставновить из корзины'
-        ]);
-    }
-
-    /**
-     * Восстановление мягко удаленного файла текущего пользователя
-     *
-     * @param File $file
-     * @return RedirectResponse
-     */
-    public function restore($file): RedirectResponse {
+    public function restore(File $file): RedirectResponse {
         $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file->id);
         if (!$file) {
             return redirect()->back()->with('msg', [
@@ -252,7 +233,7 @@ class FileController extends Controller
     }
 
     /**
-     * Полное удаление файла (без возможности восстановления)
+     * Полное удаление файла
      *
      * @param File $file
      * @return RedirectResponse
@@ -260,15 +241,11 @@ class FileController extends Controller
     public function forceDelete(File $file): RedirectResponse {
         $file = File::onlyTrashed()->where('user_id', Auth::id())->find($file->id);
         if (!$file) {
-            return redirect()->back()->with('msg', [
-                'title' => 'Файл не найден',
-            ]);
+            return $this->redirectWithError('Файл не найден', '');
         }
 
-        Storage::disk('public')->delete($file->path);
+        Storage::disk('private')->delete($file->path);
         $file->forceDelete();
-        return redirect()->back()->with('msg', [
-            'title' => 'Файл полностью удален',
-        ]);
+        return redirect()->back()->with('msg', ['title' => 'Файл полностью удален']);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\{Request, RedirectResponse, InertiaResponse};
 use Inertia\{Inertia, Response};
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\File;
 
 class EditorController extends Controller
@@ -15,7 +16,7 @@ class EditorController extends Controller
      * @param File $file
      * @return RedirectResponse|Response
      */
-    public function index(File $file): RedirectResponse|Response {
+    public function index(File $file): Response{
         $allowedExtensions = [
             'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
             'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
@@ -30,7 +31,6 @@ class EditorController extends Controller
             'text/plain',
             'text/markdown',
             'text/csv',
-            'text/plain',
             'application/javascript',
             'application/x-php',
             'text/html',
@@ -45,25 +45,35 @@ class EditorController extends Controller
             'application/sql',
             'text/css',
             'application/json',
-            ['application/x-yaml','text/yaml'],
-           ['application/xml','text/xml'],
+            'application/x-yaml', 'text/yaml',
+            'application/xml', 'text/xml',
         ];
 
-        $file = File::with(['extension', 'mimeType'])->where('user_id', Auth::id())->find($file->id);
-        if ($file) {
-            if (in_array($file->extension->extension, $allowedExtensions) && in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
-                $language = $this->getLanguageByExtension($file->extension->extension);
-                $file->content = file_get_contents(storage_path('app/public/' . $file->path));
-                return Inertia::render('Editor', ['file' => $file, 'language' => $language]);
-            } else {
-                return redirect()->back()->with('msg', [
-                    'title' => 'Невозможно открыть файл',
-                ]);
-            }
-        } else {
-            return redirect()->back()->with('msg', [
-                'title' => 'Файл не найден',
+        $file = File::where('user_id', Auth::id())->find($file->id);
+
+        if (!$file) {
+            return redirect()->back()->with('msg', ['title' => 'Файл не найден']);
+        }
+
+        if (!in_array($file->extension->extension, $allowedExtensions) ||
+            !in_array($file->mimeType->mime_type, $allowedMimeTypes)) {
+            return redirect()->back()->with('msg', ['title' => 'Невозможно открыть файл']);
+        }
+
+        if (!Storage::disk('local')->exists($file->path)) {
+            return redirect()->back()->with('msg', ['title' => 'Файл отсутствует в хранилище']);
+        }
+
+        try {
+            $language = $this->getLanguageByExtension($file->extension->extension);
+            $file->content = Storage::disk('local')->get($file->path);
+
+            return Inertia::render('Editor', [
+                'file' => $file,
+                'language' => $language
             ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('msg', ['title' => 'Ошибка при чтении файла']);
         }
     }
 
@@ -112,30 +122,28 @@ class EditorController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function upload(Request $request, File $file): RedirectResponse {
+    public function upload(Request $request, File $file): RedirectResponse
+    {
         $file = File::where('user_id', Auth::id())->find($file->id);
-        if ($file) {
-            $filePath = storage_path('app/public/' . $file->path);
-            if (file_exists($filePath)) {
-                $fileText = $request->fileText;
-                file_put_contents($filePath, $fileText);
 
-                $newFileSize = filesize($filePath);
-                $file->size = $newFileSize;
-                $file->save();
-
-                return redirect()->back()->with('msg', [
-                    'title' => 'Файл успешно сохранён',
-                ]);
-            } else {
-                return redirect()->back()->with('msg', [
-                    'title' => 'Файл не найден',
-                ]);
-            }
+        if (!$file) {
+            return redirect()->back()->with('msg', ['title' => 'Файл не найден']);
         }
 
-        return redirect()->back()->with('msg', [
-            'title' => 'Файл не найден',
-        ]);
+        if (!Storage::disk('local')->exists($file->path)) {
+            return redirect()->back()->with('msg', ['title' => 'Файл отсутствует в хранилище']);
+        }
+
+        try {
+            $fileText = $request->input('fileText');
+            Storage::disk('local')->put($file->path, $fileText);
+            $newFileSize = Storage::disk('local')->size($file->path);
+            $file->size = $newFileSize;
+            $file->save();
+
+            return redirect()->back()->with('msg', ['title' => 'Файл успешно сохранён']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('msg', ['title' => 'Ошибка при сохранении файла']);
+        }
     }
 }

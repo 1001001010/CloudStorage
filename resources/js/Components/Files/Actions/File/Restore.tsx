@@ -4,11 +4,11 @@ import { ArchiveRestore } from 'lucide-react'
 import { useForm } from '@inertiajs/react'
 
 export default function FileRestore({ file }: { file: FileType }) {
-    const { patch, processing } = useForm()
+    const { put, processing } = useForm()
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
-        patch(route('file.restore', { file: file.id }))
+        put(route('file.restore', { file: file.id }))
     }
 
     return (
