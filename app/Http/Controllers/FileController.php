@@ -26,7 +26,7 @@ class FileController extends Controller
 
         $disallowedExtensions = ['exe', 'bat', 'sh'];
         $messages = [];
-        $successCount = 0; // Счетчик успешно загруженных файлов
+        $successCount = 0;
         $userId = Auth::id();
         $totalSize = File::where('user_id', $userId)->sum('size');
         $maxSize = 5 * 1024 * 1024 * 1024; // 5 ГБ
@@ -108,7 +108,7 @@ class FileController extends Controller
 
         $path = $file->storeAs('files', $newPath, 'public');
         File::create([
-            'name' => $file->getClientOriginalName(),
+            'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
             'path' => $path,
             'extension_id' => $extension->id,
             'mime_type_id' => $mime->id,
