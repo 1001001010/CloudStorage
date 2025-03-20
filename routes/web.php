@@ -1,11 +1,23 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, MainController,
-    FolderController, FileController, TrashController, EditorController,
-    AdminController, FileAccessTokenController, PrivateFileController};
+use App\Http\Controllers\{
+    ProfileController,
+    MainController,
+    FolderController,
+    FileController,
+    TrashController,
+    EditorController,
+    AdminController,
+    FileAccessTokenController,
+    PrivateFileController
+};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\{GetUserFolders, GetUserFoldersAndFiles, IsAdmin};
+use App\Http\Middleware\{
+    GetUserFolders,
+    GetUserFoldersAndFiles,
+    IsAdmin
+};
 
 require __DIR__.'/auth.php';
 
@@ -46,17 +58,14 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::post('/access/create', 'upload')->name('access.upload');
             Route::get('/access/{token}', 'invite')->name('access.user.upload');
         });
+        Route::get('/{category?}', [MainController::class, 'index'])->name('index');
     });
 
-    Route::get('/{category?}', [MainController::class, 'index'])->name('index');
-
-    Route::middleware(IsAdmin::class)->group(function () {
-        Route::controller(AdminController::class)->group(function () {
-            Route::get('/admin/users', 'index')->name('admin.users');
-            Route::get('/admin/stats', 'stats')->name('admin.stats');
-            Route::patch('/admin/user/{user}/role/update', 'update_role')->name('admin.role.update')->whereNumber('user');
-            Route::get('/statistics/export', 'excel')->middleware('auth')->name('statistics.export');
-        });
+    Route::middleware(IsAdmin::class)->controller(AdminController::class)->group(function () {
+        Route::get('/admin/users', 'index')->name('admin.users');
+        Route::get('/admin/stats', 'stats')->name('admin.stats');
+        Route::patch('/admin/user/{user}/role/update', 'update_role')->name('admin.role.update')->whereNumber('user');
+        Route::get('/statistics/export', 'excel')->middleware('auth')->name('statistics.export');
+        Route::get('/reports/pdf', 'generateReport')->name('reports.pdf');
     });
-
 });

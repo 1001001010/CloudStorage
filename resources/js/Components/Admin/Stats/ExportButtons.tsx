@@ -15,38 +15,52 @@ export default function ExportButtons() {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Download className="h-5 w-5" />
-                    Экспорт данных
+                    Статистика хранилища
                 </CardTitle>
                 <CardDescription>
-                    Выберите формат для скачивания отчета
+                    Скачайте отчет в удобном формате
                 </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col justify-between">
                 <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        Наши отчеты содержат подробную статистику и аналитику по
-                        использованию системы. Выберите наиболее подходящий для
-                        вас формат:
+                        Получите полную аналитику вашего облачного хранилища с
+                        детальной информацией о файлах, использовании
+                        пространства и активности пользователей:
                     </p>
                     <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
-                        <li>PDF - для презентаций и быстрого просмотра</li>
                         <li>
-                            Excel - для углубленного анализа и обработки данных
+                            <span className="font-medium">PDF-отчет</span> -
+                            компактная сводка с ключевыми показателями,
+                            распределением по типам файлов и графиками
+                            активности
+                        </li>
+                        <li>
+                            <span className="font-medium">Excel-таблица</span> -
+                            расширенная статистика с возможностью сортировки,
+                            фильтрации и создания собственных диаграмм
                         </li>
                     </ul>
                 </div>
                 <div className="mt-6 flex justify-between gap-4">
-                    <Button variant="outline" className="flex-1">
-                        <FilePdf className="mr-2 h-4 w-4" />
-                        PDF
-                    </Button>
+                    <a
+                        href={route('reports.pdf')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full">
+                        <Button variant="outline" className="w-full flex-1">
+                            <FilePdf className="mr-2 h-4 w-4" />
+                            Скачать PDF-отчет
+                        </Button>
+                    </a>
                     <a
                         href={route('statistics.export')}
                         target="_blank"
-                        rel="noopener noreferrer">
-                        <Button variant="outline" className="flex-1">
+                        rel="noopener noreferrer"
+                        className="w-full">
+                        <Button variant="outline" className="w-full flex-1">
                             <FileSpreadsheet className="mr-2 h-4 w-4" />
-                            Excel
+                            Скачать Excel-таблицу
                         </Button>
                     </a>
                 </div>

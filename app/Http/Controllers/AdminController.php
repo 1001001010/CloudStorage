@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\{Request, RedirectResponse};
 use Inertia\{Inertia, Response};
-use App\Models\User;
+use App\Models\{User, File};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\StorageStatisticsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\FileExtension;
+use PDF;
 
 class AdminController extends Controller
 {
@@ -173,5 +175,153 @@ class AdminController extends Controller
         $filename = 'статистика_хранилища_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
 
         return Excel::download(new StorageStatisticsExport(), $filename);
+    }
+
+    /**
+     * Генерация PDF-отчета о хранилище
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function generateReport(Request $request)
+    {
+        // Валидация запроса
+        $request->validate([
+            'period' => 'nullable|in:week,month,year',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        $period = $request->input('period', 'month');
+        $userId = $request->input('user_id');
+
+        // Проверка прав доступа (только админ может видеть статистику всех пользователей)
+        if (!auth()->user()->is_admin && $userId != auth()->id()) {
+            $userId = auth()->id();
+        }
+
+        // Определение периода для отчета
+        switch ($period) {
+            case 'week':
+                $startDate = Carbon::now()->subWeek();
+                $periodTitle = 'за последнюю неделю';
+                break;
+            case 'year':
+                $startDate = Carbon::now()->subYear();
+                $periodTitle = 'за последний год';
+                break;
+            default: // month
+                $startDate = Carbon::now()->subMonth();
+                $periodTitle = 'за последний месяц';
+                break;
+        }
+
+        // Базовый запрос
+        $query = File::query();
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+            $user = User::find($userId);
+            $userTitle = $user ? "пользователя {$user->name}" : "выбранного пользователя";
+        } else {
+            $userTitle = "всех пользователей";
+        }
+
+        // Сбор данных для отчета
+        $data = [
+            'title' => "Отчет о состоянии хранилища {$periodTitle} для {$userTitle}",
+            'generated_at' => Carbon::now()->format('d.m.Y H:i:s'),
+            'period' => $periodTitle,
+            'user_filter' => $userTitle,
+
+            // Общая статистика
+            'total_files' => $query->count(),
+            'total_size' => $this->formatBytes($query->sum('size')),
+            'avg_file_size' => $this->formatBytes($query->avg('size') ?: 0),
+
+            // Статистика по расширениям
+            'extensions' => DB::table('files')
+                ->join('file_extensions', 'files.extension_id', '=', 'file_extensions.id')
+                ->select('file_extensions.extension', DB::raw('COUNT(*) as count'), DB::raw('SUM(files.size) as total_size'))
+                ->when($userId, function ($q) use ($userId) {
+                    return $q->where('files.user_id', $userId);
+                })
+                ->groupBy('file_extensions.extension')
+                ->orderBy('count', 'desc')
+                ->limit(5)
+                ->get()
+                ->map(function ($item) {
+                    $item->formatted_size = $this->formatBytes($item->total_size);
+                    return $item;
+                }),
+
+            // Недавние загрузки
+            'recent_uploads' => $query->clone()
+                ->with(['extension', 'user'])
+                ->where('created_at', '>=', $startDate)
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get()
+                ->map(function ($file) {
+                    return [
+                        'name' => $file->name,
+                        'extension' => $file->extension ? $file->extension->extension : 'Н/Д',
+                        'size' => $this->formatBytes($file->size),
+                        'user' => $file->user ? $file->user->name : 'Н/Д',
+                        'created_at' => $file->created_at->format('d.m.Y H:i:s'),
+                    ];
+                }),
+
+            // Активность по дням
+            'activity' => DB::table('files')
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+                ->when($userId, function ($q) use ($userId) {
+                    return $q->where('user_id', $userId);
+                })
+                ->where('created_at', '>=', $startDate)
+                ->groupBy('date')
+                ->orderBy('date', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    $item->formatted_date = Carbon::parse($item->date)->format('d.m.Y');
+                    return $item;
+                }),
+        ];
+
+        // Генерация PDF
+        $pdf = PDF::loadView('reports.storage-report', $data);
+
+        // Настройка PDF
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        // Имя файла для скачивания
+        $filename = "отчет_хранилище_{$period}_" . Carbon::now()->format('Y-m-d') . ".pdf";
+
+        // Возвращаем PDF для скачивания
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Форматирование байтов в читаемый формат
+     *
+     * @param int $bytes
+     * @param int $precision
+     * @return string
+     */
+    private function formatBytes($bytes, $precision = 2)
+    {
+        $units = ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'];
+
+        $bytes = max((int)$bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+
+        $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
