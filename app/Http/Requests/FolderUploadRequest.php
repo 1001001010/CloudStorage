@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 class FolderUploadRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Определяет, имеет ли пользователь право выполнить этот запрос
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -16,7 +18,7 @@ class FolderUploadRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получение правил валидации, которые применяются к запросу
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

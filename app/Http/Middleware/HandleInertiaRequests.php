@@ -8,14 +8,17 @@ use Inertia\Middleware;
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that is loaded on the first page visit.
+     * Корневой шаблон, который загружается при первом посещении страницы
      *
      * @var string
      */
     protected $rootView = 'app';
 
     /**
-     * Determine the current asset version.
+     * Определяет текущую версию ассетов
+     *
+     * @param Request $request
+     * @return string|null
      */
     public function version(Request $request): ?string
     {
@@ -23,8 +26,9 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
-     * Define the props that are shared by default.
+     * Определяет параметры, которые будут общими по умолчанию
      *
+     * @param Request $request
      * @return array<string, mixed>
      */
     public function share(Request $request): array

@@ -8,15 +8,17 @@ use Illuminate\Support\Facades\Auth;
 class AccessUploadRequest extends FormRequest
 {
     /**
-    * Право выполнения этого запроса
-    */
+     * Право выполнения этого запроса
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return Auth::check();
     }
 
     /**
-     * Правила валидации при поздании доступа к файлу
+     * Правила валидации при предоставлении доступа к файлу
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

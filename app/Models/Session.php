@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Session extends Model
 {
+    /**
+     * Атрибуты, которые могут быть массово присвоены
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'id',
         'user_id',
@@ -18,6 +23,8 @@ class Session extends Model
 
     /**
      * Обратная связь с моделью User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {

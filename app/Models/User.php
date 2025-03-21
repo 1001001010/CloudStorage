@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,17 +25,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Атрибуты, которые следует скрыть для сериализация.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Атрибуты, которые следует привести.
+     * Преобразование атрибутов в заданные типы
      *
      * @return array<string, string>
      */
@@ -48,7 +37,9 @@ class User extends Authenticatable
     }
 
     /**
-     * Связь с моделей Session
+     * Связь с моделью Session
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function sessions(): HasMany
     {
@@ -56,33 +47,49 @@ class User extends Authenticatable
     }
 
     /**
-     * Связь с моделей Folder
+     * Связь с моделью Folder
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function folders()
     {
         return $this->hasMany(Folder::class);
     }
 
-    public function folderCount(): int // Подсчет кол-ва созданных папок: int
+    /**
+     * Получение количества папок, созданных пользователем
+     *
+     * @return int
+     */
+    public function folderCount(): int
     {
         return $this->folders()->count();
     }
 
     /**
-     * Связь с моделей File
+     * Связь с моделью File
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function files()
     {
         return $this->hasMany(File::class);
     }
 
-    public function fileCount(): int // Подсчет кол-ва загруженных файлов: int
+    /**
+     * Получение количества файлов, загруженных пользователем
+     *
+     * @return int
+     */
+    public function fileCount(): int
     {
         return $this->files()->count();
     }
 
     /**
-     * Связь с моделей FileUserAccess
+     * Связь с моделью FileUserAccess
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function fileUserAccesses()
     {

@@ -9,6 +9,8 @@ class FileUploadRequest extends FormRequest
 {
     /**
      * Право выполнения этого запроса
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -16,7 +18,7 @@ class FileUploadRequest extends FormRequest
     }
 
     /**
-     * Правила валидации при загрузки файла
+     * Правила валидации при загрузке файла
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

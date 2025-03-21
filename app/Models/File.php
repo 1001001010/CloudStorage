@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
+    /**
+     * Атрибуты, которые могут быть массово присвоены
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'path',
@@ -24,6 +30,8 @@ class File extends Model
 
     /**
      * Связь с моделью Folder
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function folder()
     {
@@ -32,6 +40,8 @@ class File extends Model
 
     /**
      * Связь с моделью User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
@@ -40,6 +50,8 @@ class File extends Model
 
     /**
      * Связь с моделью FileExtension
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function extension()
     {
@@ -48,6 +60,8 @@ class File extends Model
 
     /**
      * Связь с моделью MimeType
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function mimeType()
     {
@@ -56,10 +70,11 @@ class File extends Model
 
     /**
      * Связь с моделью FileAccessToken
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function accessTokens()
     {
         return $this->hasMany(FileAccessToken::class);
     }
-
 }

@@ -248,4 +248,18 @@ class FileController extends Controller
         $file->forceDelete();
         return redirect()->back()->with('msg', ['title' => 'Файл полностью удален']);
     }
+
+    /**
+     * Обработка редиректа с ошибкой
+     *
+     * @param string $title
+     * @param string $description
+     * @return RedirectResponse
+     */
+    protected function redirectWithError($title, $description): RedirectResponse {
+        return redirect()->back()->with('msg', [
+            'title' => $title,
+            'description' => $description,
+        ]);
+    }
 }

@@ -17,7 +17,8 @@ class IsAdmin
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
-    public function handle(Request $request, Closure $next): Response {
+    public function handle(Request $request, Closure $next): Response
+    {
         if ($request->user() && $request->user()->is_admin == true) {
             return $next($request);
         }

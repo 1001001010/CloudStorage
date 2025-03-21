@@ -33,11 +33,11 @@ class GetUserFolders
     /**
      * Преобразование списка папок в древовидную структуру
      *
-     * @param Collection|array $folders
+     * @param \Illuminate\Database\Eloquent\Collection|array $folders
      * @param int|null $parentId
      * @return array
      */
-    public function buildFolderTree($folders, $parentId = null) : array {
+    public function buildFolderTree($folders, $parentId = null): array {
         $branch = [];
         foreach ($folders as $folder) {
             if ($folder->parent_id == $parentId) {

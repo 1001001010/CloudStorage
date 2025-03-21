@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,7 +11,7 @@ use App\Models\{Folder, File};
 class GetUserFoldersAndFiles
 {
     /**
-     * Получение папок и файлов, которые создал/загрузил пользователь
+     * Получение папок и файлов, которые загрузил пользователь
      *
      * @param Request $request
      * @param Closure $next
@@ -105,8 +106,8 @@ class GetUserFoldersAndFiles
     /**
      * Преобразование списка папок в древовидную структуру с файлами
      *
-     * @param Collection|array $folders
-     * @param Collection|array $files
+     * @param \Illuminate\Database\Eloquent\Collection|array $folders
+     * @param \Illuminate\Database\Eloquent\Collection|array $files
      * @param int|null $parentId
      * @param bool $excludeFolders
      * @return array
@@ -114,7 +115,6 @@ class GetUserFoldersAndFiles
     public function buildFolderTreeWithFiles($folders, $files, $parentId = null, $excludeFolders = false): array {
         $branch = [];
 
-        // Если папки исключены, добавляем все файлы, игнорируя связь с папками
         if ($excludeFolders) {
             foreach ($files as $file) {
                 $branch[] = array_merge(
@@ -123,7 +123,6 @@ class GetUserFoldersAndFiles
                 );
             }
         } else {
-            // Добавляем файлы, которые не принадлежат папкам
             if ($parentId === null) {
                 $filteredFiles = $files->where('folder_id', $parentId);
                 foreach ($filteredFiles as $file) {
@@ -134,7 +133,6 @@ class GetUserFoldersAndFiles
                 }
             }
 
-            // Если папки не исключены, строим дерево папок
             foreach ($folders as $folder) {
                 if ($folder->parent_id == $parentId) {
                     $children = $this->buildFolderTreeWithFiles($folders, $files, $folder->id, $excludeFolders);

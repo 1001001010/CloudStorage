@@ -9,6 +9,11 @@ class FileUserAccess extends Model
 {
     use HasFactory;
 
+    /**
+     * Атрибуты, которые могут быть массово присвоены
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'file_access_token_id',
         'user_id',
@@ -16,6 +21,8 @@ class FileUserAccess extends Model
 
     /**
      * Связь с моделью User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
@@ -24,6 +31,8 @@ class FileUserAccess extends Model
 
     /**
      * Связь с моделью FileAccessToken
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function accessToken()
     {
