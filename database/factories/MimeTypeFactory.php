@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\MimeType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MimeTypeFactory extends Factory

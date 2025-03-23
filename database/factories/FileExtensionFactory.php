@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\FileExtension;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FileExtensionFactory extends Factory

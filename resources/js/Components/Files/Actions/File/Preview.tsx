@@ -16,6 +16,7 @@ import {
     Type,
     HardDrive,
     Videotape,
+    Code2,
 } from 'lucide-react'
 
 type FileTypeKey =
@@ -129,7 +130,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'text/html',
                 'text/css',
             ],
-            icon: <Code size={80} className="!h-20 !w-20" />,
+            icon: <Code2 size={80} className="!h-20 !w-20" />,
         },
         audio: {
             extensions: ['mp3', 'wav', 'flac'],
