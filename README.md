@@ -62,4 +62,4 @@ $ npm run dev
 $ php artisan test
 ```
 ## Разработчик
-- [10010010](t.me/lll10010010)
+- [10010010](https://t.me/lll10010010)
