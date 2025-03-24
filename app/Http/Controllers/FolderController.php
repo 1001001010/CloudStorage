@@ -37,14 +37,14 @@ class FolderController extends Controller
      * @return RedirectResponse
      */
     public function delete(Folder $folder) : RedirectResponse {
-        $folder = Folder::where('user_id', Auth::id())->find($folder->id);
-
-        if(!$folder) {
+        if (!$folder->belongsToUser(Auth::id())) {
             return redirect()->back()->with('msg', [
-                'title' => 'Папка не найдена',
+                'title' => 'Папка не найдена или не принадлежит вам',
             ]);
         }
+
         $folder->delete();
+
         return redirect()->route('index')->with('msg', [
             'title' => 'Папка успешно удалена',
         ]);

@@ -211,6 +211,10 @@ class FileController extends Controller
      * @return RedirectResponse
      */
     public function rename(Request $request, File $file): RedirectResponse {
+        if ($file->user_id !== Auth::id()) {
+            abort(404);
+        }
+
         $validate_data = $request->validate([
             'name' => 'string|min:1'
         ]);

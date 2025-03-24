@@ -18,8 +18,7 @@ class DeleteFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_delete_folder_successfully()
-    {
+    public function test_delete_folder_successfully() {
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -42,8 +41,7 @@ class DeleteFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_delete_folder_not_belonging_to_user()
-    {
+    public function test_delete_folder_not_belonging_to_user() {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
         $this->actingAs($user);
@@ -58,7 +56,7 @@ class DeleteFolderTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHas('msg', [
-            'title' => 'Папка не найдена',
+            'title' => 'Папка не найдена или не принадлежит вам',
         ]);
     }
 
@@ -67,8 +65,7 @@ class DeleteFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_delete_non_existent_folder()
-    {
+    public function test_delete_non_existent_folder() {
         $user = User::factory()->create();
         $this->actingAs($user);
 

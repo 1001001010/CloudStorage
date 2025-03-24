@@ -58,8 +58,9 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::post('/access/create', 'upload')->name('access.upload');
             Route::get('/access/{token}', 'invite')->name('access.user.upload');
         });
-        Route::get('/{category?}', [MainController::class, 'index'])->name('index');
     });
+
+    Route::get('/{category?}', [MainController::class, 'index'])->name('index');
 
     Route::middleware(IsAdmin::class)->controller(AdminController::class)->group(function () {
         Route::get('/admin/users', 'index')->name('admin.users');

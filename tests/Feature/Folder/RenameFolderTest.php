@@ -18,8 +18,7 @@ class RenameFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_rename_folder_successfully()
-    {
+    public function test_rename_folder_successfully() {
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -42,8 +41,7 @@ class RenameFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_rename_folder_not_belonging_to_user()
-    {
+    public function test_rename_folder_not_belonging_to_user() {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
         $this->actingAs($user);
@@ -67,8 +65,7 @@ class RenameFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_rename_folder_invalid_data()
-    {
+    public function test_rename_folder_invalid_data() {
         $user = User::factory()->create();
         $this->actingAs($user);
 

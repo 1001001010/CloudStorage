@@ -18,8 +18,7 @@ class UploadFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_upload_folder_without_parent()
-    {
+    public function test_upload_folder_without_parent() {
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -42,8 +41,7 @@ class UploadFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_upload_folder_with_parent()
-    {
+    public function test_upload_folder_with_parent() {
         $user = User::factory()->create();
         $parentFolder = Folder::factory()->create(['user_id' => $user->id]);
 
@@ -68,8 +66,7 @@ class UploadFolderTest extends TestCase
      *
      * @return void
      */
-    public function test_upload_folder_unauthenticated()
-    {
+    public function test_upload_folder_unauthenticated() {
         $response = $this->post(route('folder.upload'), [
             'title' => 'Unauthorized Folder',
         ]);

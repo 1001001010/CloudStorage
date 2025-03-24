@@ -21,8 +21,7 @@ class DeleteFileTest extends TestCase
      *
      * @return void
      */
-    public function test_successful_file_delete()
-    {
+    public function test_successful_file_delete() {
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -44,8 +43,7 @@ class DeleteFileTest extends TestCase
      *
      * @return void
      */
-    public function test_file_not_found()
-    {
+    public function test_file_not_found() {
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -58,8 +56,7 @@ class DeleteFileTest extends TestCase
      *
      * @return void
      */
-    public function test_cannot_delete_file_of_another_user()
-    {
+    public function test_cannot_delete_file_of_another_user() {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
