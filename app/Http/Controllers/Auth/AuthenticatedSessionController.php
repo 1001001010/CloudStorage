@@ -4,11 +4,21 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\{RedirectResponse, Request};
-use Illuminate\Support\Facades\{Auth, Route, Hash};
+use Illuminate\Http\{
+    RedirectResponse,
+    Request
+};
+use Illuminate\Support\Facades\{
+    Auth,
+    Route,
+    Hash
+};
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use Inertia\{Inertia, Response};
+use Inertia\{
+    Inertia,
+    Response
+};
 use App\Models\User;
 
 class AuthenticatedSessionController extends Controller

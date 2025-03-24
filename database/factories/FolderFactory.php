@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Folder;
-use App\Models\User;
+use App\Models\{
+    Folder,
+    User
+};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FolderFactory extends Factory

@@ -2,11 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\FileExtension;
-use App\Models\MimeType;
-use App\Models\Folder;
-use App\Models\User;
-use App\Models\File;
+use App\Models\{
+    FileExtension,
+    MimeType,
+    Folder,
+    User,
+    File
+};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FileFactory extends Factory

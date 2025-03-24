@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccessUploadRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\{Request, RedirectResponse};
-use Inertia\{Inertia, Response};
-use App\Models\{File, FileAccessToken, FileUserAccess};
+use Illuminate\Http\{
+    Request,
+    RedirectResponse
+};
+use Inertia\{
+    Inertia,
+    Response
+};
+use App\Models\{
+    File,
+    FileAccessToken,
+    FileUserAccess
+};
 
 class FileAccessTokenController extends Controller
 {

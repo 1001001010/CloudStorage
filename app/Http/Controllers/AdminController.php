@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\{Request, RedirectResponse};
-use Inertia\{Inertia, Response};
-use App\Models\{User, File};
+use Illuminate\Http\{
+    Request,
+    RedirectResponse
+};
+use Inertia\{
+    Inertia,
+    Response
+};
+use App\Models\{
+    User,
+    File,
+    FileExtension
+};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\StorageStatisticsExport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\FileExtension;
 use PDF;
 
 class AdminController extends Controller
@@ -185,7 +194,6 @@ class AdminController extends Controller
      */
     public function generateReport(Request $request)
     {
-        // Валидация запроса
         $request->validate([
             'period' => 'nullable|in:week,month,year',
             'user_id' => 'nullable|exists:users,id',
@@ -194,12 +202,10 @@ class AdminController extends Controller
         $period = $request->input('period', 'month');
         $userId = $request->input('user_id');
 
-        // Проверка прав доступа (только админ может видеть статистику всех пользователей)
         if (!auth()->user()->is_admin && $userId != auth()->id()) {
             $userId = auth()->id();
         }
 
-        // Определение периода для отчета
         switch ($period) {
             case 'week':
                 $startDate = Carbon::now()->subWeek();
@@ -209,13 +215,12 @@ class AdminController extends Controller
                 $startDate = Carbon::now()->subYear();
                 $periodTitle = 'за последний год';
                 break;
-            default: // month
+            default:
                 $startDate = Carbon::now()->subMonth();
                 $periodTitle = 'за последний месяц';
                 break;
         }
 
-        // Базовый запрос
         $query = File::query();
 
         if ($userId) {
@@ -226,19 +231,16 @@ class AdminController extends Controller
             $userTitle = "всех пользователей";
         }
 
-        // Сбор данных для отчета
         $data = [
             'title' => "Отчет о состоянии хранилища {$periodTitle} для {$userTitle}",
             'generated_at' => Carbon::now()->format('d.m.Y H:i:s'),
             'period' => $periodTitle,
             'user_filter' => $userTitle,
 
-            // Общая статистика
             'total_files' => $query->count(),
             'total_size' => $this->formatBytes($query->sum('size')),
             'avg_file_size' => $this->formatBytes($query->avg('size') ?: 0),
 
-            // Статистика по расширениям
             'extensions' => DB::table('files')
                 ->join('file_extensions', 'files.extension_id', '=', 'file_extensions.id')
                 ->select('file_extensions.extension', DB::raw('COUNT(*) as count'), DB::raw('SUM(files.size) as total_size'))
@@ -254,7 +256,6 @@ class AdminController extends Controller
                     return $item;
                 }),
 
-            // Недавние загрузки
             'recent_uploads' => $query->clone()
                 ->with(['extension', 'user'])
                 ->where('created_at', '>=', $startDate)
@@ -271,7 +272,6 @@ class AdminController extends Controller
                     ];
                 }),
 
-            // Активность по дням
             'activity' => DB::table('files')
                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
                 ->when($userId, function ($q) use ($userId) {
@@ -287,21 +287,15 @@ class AdminController extends Controller
                 }),
         ];
 
-        // Генерация PDF
         $pdf = PDF::loadView('reports.storage-report', $data);
-
-        // Настройка PDF
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOptions([
             'defaultFont' => 'sans-serif',
             'isHtml5ParserEnabled' => true,
             'isRemoteEnabled' => true,
         ]);
-
-        // Имя файла для скачивания
         $filename = "отчет_хранилище_{$period}_" . Carbon::now()->format('Y-m-d') . ".pdf";
 
-        // Возвращаем PDF для скачивания
         return $pdf->download($filename);
     }
 

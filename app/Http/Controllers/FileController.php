@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Support\Facades\{Storage, Auth};
+use Illuminate\Http\{
+    Request,
+    RedirectResponse
+};
+use Illuminate\Support\Facades\{
+    Storage,
+    Auth
+};
 use Illuminate\Support\Str;
 use App\Http\Requests\FileUploadRequest;
-use App\Models\{File, Folder, FileExtension, MimeType, FileUserAccess};
+use App\Models\{
+    File,
+    Folder,
+    FileExtension,
+    MimeType,
+    FileUserAccess
+};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
@@ -181,13 +193,13 @@ class FileController extends Controller
 
         if(!$file) {
             return redirect()->back()->with('msg', [
-                'title' => 'Файлы не найден',
+                'title' => 'Файл не найден',
             ]);
         }
         $file->delete();
         return redirect()->route('index')->with('msg', [
             'title' => 'Файл перемещён в корзину',
-            'description' => 'Вы можете его восставновить из корзины'
+            'description' => 'Вы можете его восстановить из корзины'
         ]);
     }
 

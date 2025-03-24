@@ -6,7 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{Folder, File};
+use App\Models\{
+    Folder,
+    File
+};
 
 class GetUserFoldersAndFiles
 {

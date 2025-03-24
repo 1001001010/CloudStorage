@@ -5,15 +5,20 @@ namespace Tests\Feature\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
-use App\Models\{User, Folder, File};
+use App\Models\{
+    User,
+    Folder,
+    File
+};
 
-class FileUploadTest extends TestCase
+class UploadFileTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
      * Тест успешной загрузки файла
      *
+     * @return void
      */
     public function test_file_upload_success() {
         $user = User::factory()->create();
@@ -40,6 +45,7 @@ class FileUploadTest extends TestCase
     /**
      * Тест на отклонение файлов с неразрешенными расширениями
      *
+     * @return void
      */
     public function test_file_upload_rejects_disallowed_extensions() {
         $user = User::factory()->create();
@@ -62,6 +68,7 @@ class FileUploadTest extends TestCase
     /**
      * Тест на детекцию дубликатов
      *
+     * @return void
      */
     public function test_file_upload_detects_duplicates() {
         $user = User::factory()->create();

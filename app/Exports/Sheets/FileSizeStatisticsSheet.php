@@ -4,21 +4,25 @@ namespace App\Exports\Sheets;
 
 use App\Models\File;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithDrawings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Chart\Chart;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
-use PhpOffice\PhpSpreadsheet\Chart\Legend;
-use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
-use PhpOffice\PhpSpreadsheet\Chart\Title;
+use Maatwebsite\Excel\Concerns\{
+    FromCollection,
+    WithTitle,
+    WithHeadings,
+    WithStyles,
+    WithDrawings,
+    ShouldAutoSize
+};
+use PhpOffice\PhpSpreadsheet\{
+    Worksheet\Worksheet,
+    Style\Fill,
+    Style\Border,
+    Chart\Chart,
+    Chart\DataSeries,
+    Chart\DataSeriesValues,
+    Chart\Legend,
+    Chart\PlotArea,
+    Chart\Title
+};
 
 class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings, WithStyles, WithDrawings, ShouldAutoSize
 {
@@ -37,7 +41,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
             $query->where('user_id', $this->userId);
         }
 
-        // Определение диапазонов размеров
         $ranges = [
             ['min' => 0, 'max' => 1024, 'label' => 'До 1 КБ'],
             ['min' => 1024, 'max' => 10240, 'label' => '1-10 КБ'],
@@ -75,7 +78,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
             ]);
         }
 
-        // Добавление статистики по самым большим файлам
         $result->push(['', '', '']);
         $result->push(['Топ-10 самых больших файлов', '', '']);
         $result->push(['Имя файла', 'Расширение', 'Размер']);
@@ -109,7 +111,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
 
     public function styles(Worksheet $sheet)
     {
-        // Стили для заголовков секций
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -134,7 +135,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
             ],
         ]);
 
-        // Стили для заголовков таблиц
         $sheet->getStyle('A2:C2')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -165,7 +165,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
             ],
         ]);
 
-        // Стили для данных
         $sheet->getStyle('A3:C10')->applyFromArray([
             'borders' => [
                 'allBorders' => [
@@ -182,7 +181,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
             ],
         ]);
 
-        // Объединение ячеек для заголовков
         $sheet->mergeCells('A1:C1');
         $sheet->mergeCells('A12:C12');
 
@@ -191,7 +189,6 @@ class FileSizeStatisticsSheet implements FromCollection, WithTitle, WithHeadings
 
     public function drawings()
     {
-        // Создание гистограммы для распределения по размерам
         $sizeChart = new Chart(
             'size_chart',
             new Title('Распределение файлов по размерам'),

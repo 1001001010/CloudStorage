@@ -3,10 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\{Request, RedirectResponse};
-use Illuminate\Support\Facades\{Redirect, Auth};
-use Inertia\{Response, Inertia};
-use App\Models\{User, Session};
+use Illuminate\Http\{
+    Request,
+    RedirectResponse
+};
+use Illuminate\Support\Facades\{
+    Redirect,
+    Auth
+};
+use Inertia\{
+    Response,
+    Inertia
+};
+use App\Models\{
+    User,
+    Session
+};
 
 class ProfileController extends Controller
 {

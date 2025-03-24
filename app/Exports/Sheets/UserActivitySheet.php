@@ -2,25 +2,31 @@
 
 namespace App\Exports\Sheets;
 
-use App\Models\File;
-use App\Models\User;
+use App\Models\{
+    File,
+    User
+};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithDrawings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Chart\Chart;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
-use PhpOffice\PhpSpreadsheet\Chart\Legend;
-use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
-use PhpOffice\PhpSpreadsheet\Chart\Title;
+use Maatwebsite\Excel\Concerns\{
+    FromCollection,
+    WithTitle,
+    WithHeadings,
+    WithStyles,
+    WithDrawings,
+    ShouldAutoSize
+};
+use PhpOffice\PhpSpreadsheet\{
+    Worksheet\Worksheet,
+    Style\Fill,
+    Style\Border,
+    Chart\Chart,
+    Chart\DataSeries,
+    Chart\DataSeriesValues,
+    Chart\Legend,
+    Chart\PlotArea,
+    Chart\Title
+};
 
 class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, WithStyles, WithDrawings, ShouldAutoSize
 {
@@ -35,21 +41,20 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function collection()
     {
-        // Определение периода
         switch ($this->period) {
             case 'week':
                 $startDate = Carbon::now()->subWeek();
-                $groupFormat = '%Y-%m-%d'; // Используем MySQL формат
+                $groupFormat = '%Y-%m-%d';
                 $labelFormat = 'd.m';
                 break;
             case 'year':
                 $startDate = Carbon::now()->subYear();
-                $groupFormat = '%Y-%m'; // Используем MySQL формат
+                $groupFormat = '%Y-%m';
                 $labelFormat = 'F Y';
                 break;
-            default: // month
+            default:
                 $startDate = Carbon::now()->subMonth();
-                $groupFormat = '%Y-%m-%d'; // Используем MySQL формат
+                $groupFormat = '%Y-%m-%d';
                 $labelFormat = 'd.m';
                 break;
         }
@@ -60,17 +65,14 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
             $query->where('user_id', $this->userId);
         }
 
-        // Получение данных о загрузках по дням/месяцам с использованием MySQL DATE_FORMAT
         $uploadStats = $query->where('created_at', '>=', $startDate)
             ->select(DB::raw("DATE_FORMAT(created_at, '{$groupFormat}') as date"), DB::raw('COUNT(*) as count'), DB::raw('SUM(size) as total_size'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        // Преобразование дат в читаемый формат с проверкой на корректность
         $uploadStats = $uploadStats->map(function ($item) use ($labelFormat) {
             try {
-                // Проверяем, что дата корректна
                 if (!empty($item->date) && strtotime($item->date)) {
                     $date = Carbon::parse($item->date);
                     $formattedDate = $date->format($labelFormat);
@@ -84,7 +86,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
                     'total_size' => $item->total_size ?? 0,
                 ];
             } catch (\Exception $e) {
-                // В случае ошибки возвращаем безопасные значения
                 return [
                     'date' => 'Ошибка даты',
                     'count' => $item->count ?? 0,
@@ -93,7 +94,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
             }
         });
 
-        // Получение топ пользователей по количеству файлов
         $topUsersByCount = DB::table('files')
             ->join('users', 'files.user_id', '=', 'users.id')
             ->select('users.name', DB::raw('COUNT(*) as count'))
@@ -102,7 +102,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
             ->limit(10)
             ->get();
 
-        // Получение топ пользователей по размеру файлов
         $topUsersBySize = DB::table('files')
             ->join('users', 'files.user_id', '=', 'users.id')
             ->select('users.name', DB::raw('SUM(files.size) as total_size'))
@@ -163,7 +162,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function styles(Worksheet $sheet)
     {
-        // Стили для заголовков секций
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -176,7 +174,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
             ],
         ]);
 
-        // Находим индексы строк для других заголовков
         $lastRow = $sheet->getHighestRow();
         $topUsersCountRow = null;
         $topUsersSizeRow = null;
@@ -218,7 +215,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
             ]);
         }
 
-        // Объединение ячеек для заголовков
         $sheet->mergeCells('A1:C1');
 
         if ($topUsersCountRow) {
@@ -234,7 +230,6 @@ class UserActivitySheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function drawings()
     {
-        // Создание линейной диаграммы для активности загрузок
         $activityChart = new Chart(
             'activity_chart',
             new Title('Активность загрузок за период'),

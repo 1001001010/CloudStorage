@@ -2,21 +2,24 @@
 
 namespace Tests\Feature\File;
 
-use App\Models\File;
-use App\Models\User;
-use App\Models\Folder;
+use App\Models\{
+    User,
+    Folder,
+    File
+};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class FileDeleteTest extends TestCase
+class DeleteFileTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
      * Тест успешного мягкого удаления файла
      *
+     * @return void
      */
     public function test_successful_file_delete()
     {
@@ -32,32 +35,28 @@ class FileDeleteTest extends TestCase
         $response->assertRedirect(route('index'));
         $response->assertSessionHas('msg', [
             'title' => 'Файл перемещён в корзину',
-            'description' => 'Вы можете его восставновить из корзины'
+            'description' => 'Вы можете его восстановить из корзины'
         ]);
     }
 
     /**
      * Тест на случай, если файл не существует
      *
+     * @return void
      */
     public function test_file_not_found()
     {
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $folder = Folder::factory()->create(['user_id' => $user->id]);
-
         $response = $this->delete(route('file.delete', ['file' => 999]));
-
-        $response->assertRedirect();
-        $response->assertSessionHas('msg', [
-            'title' => 'Файлы не найден'
-        ]);
+        $response->assertStatus(404);
     }
 
     /**
      * Тест на попытку удалить файл другого пользователя
      *
+     * @return void
      */
     public function test_cannot_delete_file_of_another_user()
     {
@@ -75,7 +74,7 @@ class FileDeleteTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHas('msg', [
-            'title' => 'Файлы не найден'
+            'title' => 'Файл не найден'
         ]);
     }
 }

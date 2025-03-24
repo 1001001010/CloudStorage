@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\{Request, RedirectResponse, InertiaResponse};
-use Inertia\{Inertia, Response};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\{
+    Request,
+    RedirectResponse,
+    InertiaResponse
+};
+use Inertia\{
+    Inertia,
+    Response
+};
+use Illuminate\Support\Facades\{
+    Auth,
+    Storage
+};
 use App\Models\File;
 
 class EditorController extends Controller

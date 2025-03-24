@@ -2,20 +2,26 @@
 
 namespace App\Exports\Sheets;
 
-use App\Models\File;
-use App\Models\User;
-use App\Models\FileExtension;
-use App\Models\MimeType;
+use App\Models\{
+    File,
+    User,
+    FileExtension,
+    MimeType
+};
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Maatwebsite\Excel\Concerns\{
+    FromCollection,
+    WithTitle,
+    WithHeadings,
+    WithStyles,
+    ShouldAutoSize
+};
+use PhpOffice\PhpSpreadsheet\{
+    Worksheet\Worksheet,
+    Style\Fill,
+    Style\Border,
+    Style\Alignment
+};
 
 class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings, WithStyles, ShouldAutoSize
 {
@@ -79,11 +85,9 @@ class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings,
 
     public function styles(Worksheet $sheet)
     {
-        // Объединение ячеек для заголовка
         $sheet->mergeCells('A1:C1');
         $sheet->setCellValue('A1', 'ОБЩАЯ СТАТИСТИКА ХРАНИЛИЩА');
 
-        // Стили для заголовка
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -100,7 +104,6 @@ class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings,
             ],
         ]);
 
-        // Стили для заголовков таблицы
         $sheet->getStyle('A2:C2')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -118,7 +121,6 @@ class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings,
             ],
         ]);
 
-        // Стили для данных
         $lastRow = $sheet->getHighestRow();
         $sheet->getStyle('A3:C' . $lastRow)->applyFromArray([
             'borders' => [
@@ -129,7 +131,6 @@ class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings,
             ],
         ]);
 
-        // Чередующиеся цвета строк
         for ($row = 3; $row <= $lastRow; $row++) {
             if ($row % 2 == 0) {
                 $sheet->getStyle('A' . $row . ':C' . $row)->applyFromArray([
@@ -141,11 +142,9 @@ class GeneralStatisticsSheet implements FromCollection, WithTitle, WithHeadings,
             }
         }
 
-        // Выравнивание
         $sheet->getStyle('A2:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $sheet->getStyle('B2:C' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
-        // Высота строки заголовка
         $sheet->getRowDimension(1)->setRowHeight(30);
 
         return [];

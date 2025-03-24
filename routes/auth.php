@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\Auth\{AuthenticatedSessionController,
-    PasswordController, RegisteredUserController};
+use App\Http\Controllers\Auth\{
+    AuthenticatedSessionController,
+    PasswordController,
+    RegisteredUserController
+};
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{
+    Model,
+    Factories\HasFactory
+};
 
 class Folder extends Model
 {
@@ -54,5 +56,16 @@ class Folder extends Model
     public function files()
     {
         return $this->hasMany(File::class);
+    }
+
+    /**
+     * Проверяет, принадлежит ли папка текущему пользователю.
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function belongsToUser(int $userId): bool
+    {
+        return $this->user_id === $userId;
     }
 }

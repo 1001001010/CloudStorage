@@ -2,24 +2,30 @@
 
 namespace App\Exports\Sheets;
 
-use App\Models\File;
-use App\Models\User;
+use App\Models\{
+    File,
+    User
+};
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithDrawings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Chart\Chart;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
-use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
-use PhpOffice\PhpSpreadsheet\Chart\Legend;
-use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
-use PhpOffice\PhpSpreadsheet\Chart\Title;
+use Maatwebsite\Excel\Concerns\{
+    FromCollection,
+    WithTitle,
+    WithHeadings,
+    WithStyles,
+    WithDrawings,
+    ShouldAutoSize
+};
+use PhpOffice\PhpSpreadsheet\{
+    Worksheet\Worksheet,
+    Style\Fill,
+    Style\Border,
+    Chart\Chart,
+    Chart\DataSeries,
+    Chart\DataSeriesValues,
+    Chart\Legend,
+    Chart\PlotArea,
+    Chart\Title
+};
 
 class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, WithStyles, WithDrawings, ShouldAutoSize
 {
@@ -32,14 +38,12 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function collection()
     {
-        // Общая статистика использования хранилища
         $totalSize = File::sum('size');
         $totalFiles = File::count();
         $totalUsers = User::count();
         $avgSizePerUser = $totalUsers > 0 ? $totalSize / $totalUsers : 0;
         $avgFilesPerUser = $totalUsers > 0 ? $totalFiles / $totalUsers : 0;
 
-        // Использование хранилища по пользователям
         $userStats = DB::table('files')
             ->join('users', 'files.user_id', '=', 'users.id')
             ->select('users.name', DB::raw('COUNT(*) as file_count'), DB::raw('SUM(files.size) as total_size'))
@@ -83,7 +87,6 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function styles(Worksheet $sheet)
     {
-        // Стили для заголовков секций
         $sheet->getStyle('A1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -108,7 +111,6 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
             ],
         ]);
 
-        // Стили для заголовков таблиц
         $sheet->getStyle('A2:C2')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -139,7 +141,6 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
             ],
         ]);
 
-        // Стили для данных
         $sheet->getStyle('A3:C7')->applyFromArray([
             'borders' => [
                 'allBorders' => [
@@ -157,7 +158,6 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
             ],
         ]);
 
-        // Объединение ячеек для заголовков
         $sheet->mergeCells('A1:C1');
         $sheet->mergeCells('A9:C9');
 
@@ -166,7 +166,6 @@ class StorageUsageSheet implements FromCollection, WithTitle, WithHeadings, With
 
     public function drawings()
     {
-        // Создание круговой диаграммы для использования хранилища по пользователям
         $storageChart = new Chart(
             'storage_chart',
             new Title('Распределение хранилища по пользователям'),

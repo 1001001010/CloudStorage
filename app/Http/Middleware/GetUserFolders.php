@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\{Folder, File};
+use App\Models\{
+    Folder,
+    File
+};
 
 class GetUserFolders
 {

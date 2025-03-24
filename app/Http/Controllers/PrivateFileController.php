@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{
+    Auth,
+    Storage
+};
 use App\Models\File;
 
 class PrivateFileController extends Controller

@@ -40,14 +40,14 @@ export default function MainFiles({
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
+    // console.log(FoldersFilesTree)
+
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
     const [filterType, setFilterType] = useState<FilterType>('name')
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
-
-    const { url } = usePage()
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,

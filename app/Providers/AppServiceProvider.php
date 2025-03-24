@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\{Vite, Auth};
+use Illuminate\Support\Facades\{
+    Vite,
+    Auth
+};
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\HelperClass;
+use App\{
+    HelperClass,
+    Models\Folder
+};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
-use App\Models\Folder;
+use Inertia\{
+    Inertia,
+    Response
+};
 
 class MainController extends Controller
 {

@@ -30,8 +30,8 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
         });
         Route::controller(FolderController::class)->group(function () {
             Route::post('/folder/upload', 'upload')->name('folder.upload');
-            Route::delete('/folder/delete/{folder}', 'delete')->name('folder.delete')->whereNumber('folder.delete');
-            Route::patch('/folder/rename/{folder}', 'rename')->name('folder.rename')->whereNumber('folder.rename');
+            Route::delete('/folder/delete/{folder}', 'delete')->name('folder.delete')->whereNumber('folder');
+            Route::patch('/folder/rename/{folder}', 'rename')->name('folder.rename')->whereNumber('folder');
         });
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
