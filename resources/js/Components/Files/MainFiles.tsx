@@ -192,38 +192,52 @@ export default function MainFiles({
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <div className="flex flex-1 items-center gap-5">
-                                <SearchFileInput
-                                    searchFileName={searchFileName}
-                                    handleSearchChange={handleSearchChange}
-                                />
-                                <Separator
-                                    orientation="vertical"
-                                    className="h-4"
-                                />
-                                <BreadcrumbFile
-                                    breadcrumbPath={breadcrumbPath}
-                                    currentPath={currentPath}
-                                    setCurrentPath={setCurrentPath}
-                                    setBreadcrumbPath={setBreadcrumbPath}
-                                    setCurrentFolderId={setCurrentFolderId}
-                                />
+                        <div className="space-y-4">
+                            <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+                                <div className="w-full md:w-auto md:min-w-[240px] md:max-w-sm">
+                                    <SearchFileInput
+                                        searchFileName={searchFileName}
+                                        handleSearchChange={handleSearchChange}
+                                    />
+                                </div>
+
+                                <div className="hidden md:block">
+                                    <Separator
+                                        orientation="vertical"
+                                        className="h-4"
+                                    />
+                                </div>
+
+                                <div className="flex justify-start">
+                                    <FilterControls
+                                        filterType={filterType}
+                                        setFilterType={setFilterType}
+                                        sortDirection={sortDirection}
+                                        setSortDirection={setSortDirection}
+                                        onReset={resetFilters}
+                                    />
+                                </div>
                             </div>
-                            <FilterControls
-                                filterType={filterType}
-                                setFilterType={setFilterType}
-                                sortDirection={sortDirection}
-                                setSortDirection={setSortDirection}
-                                onReset={resetFilters}
+                        </div>
+
+                        <div className="w-full overflow-x-auto pt-4 md:flex-1">
+                            <BreadcrumbFile
+                                breadcrumbPath={breadcrumbPath}
+                                currentPath={currentPath}
+                                setCurrentPath={setCurrentPath}
+                                setBreadcrumbPath={setBreadcrumbPath}
+                                setCurrentFolderId={setCurrentFolderId}
                             />
                         </div>
-                        <FoldersAndFiles
-                            filteredItems={filteredItems}
-                            currentPath={currentPath}
-                            handleFolderClick={handleFolderClick}
-                            accessLink={accessLink}
-                        />
+
+                        <div className="mt-6">
+                            <FoldersAndFiles
+                                filteredItems={filteredItems}
+                                currentPath={currentPath}
+                                handleFolderClick={handleFolderClick}
+                                accessLink={accessLink}
+                            />
+                        </div>
                     </div>
                 </div>
             )}

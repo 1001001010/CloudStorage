@@ -5,6 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/dialog'
+import { Skeleton } from '@/Components/ui/skeleton'
 import { LucideMousePointerSquareDashed } from 'lucide-react'
 import { File as FileType } from '@/types'
 import { useEffect, useState } from 'react'
@@ -13,6 +14,7 @@ import { toast } from 'sonner'
 
 export default function FilePhotoView({ file }: { file: FileType }) {
     const [fileUrl, setFileUrl] = useState('')
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         axios
@@ -20,8 +22,11 @@ export default function FilePhotoView({ file }: { file: FileType }) {
             .then((response) => {
                 setFileUrl(response.data.fileUrl)
             })
-            .catch((error) => {
+            .catch(() => {
                 toast('Ошибка загрузки файла')
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }, [file.id])
 
@@ -41,11 +46,15 @@ export default function FilePhotoView({ file }: { file: FileType }) {
                     </DialogTitle>
                 </DialogHeader>
                 <div className="flex h-full w-full items-center justify-center">
-                    <img
-                        src={fileUrl}
-                        alt={file.name}
-                        className="max-h-full max-w-full rounded-lg object-contain shadow-md"
-                    />
+                    {loading ? (
+                        <Skeleton className="h-[400px] w-[600px] rounded-lg" />
+                    ) : (
+                        <img
+                            src={fileUrl}
+                            alt={file.name}
+                            className="max-h-full max-w-full rounded-lg object-contain shadow-md"
+                        />
+                    )}
                 </div>
             </DialogContent>
         </Dialog>

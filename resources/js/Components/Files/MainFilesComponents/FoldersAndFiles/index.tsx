@@ -18,7 +18,7 @@ export default function FoldersAndFiles({
     return (
         <>
             {filteredItems && filteredItems.length > 0 ? (
-                <div className="grids grid min-h-[200px] items-center justify-center gap-5 pt-5">
+                <div className="grids grid min-h-[150px] items-center justify-center gap-5">
                     {filteredItems.map((item: any, index: number) => (
                         <div key={index}>
                             {item.hasOwnProperty('name') ? (

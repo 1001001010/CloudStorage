@@ -12,7 +12,7 @@ export default function SearchFileInput({
     handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }) {
     return (
-        <div className="relative w-full max-w-sm">
+        <div className="relative w-full">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
                 className="w-full pl-9"

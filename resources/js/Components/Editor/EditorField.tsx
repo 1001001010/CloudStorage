@@ -15,7 +15,10 @@ export default function EditorField({
                     <div className="hidden h-full w-full flex-col px-4 pr-2 md:flex">
                         <div className="flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
                             <h2 className="text-lg font-semibold">
-                                Редактирование
+                                Редактирование{' '}
+                                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                                    {file.name + '.' + file.extension.extension}
+                                </code>
                             </h2>
                         </div>
                         <Separator />

@@ -143,8 +143,7 @@ export default function FileChart({
             <CardFooter className="flex-col gap-2 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none">
                     Использование хранилища: {storage.percentage}% (занято{' '}
-                    {storage.used} ГБ из {storage.total} ГБ){' '}
-                    <HardDrive className="h-4 w-4" />
+                    {storage.used} ГБ из {storage.total} ГБ)
                 </div>
                 <div className="leading-none text-muted-foreground">
                     Показано распределение файлов по всему хранилищу
