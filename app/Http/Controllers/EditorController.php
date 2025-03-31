@@ -16,16 +16,24 @@ use Illuminate\Support\Facades\{
     Storage
 };
 use App\Models\File;
+use App\Http\Controllers\EncryptionController;
 
 class EditorController extends Controller
 {
+    protected $encryptionController;
+
+    public function __construct(EncryptionController $encryptionController)
+    {
+        $this->encryptionController = $encryptionController;
+    }
+
     /**
      * Отображение страницы редактирования текстовых файлов
      *
      * @param File $file
-     * @return RedirectResponse|Response
+     * @return InertiaResponse|RedirectResponse
      */
-    public function index(File $file): Response{
+    public function index(File $file) {
         $allowedExtensions = [
             'txt', 'md', 'csv', 'log', 'js', 'ts', 'jsx', 'tsx',
             'py', 'java', 'cpp', 'c', 'h', 'hpp', 'rb', 'php',
@@ -73,17 +81,17 @@ class EditorController extends Controller
             return redirect()->back()->with('msg', ['title' => 'Файл отсутствует в хранилище']);
         }
 
-        try {
-            $language = $this->getLanguageByExtension($file->extension->extension);
-            $file->content = Storage::disk('local')->get($file->path);
+        $language = $this->getLanguageByExtension($file->extension->extension);
 
-            return Inertia::render('Editor', [
-                'file' => $file,
-                'language' => $language
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('msg', ['title' => 'Ошибка при чтении файла']);
-        }
+        $encryptedContent = Storage::disk('local')->get($file->path);
+        $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+
+        $file->content = $decryptedContent;
+
+        return Inertia::render('Editor', [
+            'file' => $file,
+            'language' => $language
+        ]);
     }
 
     /**
@@ -145,7 +153,11 @@ class EditorController extends Controller
 
         try {
             $fileText = $request->input('fileText');
-            Storage::disk('local')->put($file->path, $fileText);
+
+            $encryptedContent = $this->encryptionController->encryptFile($fileText);
+
+            Storage::disk('local')->put($file->path, $encryptedContent);
+
             $newFileSize = Storage::disk('local')->size($file->path);
             $file->size = $newFileSize;
             $file->save();

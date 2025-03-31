@@ -20,9 +20,17 @@ use App\Models\{
     FileUserAccess
 };
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Http\Controllers\EncryptionController;
 
 class FileController extends Controller
 {
+    protected $encryptionController;
+
+    public function __construct(EncryptionController $encryptionController)
+    {
+        $this->encryptionController = $encryptionController;
+    }
+
     /**
      * Обработка загрузки файлов
      *
@@ -109,18 +117,19 @@ class FileController extends Controller
             return ['message' => "Файл уже существует.", 'totalSize' => $totalSize, 'success' => false];
         }
 
+        // Чтение и шифрование файла
+        $fileContent = file_get_contents($file->getRealPath());
+        $encryptedContent = $this->encryptionController->encryptFile($fileContent);
+
         $timePart = time();
         $randomPart = Str::random(20);
-        $newPath = "{$timePart}_{$randomPart}.{$fileExtension}";
+        $newPath = "{$timePart}_{$randomPart}.enc";
 
-        if (strlen($newPath) > 40) {
-            $newPath = substr($newPath, 0, 40 - strlen($fileExtension) - 1) . ".{$fileExtension}";
-        }
+        $path = "files/{$newPath}";
+        Storage::disk('private')->put($path, $encryptedContent);
 
         $extension = FileExtension::firstOrCreate(['extension' => $fileExtension]);
         $mime = MimeType::firstOrCreate(['mime_type' => $mimeType]);
-
-        $path = $file->storeAs('files', $newPath, 'private');
 
         File::create([
             'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
@@ -146,11 +155,13 @@ class FileController extends Controller
      * @param File $file
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function download(File $file): BinaryFileResponse|RedirectResponse {
-        if ($this->checkUserFileAccess($file)) {
-            return $this->serveFile($file);
+    public function download(File $file): BinaryFileResponse|RedirectResponse
+    {
+        if (!$this->checkUserFileAccess($file)) {
+            return $this->redirectWithError('Нет прав на скачивание файла', '');
         }
-        return $this->redirectWithError('Нет прав на скачивание файла', '');
+
+        return $this->serveFile($file);
     }
 
     /**
@@ -169,17 +180,21 @@ class FileController extends Controller
      * @param File $file
      * @return BinaryFileResponse|RedirectResponse
      */
-    protected function serveFile(File $file): BinaryFileResponse|RedirectResponse {
+    protected function serveFile(File $file): BinaryFileResponse|RedirectResponse
+    {
         $filePath = $file->path;
 
-        if (Storage::disk('private')->exists($filePath)) {
-            return response()->file(Storage::path($filePath), [
-                'Content-Disposition' => 'attachment; filename="' . $file->name . '.' . $file->extension->extension . '"'
-            ]);
-
+        if (!Storage::disk('private')->exists($filePath)) {
+            return $this->redirectWithError('Файл не найден', '');
         }
 
-        return $this->redirectWithError('Файл не найден', '');
+        $encryptedContent = Storage::disk('private')->get($filePath);
+        $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+
+        $tempPath = storage_path('app/private/temp_' . $file->id);
+        file_put_contents($tempPath, $decryptedContent);
+
+        return response()->download($tempPath, $file->name . '.' . $file->extension->extension)->deleteFileAfterSend();
     }
 
     /**

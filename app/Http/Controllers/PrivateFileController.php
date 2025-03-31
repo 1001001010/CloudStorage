@@ -7,9 +7,17 @@ use Illuminate\Support\Facades\{
     Storage
 };
 use App\Models\File;
+use App\Http\Controllers\EncryptionController;
 
 class PrivateFileController extends Controller
 {
+    protected $encryptionController;
+
+    public function __construct(EncryptionController $encryptionController)
+    {
+        $this->encryptionController = $encryptionController;
+    }
+
     /**
      * Получение URL для файла.
      *
@@ -44,7 +52,13 @@ class PrivateFileController extends Controller
 
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
-            return response()->file(Storage::path($filePath));
+            $encryptedContent = Storage::get($filePath);
+            $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+
+            $tempPath = storage_path('app/private/temp_' . $file->id);
+            file_put_contents($tempPath, $decryptedContent);
+
+            return response()->file($tempPath)->deleteFileAfterSend(true);
         }
 
         return response()->json(['error' => 'Файл не найден на сервере'], 404);
@@ -65,7 +79,13 @@ class PrivateFileController extends Controller
 
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
-            return response()->file(Storage::path($filePath));
+            $encryptedContent = Storage::get($filePath);
+            $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+
+            $tempPath = storage_path('app/private/temp_' . $file->id);
+            file_put_contents($tempPath, $decryptedContent);
+
+            return response()->file($tempPath)->deleteFileAfterSend(true);
         }
 
         return response()->json(['error' => 'Файл не найден на сервере'], 404);
