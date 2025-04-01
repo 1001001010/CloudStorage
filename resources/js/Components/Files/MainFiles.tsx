@@ -186,7 +186,7 @@ export default function MainFiles({
                     </div>
                 </div>
             ) : (
-                <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
+                <div className="expend-h m-1 flex min-h-screen flex-wrap rounded-lg border shadow">
                     <div
                         className="h-full w-full p-5"
                         onDragStart={(e) => dragStartHandler(e)}

@@ -50,9 +50,16 @@ class FileController extends Controller
         $totalSize = File::where('user_id', $userId)->sum('size');
         $maxSize = 5 * 1024 * 1024 * 1024; // 5 ГБ
 
+        $fileCount = count($request->file('files'));
+        $successfulFiles = [];
+
         foreach ($request->file('files') as $file) {
             $result = $this->processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folder ? $folder->id : null);
-            $messages[] = $result['message'];
+            if ($result['success']) {
+                $successfulFiles[] = $file->getClientOriginalName();
+            } else {
+                $messages[] = $result['message'];
+            }
             $totalSize = $result['totalSize'];
             $successCount += $result['success'] ? 1 : 0;
         }
@@ -61,9 +68,20 @@ class FileController extends Controller
             return $this->redirectWithError('Ошибка загрузки', implode("\n", $messages));
         }
 
+        if ($successCount === 1) {
+            $successMessage = "Файл \"{$successfulFiles[0]}\" успешно загружен.";
+        } else {
+            $successMessage = "{$successCount} файлов успешно загружено.";
+        }
+
+        $finalMessage = $successMessage;
+        if (!empty($messages)) {
+            $finalMessage .= "\n" . implode("\n", $messages);
+        }
+
         return redirect()->route('index')->with('msg', [
             'title' => 'Загрузка завершена',
-            'description' => implode("\n", $messages),
+            'description' => $finalMessage,
         ]);
     }
 
@@ -97,11 +115,10 @@ class FileController extends Controller
     protected function processFile($file, $totalSize, $userId, $disallowedExtensions, $maxSize, $folderId): array
     {
         $fileSize = $file->getSize();
-        $messages = [];
         $success = false;
 
         if (($totalSize + $fileSize) > $maxSize) {
-            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false]; 
+            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false];
         }
 
         $fileExtension = strtolower($file->getClientOriginalExtension());
@@ -143,7 +160,7 @@ class FileController extends Controller
         ]);
 
         return [
-            'message' => "Файл \"{$file->getClientOriginalName()}\" успешно загружен.",
+            'message' => '', // No message needed here anymore
             'totalSize' => $totalSize + $fileSize,
             'success' => true
         ];

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 40);
+            $table->string('name');
             $table->string('path', 50);
             $table->unsignedBigInteger('extension_id');
             $table->unsignedBigInteger('mime_type_id')->nullable();

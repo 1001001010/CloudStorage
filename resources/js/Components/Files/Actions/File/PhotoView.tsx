@@ -38,10 +38,10 @@ export default function FilePhotoView({ file }: { file: FileType }) {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>
-                        Просмотр изображения{' '}
-                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-                            {file.name}.{file.extension.extension}
+                    <DialogTitle className="flex items-center justify-start gap-2">
+                        <span>Просмотр изображения</span>
+                        <code className="relative max-w-xs truncate rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            <span>{file.name}</span>.{file.extension.extension}
                         </code>
                     </DialogTitle>
                 </DialogHeader>
@@ -52,7 +52,7 @@ export default function FilePhotoView({ file }: { file: FileType }) {
                         <img
                             src={fileUrl}
                             alt={file.name}
-                            className="max-h-full max-w-full rounded-lg object-contain shadow-md"
+                            className="max-h-[500px] max-w-full rounded-lg object-contain shadow-md"
                         />
                     )}
                 </div>

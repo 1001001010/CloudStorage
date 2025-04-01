@@ -38,7 +38,7 @@ export default function Stats({
             msg={msg}
             totalSize={totalSize}
             breadcrumbs={['Панель администратора', 'Статистика']}>
-            <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
+            <div className="expend-h m-1 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="h-full w-full p-5">
                     <UserChart chartData={chartData} auth={auth} />
                     <div className="flex w-full flex-row justify-between gap-3 pt-3 max-lg:flex-col">

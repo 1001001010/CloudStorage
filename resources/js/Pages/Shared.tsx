@@ -26,7 +26,7 @@ export default function Welcome({
                 totalSize={totalSize}
                 breadcrumbs={['Общий доступ']}>
                 {auth.user ? (
-                    <div className="expend-h m-4 flex min-h-screen flex-wrap rounded-lg border shadow">
+                    <div className="expend-h m-1 flex min-h-screen flex-wrap rounded-lg border shadow">
                         <div className="h-full w-full p-5">
                             {files.length ? (
                                 <div className="grids grid min-h-[200px] items-center justify-center gap-5">
