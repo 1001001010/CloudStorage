@@ -142,7 +142,7 @@ class AdminController extends Controller
             'Фото' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'],
             'Видео' => ['mp4', 'avi', 'mov', 'webm', 'mkv'],
             'Архивы' => ['zip', 'rar', 'tar', 'gz', '7z'],
-            'Базы данных' => ['sql', 'db', 'sqlite', 'mdb', 'accdb'],
+            'Базы_данных' => ['sql', 'db', 'sqlite', 'mdb', 'accdb'],
             'Код' => ['js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'h', 'php', 'html', 'css'],
             'Аудио' => ['mp3', 'wav', 'flac'],
             'Презентации' => ['ppt', 'key'],

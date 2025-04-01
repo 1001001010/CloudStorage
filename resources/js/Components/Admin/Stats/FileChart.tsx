@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { HardDrive, TrendingUp } from 'lucide-react'
 import { Label, Pie, PieChart } from 'recharts'
 
 import {
@@ -40,9 +39,29 @@ const chartConfig = {
         label: 'Архивы',
         color: 'hsl(var(--chart-4))',
     },
+    database: {
+        label: 'Базы данных',
+        color: 'hsl(var(--chart-5))',
+    },
+    code: {
+        label: 'Код',
+        color: 'hsl(var(--chart-6))',
+    },
+    audio: {
+        label: 'Аудио',
+        color: 'hsl(var(--chart-7))',
+    },
+    presentation: {
+        label: 'Презентации',
+        color: 'hsl(var(--chart-8))',
+    },
+    tables: {
+        label: 'Таблицы',
+        color: 'hsl(var(--chart-9))',
+    },
     other: {
         label: 'Другое',
-        color: 'hsl(var(--chart-5))',
+        color: 'hsl(var(--chart-10))',
     },
 } satisfies ChartConfig
 
@@ -57,27 +76,52 @@ export default function FileChart({
         {
             browser: 'Документы',
             visitors: fileStats['Документы']?.count || 0,
-            fill: 'var(--color-chrome)',
+            fill: 'hsl(var(--chart-1))',
         },
         {
             browser: 'Фото',
             visitors: fileStats['Фото']?.count || 0,
-            fill: 'var(--color-safari)',
+            fill: 'hsl(var(--chart-2))',
         },
         {
             browser: 'Видео',
             visitors: fileStats['Видео']?.count || 0,
-            fill: 'var(--color-firefox)',
+            fill: 'hsl(var(--chart-3))',
         },
         {
             browser: 'Архивы',
             visitors: fileStats['Архивы']?.count || 0,
-            fill: 'var(--color-edge)',
+            fill: 'hsl(var(--chart-4))',
+        },
+        {
+            browser: 'Базы данных',
+            visitors: fileStats['Базы_данных']?.count || 0,
+            fill: 'hsl(var(--chart-5))',
+        },
+        {
+            browser: 'Код',
+            visitors: fileStats['Код']?.count || 0,
+            fill: 'hsl(var(--chart-6))',
+        },
+        {
+            browser: 'Аудио',
+            visitors: fileStats['Аудио']?.count || 0,
+            fill: 'hsl(var(--chart-7))',
+        },
+        {
+            browser: 'Презентации',
+            visitors: fileStats['Презентации']?.count || 0,
+            fill: 'hsl(var(--chart-8))',
+        },
+        {
+            browser: 'Таблицы',
+            visitors: fileStats['Таблицы']?.count || 0,
+            fill: 'hsl(var(--chart-9))',
         },
         {
             browser: 'Другое',
             visitors: fileStats['Другое']?.count || 0,
-            fill: 'var(--color-other)',
+            fill: 'hsl(var(--chart-10))',
         },
     ]
 

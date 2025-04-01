@@ -96,6 +96,11 @@ interface FileStatsType {
     Фото?: { count: number }
     Видео?: { count: number }
     Архивы?: { count: number }
+    Базы_данных?: { count: number }
+    Код?: { count: number }
+    Аудио?: { count: number }
+    Презентации?: { count: number }
+    Таблицы?: { count: number }
     Другое?: { count: number }
 }
 
