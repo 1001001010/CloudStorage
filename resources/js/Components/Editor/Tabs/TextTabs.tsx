@@ -28,7 +28,7 @@ export default function TextTabs({ file }: PageProps<{ file: File }>) {
             <div className="flex h-full flex-col space-y-4">
                 <Textarea
                     placeholder="Содержимое документа"
-                    value={data.fileText} // Используем value вместо defaultValue
+                    value={data.fileText}
                     onChange={(e) => setData('fileText', e.target.value)}
                     className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
                 />
