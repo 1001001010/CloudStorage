@@ -200,24 +200,17 @@ export default function MainFiles({
                                         handleSearchChange={handleSearchChange}
                                     />
                                 </div>
-
-                                <div className="hidden md:block">
-                                    <Separator
-                                        orientation="vertical"
-                                        className="h-4"
-                                    />
-                                </div>
-
-                                <div className="flex justify-start">
-                                    <FilterControls
-                                        filterType={filterType}
-                                        setFilterType={setFilterType}
-                                        sortDirection={sortDirection}
-                                        setSortDirection={setSortDirection}
-                                        onReset={resetFilters}
-                                    />
-                                </div>
                             </div>
+                        </div>
+
+                        <div className="w-full overflow-x-auto pt-4 md:flex-1">
+                            <FilterControls
+                                filterType={filterType}
+                                setFilterType={setFilterType}
+                                sortDirection={sortDirection}
+                                setSortDirection={setSortDirection}
+                                onReset={resetFilters}
+                            />
                         </div>
 
                         <div className="w-full overflow-x-auto pt-4 md:flex-1">

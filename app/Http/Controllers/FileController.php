@@ -101,20 +101,20 @@ class FileController extends Controller
         $success = false;
 
         if (($totalSize + $fileSize) > $maxSize) {
-            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false];
+            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false]; 
         }
 
         $fileExtension = strtolower($file->getClientOriginalExtension());
 
         if (in_array($fileExtension, $disallowedExtensions)) {
-            return ['message' => "Файл с расширением .{$fileExtension} запрещен.", 'totalSize' => $totalSize, 'success' => false];
+            return ['message' => "Файл с расширением .{$fileExtension} запрещен", 'totalSize' => $totalSize, 'success' => false];
         }
 
         $mimeType = $file->getMimeType();
         $fileHash = hash_file('sha256', $file->getRealPath());
 
-        if (File::where('file_hash', $fileHash)->where('user_id', $userId)->exists()) {
-            return ['message' => "Файл уже существует.", 'totalSize' => $totalSize, 'success' => false];
+        if (File::withTrashed()->where('file_hash', $fileHash)->where('user_id', $userId)->exists()) {
+            return ['message' => "Файл уже существует", 'totalSize' => $totalSize, 'success' => false];
         }
 
         // Чтение и шифрование файла

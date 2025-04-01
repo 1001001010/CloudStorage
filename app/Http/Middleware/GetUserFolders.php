@@ -23,7 +23,7 @@ class GetUserFolders
      */
     public function handle(Request $request, Closure $next): mixed {
         $folders = Folder::where('user_id', Auth::id())->get();
-        $files = File::where('user_id', Auth::id())->get();
+        $files = File::withTrashed()->where('user_id', Auth::id())->get();
         $totalSize = $files->sum('size');
 
         $foldersTree = $this->buildFolderTree($folders);

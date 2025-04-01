@@ -66,10 +66,10 @@ export default function FilterControls({
     }
 
     return (
-        <div className="sm:justify- flex w-full flex-nowrap items-center justify-center gap-2">
+        <div className="flex h-full flex-wrap items-center justify-start gap-2">
             <Badge
                 variant="outline"
-                className="flex h-9 items-center gap-1 px-3 py-1.5">
+                className="flex h-9 items-center gap-2 px-3 py-1.5">
                 {getFilterIcon()}
                 <span className="inline max-sm:hidden">{getFilterLabel()}</span>
             </Badge>
