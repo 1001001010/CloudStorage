@@ -38,8 +38,8 @@ export default function FilePhotoView({ file }: { file: FileType }) {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="flex items-center justify-start gap-2">
-                        <span>Просмотр изображения</span>
+                    <DialogTitle className="flex items-center justify-start">
+                        <span>Просмотр изображения </span>
                         <code className="relative max-w-xs truncate rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
                             <span>{file.name}</span>.{file.extension.extension}
                         </code>

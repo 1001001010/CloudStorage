@@ -7,6 +7,7 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from '@/Components/ui/breadcrumb'
+import { Slash } from 'lucide-react'
 import type React from 'react'
 
 export type FolderOrFile = any
@@ -43,9 +44,7 @@ export default function BreadcrumbFile({
                                 onClick={() => handleBreadcrumbClick(index)}>
                                 {title}
                             </BreadcrumbLink>
-                            {index < breadcrumbPath.length - 1 && (
-                                <BreadcrumbSeparator />
-                            )}
+                            {index < breadcrumbPath.length - 1 && '/'}
                         </BreadcrumbItem>
                     ))}
                 </BreadcrumbList>
