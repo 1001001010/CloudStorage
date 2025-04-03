@@ -15,6 +15,12 @@ export default function CodeTabs({
         fileText: file.content || '',
     })
 
+    const [isDarkMode, setIsDarkMode] = useState(() =>
+        typeof window !== 'undefined'
+            ? localStorage.getItem('theme') === 'dark'
+            : false
+    )
+
     const [content, setContent] = useState(file.content)
     const editorContainerRef = useRef<HTMLDivElement>(null)
 
@@ -69,7 +75,7 @@ export default function CodeTabs({
                         setContent(value || '')
                         setData('fileText', value || '')
                     }}
-                    theme="vs-dark"
+                    theme={isDarkMode ? 'vs-dark' : 'light'}
                     options={{
                         scrollBeyondLastLine: false,
                         minimap: { enabled: false },

@@ -66,7 +66,7 @@ export default function FilterControls({
     }
 
     return (
-        <div className="flex h-full flex-wrap items-center justify-start gap-2">
+        <div className="px-auto flex h-full w-max flex-wrap items-center justify-between gap-2 max-sm:justify-center">
             <Badge
                 variant="outline"
                 className="flex h-9 items-center gap-2 px-3 py-1.5">
@@ -77,7 +77,7 @@ export default function FilterControls({
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="h-9 gap-1">
-                        <span className="hidden sm:inline">Фильтр</span>
+                        <span className="">Фильтр</span>
                         <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>

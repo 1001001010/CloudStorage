@@ -193,43 +193,37 @@ export default function MainFiles({
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
                         <div className="space-y-4">
-                            <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-                                <div className="w-full md:w-auto md:min-w-[240px] md:max-w-sm">
+                            <div className="space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+                                <div className="flex w-full flex-col gap-4 md:w-auto md:min-w-[240px] md:max-w-sm">
                                     <SearchFileInput
                                         searchFileName={searchFileName}
                                         handleSearchChange={handleSearchChange}
                                     />
+                                    <FilterControls
+                                        filterType={filterType}
+                                        setFilterType={setFilterType}
+                                        sortDirection={sortDirection}
+                                        setSortDirection={setSortDirection}
+                                        onReset={resetFilters}
+                                    />
+                                    <BreadcrumbFile
+                                        breadcrumbPath={breadcrumbPath}
+                                        currentPath={currentPath}
+                                        setCurrentPath={setCurrentPath}
+                                        setBreadcrumbPath={setBreadcrumbPath}
+                                        setCurrentFolderId={setCurrentFolderId}
+                                    />
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="w-full overflow-x-auto pt-4 md:flex-1">
-                            <FilterControls
-                                filterType={filterType}
-                                setFilterType={setFilterType}
-                                sortDirection={sortDirection}
-                                setSortDirection={setSortDirection}
-                                onReset={resetFilters}
-                            />
-                        </div>
-
-                        <div className="w-full overflow-x-auto pt-4 md:flex-1">
-                            <BreadcrumbFile
-                                breadcrumbPath={breadcrumbPath}
-                                currentPath={currentPath}
-                                setCurrentPath={setCurrentPath}
-                                setBreadcrumbPath={setBreadcrumbPath}
-                                setCurrentFolderId={setCurrentFolderId}
-                            />
-                        </div>
-
-                        <div className="mt-6">
-                            <FoldersAndFiles
-                                filteredItems={filteredItems}
-                                currentPath={currentPath}
-                                handleFolderClick={handleFolderClick}
-                                accessLink={accessLink}
-                            />
+                            <div className="">
+                                <FoldersAndFiles
+                                    filteredItems={filteredItems}
+                                    currentPath={currentPath}
+                                    handleFolderClick={handleFolderClick}
+                                    accessLink={accessLink}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
