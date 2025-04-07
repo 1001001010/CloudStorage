@@ -92,6 +92,14 @@ export interface StoragePercentageType {
     percentage: number // Использование в процентах
 }
 
+export interface FilterControlsProps {
+    filterType: FilterType
+    setFilterType: (type: FilterType) => void
+    sortDirection: SortDirection
+    setSortDirection: (direction: SortDirection) => void
+    onReset: () => void
+}
+
 interface FileStatsType {
     Документы?: { count: number }
     Фото?: { count: number }

@@ -12,12 +12,10 @@ import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
 import { Upload } from 'lucide-react'
 import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
-import FilterControls, {
-    FilterType,
-    SortDirection,
-} from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
 import { router } from '@inertiajs/react'
 import ViewControls from './MainFilesComponents/FoldersAndFiles/ViewControls'
+import { useSettingsStore } from '@/store/settings-store'
+import FilterControls from './MainFilesComponents/FoldersAndFiles/FilterControls'
 
 export type FolderOrFile = any
 
@@ -36,8 +34,16 @@ export default function MainFiles({
         file_name: null as string | null,
     })
 
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-    const [itemSize, setItemSize] = useState<number>(100)
+    const {
+        viewMode,
+        setViewMode,
+        itemSize,
+        setItemSize,
+        filterType,
+        setFilterType,
+        sortDirection,
+        setSortDirection,
+    } = useSettingsStore()
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
@@ -48,8 +54,6 @@ export default function MainFiles({
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
-    const [filterType, setFilterType] = useState<FilterType>('name')
-    const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
 
     const handleFolderClick = (
         children: FolderTypes[] | undefined,

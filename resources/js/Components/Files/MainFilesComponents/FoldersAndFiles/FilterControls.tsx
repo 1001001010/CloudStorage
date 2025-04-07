@@ -17,17 +17,8 @@ import {
     Tag,
 } from 'lucide-react'
 import { Badge } from '@/Components/ui/badge'
-
-export type FilterType = 'name' | 'created_at' | 'updated_at'
-export type SortDirection = 'asc' | 'desc'
-
-interface FilterControlsProps {
-    filterType: FilterType
-    setFilterType: (type: FilterType) => void
-    sortDirection: SortDirection
-    setSortDirection: (direction: SortDirection) => void
-    onReset: () => void
-}
+import { FilterControlsProps } from '@/types'
+import { FilterType } from '@/store/settings-store'
 
 export default function FilterControls({
     filterType,
