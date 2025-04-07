@@ -80,40 +80,41 @@ export default function FileContext({
         return `${name}.${extension}`
     }
 
-    // Calculate icon size based on itemSize (for grid view)
     const iconSize =
-        viewMode === 'grid' ? Math.max(40, Math.min(100, itemSize * 0.8)) : 40 // Fixed size for list view
+        viewMode === 'grid' ? Math.max(40, Math.min(100, itemSize * 0.8)) : 40
 
-    // Render grid view (original view)
     if (viewMode === 'grid') {
         return (
             <ContextMenu>
                 <ContextMenuTrigger>
                     <Button
                         variant="ghost"
-                        className="flex h-full w-full flex-col items-center"
-                        style={{
-                            maxWidth: `${itemSize}%`,
-                            padding: `${Math.max(4, itemSize * 0.05)}px`,
-                        }}>
-                        <div style={{ width: iconSize, height: iconSize }}>
-                            <FilePreview file={file} iconSize={iconSize} />
-                        </div>
-                        {isEditing ? (
-                            <FileRename
-                                fileId={file.id}
-                                initialName={file.name}
-                                onCancel={handleRenameCancel}
-                                onRename={handleRenameSuccess}
-                            />
-                        ) : (
-                            <p className="mt-2 text-center">
+                        className="flex h-full w-full flex-col items-center justify-center">
+                        <div
+                            className="flex flex-col items-center justify-center"
+                            style={{
+                                width: `${itemSize}px`,
+                                height: `${itemSize + 40}px`,
+                            }}>
+                            <div
+                                className="flex items-center justify-center"
+                                style={{
+                                    width: `${iconSize}px`,
+                                    height: `${iconSize}px`,
+                                }}>
+                                <FilePreview file={file} iconSize={iconSize} />
+                            </div>
+                            <p
+                                className="mt-2 truncate text-center"
+                                style={{
+                                    fontSize: `${Math.max(10, itemSize * 0.12)}px`,
+                                }}>
                                 {truncateFileName(
                                     file.name,
                                     file.extension.extension
                                 )}
                             </p>
-                        )}
+                        </div>
                     </Button>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -123,7 +124,6 @@ export default function FileContext({
         )
     }
 
-    // Render list view
     return (
         <ContextMenu>
             <ContextMenuTrigger>
@@ -165,7 +165,6 @@ export default function FileContext({
         </ContextMenu>
     )
 
-    // Helper function to render context menu items
     function renderContextMenuItems() {
         if (trash) {
             return (

@@ -12,12 +12,11 @@ import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
 import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
 import { Upload } from 'lucide-react'
 import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
-import { Separator } from '@/Components/ui/separator'
 import FilterControls, {
     FilterType,
     SortDirection,
 } from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import ViewControls from './MainFilesComponents/FoldersAndFiles/ViewControls'
 
 export type FolderOrFile = any
@@ -44,7 +43,6 @@ export default function MainFiles({
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
         FoldersFilesTree,
     ])
-    // console.log(FoldersFilesTree)
 
     const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
@@ -229,16 +227,14 @@ export default function MainFiles({
                                 setCurrentFolderId={setCurrentFolderId}
                             />
 
-                            <div className="">
-                                <FoldersAndFiles
-                                    filteredItems={filteredItems}
-                                    currentPath={currentPath}
-                                    handleFolderClick={handleFolderClick}
-                                    accessLink={accessLink}
-                                    viewMode={viewMode}
-                                    itemSize={itemSize}
-                                />
-                            </div>
+                            <FoldersAndFiles
+                                filteredItems={filteredItems}
+                                currentPath={currentPath}
+                                handleFolderClick={handleFolderClick}
+                                accessLink={accessLink}
+                                viewMode={viewMode}
+                                itemSize={itemSize}
+                            />
                         </div>
                     </div>
                 </div>

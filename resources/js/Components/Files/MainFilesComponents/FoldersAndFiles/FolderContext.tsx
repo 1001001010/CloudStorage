@@ -31,30 +31,43 @@ export default function FolderContext({
         )
     }
 
-    // Calculate icon size based on itemSize (for grid view)
     const iconSize = Math.max(40, Math.min(100, itemSize * 0.8))
 
-    // Render grid view (original view)
     if (viewMode === 'grid') {
         return (
             <ContextMenu>
                 <ContextMenuTrigger>
                     <Button
                         variant="ghost"
-                        className="flex h-full w-full flex-col items-center"
-                        style={{
-                            maxWidth: `${itemSize}%`,
-                            padding: `${Math.max(4, itemSize * 0.05)}px`,
-                        }}
+                        className="flex h-full w-full flex-col items-center justify-center"
                         onClick={handleClick}>
-                        <Folder
-                            size={iconSize}
-                            className={`!h-${iconSize / 5} !w-${iconSize / 5}`}
-                            style={{ width: iconSize, height: iconSize }}
-                        />
-                        <p className="mt-2 truncate text-center">
-                            {folder.title}
-                        </p>
+                        <div
+                            className="flex flex-col items-center justify-center"
+                            style={{
+                                width: `${itemSize}px`,
+                                height: `${itemSize + 40}px`,
+                            }}>
+                            <div
+                                className="flex items-center justify-center"
+                                style={{
+                                    width: `${iconSize}px`,
+                                    height: `${iconSize}px`,
+                                }}>
+                                <Folder
+                                    style={{
+                                        width: iconSize,
+                                        height: iconSize,
+                                    }}
+                                />
+                            </div>
+                            <p
+                                className="mt-2 truncate text-center"
+                                style={{
+                                    fontSize: `${Math.max(10, itemSize * 0.12)}px`,
+                                }}>
+                                {folder.title}
+                            </p>
+                        </div>
                     </Button>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -65,7 +78,6 @@ export default function FolderContext({
         )
     }
 
-    // Render list view
     return (
         <ContextMenu>
             <ContextMenuTrigger>

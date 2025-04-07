@@ -16,15 +16,16 @@ use Illuminate\Support\Facades\{
     Storage
 };
 use App\Models\File;
-use App\Http\Controllers\EncryptionController;
+use App\Services\Cryptography\FileEncryptionService;
 
 class EditorController extends Controller
 {
-    protected $encryptionController;
+    protected FileEncryptionService $encryptService;
 
-    public function __construct(EncryptionController $encryptionController)
-    {
-        $this->encryptionController = $encryptionController;
+    public function __construct(
+        FileEncryptionService $encryptService,
+    ) {
+        $this->encryptService = $encryptService;
     }
 
     /**
@@ -154,7 +155,7 @@ class EditorController extends Controller
         try {
             $fileText = $request->input('fileText');
 
-            $encryptedContent = $this->encryptionController->encryptFile($fileText);
+            $encryptedContent = $this->encryptService->encryptFile($fileText);
 
             Storage::disk('local')->put($file->path, $encryptedContent);
 
@@ -162,9 +163,9 @@ class EditorController extends Controller
             $file->size = $newFileSize;
             $file->save();
 
-            return redirect()->back()->with('msg', ['title' => 'Файл успешно сохранён']);
+            return back()->with('msg', ['title' => 'Файл успешно сохранён']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('msg', ['title' => 'Ошибка при сохранении файла']);
+            return back()->with('msg', ['title' => 'Ошибка при сохранении файла']);
         }
     }
 }
