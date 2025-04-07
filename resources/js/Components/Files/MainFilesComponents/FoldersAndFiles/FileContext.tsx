@@ -27,6 +27,7 @@ import {
     FileRename,
     FileInfo,
 } from '@/Components/Files/Actions/File/index'
+import { formatFileSize } from '@/formatFileSize'
 
 export default function FileContext({
     file,
@@ -80,8 +81,7 @@ export default function FileContext({
         return `${name}.${extension}`
     }
 
-    const iconSize =
-        viewMode === 'grid' ? Math.max(40, Math.min(100, itemSize * 0.8)) : 40
+    const iconSize = Math.max(40, Math.min(100, itemSize * 0.8))
 
     if (viewMode === 'grid') {
         return (
@@ -96,12 +96,7 @@ export default function FileContext({
                                 width: `${itemSize}px`,
                                 height: `${itemSize + 40}px`,
                             }}>
-                            <div
-                                className="flex items-center justify-center"
-                                style={{
-                                    width: `${iconSize}px`,
-                                    height: `${iconSize}px`,
-                                }}>
+                            <div className="flex items-center justify-center">
                                 <FilePreview file={file} iconSize={iconSize} />
                             </div>
                             <p
@@ -131,9 +126,7 @@ export default function FileContext({
                     <Button
                         variant="ghost"
                         className="flex h-full w-full items-center justify-start gap-3 px-3 py-2 text-left">
-                        <div
-                            className="flex-shrink-0"
-                            style={{ width: '40px', height: '40px' }}>
+                        <div className="flex-shrink-0">
                             <FilePreview file={file} iconSize={iconSize} />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -150,7 +143,7 @@ export default function FileContext({
                                         {`${file.name}.${file.extension.extension}`}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        {file.size} •{' '}
+                                        {formatFileSize(file.size)} •{' '}
                                         {new Date(
                                             file.updated_at
                                         ).toLocaleDateString()}
