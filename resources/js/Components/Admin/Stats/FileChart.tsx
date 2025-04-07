@@ -130,7 +130,7 @@ export default function FileChart({
     }, [])
 
     return (
-        <Card className="flex h-full w-full flex-col">
+        <Card className="flex h-max w-full flex-col">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Обзор файлового хранилища</CardTitle>
                 <CardDescription>Распределение типов файлов</CardDescription>

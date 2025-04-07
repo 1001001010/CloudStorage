@@ -1,7 +1,7 @@
 import { File as FileType } from '@/types'
 import { IconPhoto } from '@tabler/icons-react'
 import {
-    File as LucideFile,
+    LucideFile,
     FolderArchive,
     Database,
     FileText,
@@ -18,6 +18,7 @@ import {
     Videotape,
     Code2,
 } from 'lucide-react'
+import React from 'react'
 
 type FileTypeKey =
     | 'image'
@@ -36,7 +37,18 @@ type FileTypeKey =
     | 'font'
     | 'virtual'
 
-export default function FilePreview({ file }: { file: FileType }) {
+export default function FilePreview({
+    file,
+    iconSize = 80,
+}: {
+    file: FileType
+    iconSize?: number
+}) {
+    const iconStyle = {
+        width: `${iconSize}px`,
+        height: `${iconSize}px`,
+    }
+
     const fileTypes: Record<
         FileTypeKey,
         { extensions: string[]; mimeTypes: string[]; icon: JSX.Element }
@@ -50,7 +62,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'image/webp',
                 'image/bmp',
             ],
-            icon: <IconPhoto size={80} className="!h-20 !w-20" />,
+            icon: <IconPhoto style={iconStyle} />,
         },
         video: {
             extensions: ['mp4', 'avi', 'mov', 'webm', 'mkv'],
@@ -61,7 +73,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'video/webm',
                 'video/x-matroska',
             ],
-            icon: <Videotape size={80} className="!h-20 !w-20" />,
+            icon: <Videotape style={iconStyle} />,
         },
         archive: {
             extensions: ['zip', 'rar', 'tar', 'gz', '7z'],
@@ -72,7 +84,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'application/gzip',
                 'application/x-7z-compressed',
             ],
-            icon: <FolderArchive size={80} className="!h-20 !w-20" />,
+            icon: <FolderArchive style={iconStyle} />,
         },
         database: {
             extensions: ['sql', 'db', 'sqlite', 'mdb', 'accdb'],
@@ -83,7 +95,7 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'application/vnd.ms-access',
                 'application/vnd.ms-access.database',
             ],
-            icon: <Database size={80} className="!h-20 !w-20" />,
+            icon: <Database style={iconStyle} />,
         },
         document: {
             extensions: ['docx', 'xlsx', 'pdf', 'pptx', 'txt'],
@@ -95,12 +107,12 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'application/vnd.ms-powerpoint',
                 'text/plain',
             ],
-            icon: <FileText size={80} className="!h-20 !w-20" />,
+            icon: <FileText style={iconStyle} />,
         },
         json: {
             extensions: ['json'],
             mimeTypes: ['application/json'],
-            icon: <FileJson size={80} className="!h-20 !w-20" />,
+            icon: <FileJson style={iconStyle} />,
         },
         code: {
             extensions: [
@@ -130,12 +142,12 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'text/html',
                 'text/css',
             ],
-            icon: <Code2 size={80} className="!h-20 !w-20" />,
+            icon: <Code2 style={iconStyle} />,
         },
         audio: {
             extensions: ['mp3', 'wav', 'flac'],
             mimeTypes: ['audio/mpeg', 'audio/wav', 'audio/flac'],
-            icon: <Music size={80} className="!h-20 !w-20" />,
+            icon: <Music style={iconStyle} />,
         },
         presentation: {
             extensions: ['ppt', 'key'],
@@ -143,37 +155,37 @@ export default function FilePreview({ file }: { file: FileType }) {
                 'application/vnd.ms-powerpoint',
                 'application/vnd.apple.keynote',
             ],
-            icon: <Presentation size={80} className="!h-20 !w-20" />,
+            icon: <Presentation style={iconStyle} />,
         },
         spreadsheet: {
             extensions: ['xls', 'csv'],
             mimeTypes: ['application/vnd.ms-excel', 'text/csv'],
-            icon: <Table size={80} className="!h-20 !w-20" />,
+            icon: <Table style={iconStyle} />,
         },
         config: {
             extensions: ['ini', 'cfg'],
             mimeTypes: ['text/plain'],
-            icon: <Settings size={80} className="!h-20 !w-20" />,
+            icon: <Settings style={iconStyle} />,
         },
         '3d': {
             extensions: ['obj', 'stl'],
             mimeTypes: ['text/plain', 'application/sla'],
-            icon: <Box size={80} className="!h-20 !w-20" />,
+            icon: <Box style={iconStyle} />,
         },
         vector: {
             extensions: ['svg'],
             mimeTypes: ['image/svg+xml'],
-            icon: <Image size={80} className="!h-20 !w-20" />,
+            icon: <Image style={iconStyle} />,
         },
         font: {
             extensions: ['ttf', 'otf'],
             mimeTypes: ['application/x-font-ttf', 'application/x-font-otf'],
-            icon: <Type size={80} className="!h-20 !w-20" />,
+            icon: <Type style={iconStyle} />,
         },
         virtual: {
             extensions: ['ova', 'vmdk'],
             mimeTypes: ['application/ovf', 'application/x-vmdk'],
-            icon: <HardDrive size={80} className="!h-20 !w-20" />,
+            icon: <HardDrive style={iconStyle} />,
         },
     }
 
@@ -192,7 +204,7 @@ export default function FilePreview({ file }: { file: FileType }) {
             }
         }
 
-        return <LucideFile size={80} className="!h-20 !w-20" />
+        return <LucideFile style={iconStyle} />
     }
 
     return <>{getFileIcon()}</>

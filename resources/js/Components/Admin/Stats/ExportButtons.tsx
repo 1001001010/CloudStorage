@@ -136,17 +136,7 @@ export default function ExportButtons() {
                             </div>
                         </div>
 
-                        <div className="mt-2 flex items-center justify-between rounded-lg bg-muted p-2 text-[10px] sm:text-xs">
-                            <span>Формат документа: PDF</span>
-                            <Badge
-                                variant="outline"
-                                className="text-[10px] sm:text-xs">
-                                Оптимизирован для печати
-                            </Badge>
-                        </div>
-
-                        {/* Кнопки скачивания для PDF */}
-                        <div className="mt-3 grid grid-cols-1 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
+                        <div className="mt-3 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                             <a
                                 href={route('reports.pdf')}
                                 target="_blank"
@@ -156,19 +146,7 @@ export default function ExportButtons() {
                                     variant="outline"
                                     className="w-full border-red-200 bg-red-50 px-2 py-1 text-xs text-red-600 hover:bg-red-100 hover:text-red-700 sm:px-3 sm:py-2 sm:text-sm">
                                     <FilePdf className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                                    Стандартный отчет
-                                </Button>
-                            </a>
-                            <a
-                                href={route('reports.pdf', { period: 'month' })}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full">
-                                <Button
-                                    variant="outline"
-                                    className="w-full border-red-200 bg-red-50 px-2 py-1 text-xs text-red-600 hover:bg-red-100 hover:text-red-700 sm:px-3 sm:py-2 sm:text-sm">
-                                    <Clock className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                                    За текущий месяц
+                                    Скачать отчет
                                 </Button>
                             </a>
                         </div>

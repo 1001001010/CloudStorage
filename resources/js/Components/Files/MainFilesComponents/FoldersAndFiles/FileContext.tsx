@@ -33,11 +33,15 @@ export default function FileContext({
     trash,
     accessLink,
     shared,
+    viewMode = 'grid',
+    itemSize = 100,
 }: {
     file: FileType
     trash?: boolean
     shared?: boolean
     accessLink?: string
+    viewMode?: 'grid' | 'list'
+    itemSize?: number
 }) {
     const [isEditing, setIsEditing] = useState(false)
 
@@ -76,63 +80,129 @@ export default function FileContext({
         return `${name}.${extension}`
     }
 
+    // Calculate icon size based on itemSize (for grid view)
+    const iconSize =
+        viewMode === 'grid' ? Math.max(40, Math.min(100, itemSize * 0.8)) : 40 // Fixed size for list view
+
+    // Render grid view (original view)
+    if (viewMode === 'grid') {
+        return (
+            <ContextMenu>
+                <ContextMenuTrigger>
+                    <Button
+                        variant="ghost"
+                        className="flex h-full w-full flex-col items-center"
+                        style={{
+                            maxWidth: `${itemSize}%`,
+                            padding: `${Math.max(4, itemSize * 0.05)}px`,
+                        }}>
+                        <div style={{ width: iconSize, height: iconSize }}>
+                            <FilePreview file={file} iconSize={iconSize} />
+                        </div>
+                        {isEditing ? (
+                            <FileRename
+                                fileId={file.id}
+                                initialName={file.name}
+                                onCancel={handleRenameCancel}
+                                onRename={handleRenameSuccess}
+                            />
+                        ) : (
+                            <p className="mt-2 text-center">
+                                {truncateFileName(
+                                    file.name,
+                                    file.extension.extension
+                                )}
+                            </p>
+                        )}
+                    </Button>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                    {renderContextMenuItems()}
+                </ContextMenuContent>
+            </ContextMenu>
+        )
+    }
+
+    // Render list view
     return (
         <ContextMenu>
             <ContextMenuTrigger>
-                <Button
-                    variant="ghost"
-                    className="flex h-full w-full flex-col items-center">
-                    <FilePreview file={file} />
-                    {isEditing ? (
-                        <FileRename
-                            fileId={file.id}
-                            initialName={file.name}
-                            onCancel={handleRenameCancel}
-                            onRename={handleRenameSuccess}
-                        />
-                    ) : (
-                        <p>
-                            {truncateFileName(
-                                file.name,
-                                file.extension.extension
+                <div className="w-full">
+                    <Button
+                        variant="ghost"
+                        className="flex h-full w-full items-center justify-start gap-3 px-3 py-2 text-left">
+                        <div
+                            className="flex-shrink-0"
+                            style={{ width: '40px', height: '40px' }}>
+                            <FilePreview file={file} iconSize={iconSize} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            {isEditing ? (
+                                <FileRename
+                                    fileId={file.id}
+                                    initialName={file.name}
+                                    onCancel={handleRenameCancel}
+                                    onRename={handleRenameSuccess}
+                                />
+                            ) : (
+                                <>
+                                    <p className="truncate font-medium">
+                                        {`${file.name}.${file.extension.extension}`}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {file.size} •{' '}
+                                        {new Date(
+                                            file.updated_at
+                                        ).toLocaleDateString()}
+                                    </p>
+                                </>
                             )}
-                        </p>
-                    )}
-                </Button>
+                        </div>
+                    </Button>
+                </div>
             </ContextMenuTrigger>
-            <ContextMenuContent>
-                {trash ? (
-                    <>
-                        <FileRestore file={file} />
-                        <FileForceDelete file={file} />
-                    </>
-                ) : shared ? (
-                    <>
-                        <FileDownload file={file} />
-                        <FileInfo file={file} role={'Receiver'} />
-                        {isImageFile && <FilePhotoView file={file} />}
-                        {isVideoFile && <FileVideoView file={file} />}
-                    </>
-                ) : (
-                    <>
-                        <FileDownload file={file} />
-                        <FileShare file={file} accessLink={accessLink} />
-                        {canEdit && <FileEdit file={file} />}
-                        {isImageFile && <FilePhotoView file={file} />}
-                        {isVideoFile && <FileVideoView file={file} />}
-                        {file.access_tokens ? (
-                            <FileInfo file={file} role={'Sender'} />
-                        ) : null}
-                        <ContextMenuItem
-                            onClick={() => setIsEditing(true)}
-                            disabled={false}>
-                            <PenLine className="mr-2 h-4 w-4" />
-                            Переименовать
-                        </ContextMenuItem>
-                        <FileDelete file={file} />
-                    </>
-                )}
-            </ContextMenuContent>
+            <ContextMenuContent>{renderContextMenuItems()}</ContextMenuContent>
         </ContextMenu>
     )
+
+    // Helper function to render context menu items
+    function renderContextMenuItems() {
+        if (trash) {
+            return (
+                <>
+                    <FileRestore file={file} />
+                    <FileForceDelete file={file} />
+                </>
+            )
+        } else if (shared) {
+            return (
+                <>
+                    <FileDownload file={file} />
+                    <FileInfo file={file} role={'Receiver'} />
+                    {isImageFile && <FilePhotoView file={file} />}
+                    {isVideoFile && <FileVideoView file={file} />}
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <FileDownload file={file} />
+                    <FileShare file={file} accessLink={accessLink} />
+                    {canEdit && <FileEdit file={file} />}
+                    {isImageFile && <FilePhotoView file={file} />}
+                    {isVideoFile && <FileVideoView file={file} />}
+                    {file.access_tokens ? (
+                        <FileInfo file={file} role={'Sender'} />
+                    ) : null}
+                    <ContextMenuItem
+                        onClick={() => setIsEditing(true)}
+                        disabled={false}>
+                        <PenLine className="mr-2 h-4 w-4" />
+                        Переименовать
+                    </ContextMenuItem>
+                    <FileDelete file={file} />
+                </>
+            )
+        }
+    }
 }

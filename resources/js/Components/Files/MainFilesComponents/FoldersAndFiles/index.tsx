@@ -9,27 +9,40 @@ export default function FoldersAndFiles({
     handleFolderClick,
     accessLink,
     filteredItems,
+    viewMode = 'grid',
+    itemSize = 100,
 }: {
     currentPath: FolderOrFile[][]
     handleFolderClick: any
     accessLink?: string
     filteredItems: any
+    viewMode?: 'grid' | 'list'
+    itemSize?: number
 }) {
+    const gridClasses =
+        'grid min-h-[150px] grids items-center justify-center gap-5'
+    const listClasses = 'flex flex-col min-h-[150px] gap-2'
+
     return (
         <>
             {filteredItems && filteredItems.length > 0 ? (
-                <div className="grids grid min-h-[150px] items-center justify-center gap-5">
+                <div
+                    className={viewMode === 'grid' ? gridClasses : listClasses}>
                     {filteredItems.map((item: any, index: number) => (
                         <div key={index}>
                             {item.hasOwnProperty('name') ? (
                                 <FileContext
                                     file={item}
                                     accessLink={accessLink}
+                                    viewMode={viewMode}
+                                    itemSize={itemSize}
                                 />
                             ) : (
                                 <FolderContext
                                     folder={item}
                                     handleFolderClick={handleFolderClick}
+                                    viewMode={viewMode}
+                                    itemSize={itemSize}
                                 />
                             )}
                         </div>

@@ -18,6 +18,7 @@ import FilterControls, {
     SortDirection,
 } from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
 import { router, usePage } from '@inertiajs/react'
+import ViewControls from './MainFilesComponents/FoldersAndFiles/ViewControls'
 
 export type FolderOrFile = any
 
@@ -35,6 +36,9 @@ export default function MainFiles({
         files: null as File[] | null,
         file_name: null as string | null,
     })
+
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+    const [itemSize, setItemSize] = useState<number>(100)
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
@@ -193,11 +197,19 @@ export default function MainFiles({
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragStartHandler(e)}>
                         <div className="space-y-4">
-                            <div className="space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+                            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                 <div className="flex w-full flex-col gap-4 md:w-auto md:min-w-[240px] md:max-w-sm">
                                     <SearchFileInput
                                         searchFileName={searchFileName}
                                         handleSearchChange={handleSearchChange}
+                                    />
+                                </div>
+                                <div className="flex flex-wrap items-center gap-4">
+                                    <ViewControls
+                                        viewMode={viewMode}
+                                        setViewMode={setViewMode}
+                                        itemSize={itemSize}
+                                        setItemSize={setItemSize}
                                     />
                                     <FilterControls
                                         filterType={filterType}
@@ -206,15 +218,16 @@ export default function MainFiles({
                                         setSortDirection={setSortDirection}
                                         onReset={resetFilters}
                                     />
-                                    <BreadcrumbFile
-                                        breadcrumbPath={breadcrumbPath}
-                                        currentPath={currentPath}
-                                        setCurrentPath={setCurrentPath}
-                                        setBreadcrumbPath={setBreadcrumbPath}
-                                        setCurrentFolderId={setCurrentFolderId}
-                                    />
                                 </div>
                             </div>
+
+                            <BreadcrumbFile
+                                breadcrumbPath={breadcrumbPath}
+                                currentPath={currentPath}
+                                setCurrentPath={setCurrentPath}
+                                setBreadcrumbPath={setBreadcrumbPath}
+                                setCurrentFolderId={setCurrentFolderId}
+                            />
 
                             <div className="">
                                 <FoldersAndFiles
@@ -222,6 +235,8 @@ export default function MainFiles({
                                     currentPath={currentPath}
                                     handleFolderClick={handleFolderClick}
                                     accessLink={accessLink}
+                                    viewMode={viewMode}
+                                    itemSize={itemSize}
                                 />
                             </div>
                         </div>

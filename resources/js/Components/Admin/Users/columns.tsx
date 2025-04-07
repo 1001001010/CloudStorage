@@ -15,6 +15,7 @@ import { MoreHorizontal } from 'lucide-react'
 import moment from 'moment'
 import EditRole from './EditRole'
 import { usePage } from '@inertiajs/react'
+import ResetPassword from './ResetPassword'
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -101,6 +102,9 @@ export const columns: ColumnDef<User>[] = [
                         <DropdownMenuLabel>Действия</DropdownMenuLabel>
                         <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
                             <EditRole auth={auth} user={user} />
+                        </div>
+                        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
+                            <ResetPassword auth={auth} user={user} />
                         </div>
                     </DropdownMenuContent>
                 </DropdownMenu>

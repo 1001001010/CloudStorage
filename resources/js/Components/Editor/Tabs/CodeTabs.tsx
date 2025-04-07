@@ -15,7 +15,7 @@ export default function CodeTabs({
         fileText: file.content || '',
     })
 
-    const [isDarkMode, setIsDarkMode] = useState(() =>
+    const [isDarkMode] = useState(() =>
         typeof window !== 'undefined'
             ? localStorage.getItem('theme') === 'dark'
             : false
