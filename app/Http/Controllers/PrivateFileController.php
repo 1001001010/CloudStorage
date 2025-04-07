@@ -7,15 +7,17 @@ use Illuminate\Support\Facades\{
     Storage
 };
 use App\Models\File;
-use App\Http\Controllers\EncryptionController;
+use App\Services\Cryptography\FileEncryptionService;
 
 class PrivateFileController extends Controller
 {
-    protected $encryptionController;
 
-    public function __construct(EncryptionController $encryptionController)
-    {
-        $this->encryptionController = $encryptionController;
+    protected FileEncryptionService $encryptService;
+
+    public function __construct(
+        FileEncryptionService $encryptService,
+    ) {
+        $this->encryptService = $encryptService;
     }
 
     /**
@@ -53,7 +55,7 @@ class PrivateFileController extends Controller
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
             $encryptedContent = Storage::get($filePath);
-            $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+            $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
 
             $tempPath = storage_path('app/private/temp_' . $file->id);
             file_put_contents($tempPath, $decryptedContent);
@@ -80,7 +82,7 @@ class PrivateFileController extends Controller
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
             $encryptedContent = Storage::get($filePath);
-            $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+            $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
 
             $tempPath = storage_path('app/private/temp_' . $file->id);
             file_put_contents($tempPath, $decryptedContent);

@@ -7,6 +7,7 @@ import Layout from '@/Layouts/Layout'
 import ActiveSession from './Partials/ActiveSession'
 
 export default function Dashboard({
+    auth,
     activeSession,
     userAgent,
     FoldersTree,
@@ -31,12 +32,14 @@ export default function Dashboard({
             totalSize={totalSize}>
             <div className="m-4 flex flex-wrap rounded-lg border shadow max-sm:m-1 max-sm:p-1 xl:flex-nowrap">
                 <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:p-1 xl:w-2/3">
-                    <div className="mb-4 w-full rounded-lg border p-4 shadow">
-                        <UpdateProfileInformationForm className="mb-4" />
+                    <div className="w-full rounded-lg border p-4 shadow">
+                        <UpdateProfileInformationForm />
                     </div>
-                    <div className="mb-4 w-full rounded-lg border p-4 shadow">
-                        <UpdatePasswordForm className="mb-4" />
-                    </div>
+                    {auth.user.provider == 'email' ? (
+                        <div className="mt-4 w-full rounded-lg border p-4 shadow">
+                            <UpdatePasswordForm />
+                        </div>
+                    ) : null}
                 </div>
 
                 <div className="w-full p-4 text-gray-900 dark:text-gray-100 max-sm:pt-0 xl:w-1/3">

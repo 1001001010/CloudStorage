@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Services\User\UserService;
 use Illuminate\Http\{
     RedirectResponse,
     Request
@@ -13,19 +13,26 @@ use Illuminate\Support\Facades\{
     Auth,
     Hash
 };
-use Illuminate\Validation\Rules;
 use Inertia\{
     Inertia,
     Response
 };
 
-class RegisteredUserController extends Controller
-{
+class RegisteredUserController extends Controller {
+
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Рендер страницы регистрации
+     *
+     * @return \Inertia\Response
      */
-    public function create() : Response
-    {
+    public function create() : Response {
         return Inertia::render('Auth/Register');
     }
 
@@ -34,35 +41,10 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request) : RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required|string|max:40',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ], [
-            'name.required' => 'Укажите ваше имя',
-            'name.string' => 'Поля имя должно быть строкой',
-            'name.max' => 'Максимальная длина - 40 символов',
-            'email.required' => 'Укажите вашу почту',
-            'email.string' => 'Поля Email должно быть строкой',
-            'email.lowercase' => 'Поля Email не должно иметь заглавных символов',
-            'email.email' => 'Поля Email должно быть почтой',
-            'email.max' => 'Максимальная длина - 255 символов',
-            'email.unique' => 'Эта почта уже занята',
-            'password.required' => 'Укажите ваш пароль',
-            'password.confirmed' => 'Подтвердите ваш пароль',
-        ]);
+    public function store(RegisterRequest $request) : RedirectResponse {
+        $data = $request->validated();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
+        $this->userService->registerUser($data);
 
         return redirect(route('profile.index', absolute: false));
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Cryptography\FileEncryptionService;
 use Illuminate\Http\{
     Request,
     RedirectResponse
@@ -20,15 +21,16 @@ use App\Models\{
     FileUserAccess
 };
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use App\Http\Controllers\EncryptionController;
 
 class FileController extends Controller
 {
-    protected $encryptionController;
 
-    public function __construct(EncryptionController $encryptionController)
-    {
-        $this->encryptionController = $encryptionController;
+    protected FileEncryptionService $encryptService;
+
+    public function __construct(
+        FileEncryptionService $encryptService,
+    ) {
+        $this->encryptService = $encryptService;
     }
 
     /**
@@ -136,7 +138,7 @@ class FileController extends Controller
 
         // Чтение и шифрование файла
         $fileContent = file_get_contents($file->getRealPath());
-        $encryptedContent = $this->encryptionController->encryptFile($fileContent);
+        $encryptedContent = $this->encryptService->encryptFile($fileContent);
 
         $timePart = time();
         $randomPart = Str::random(20);
@@ -206,7 +208,7 @@ class FileController extends Controller
         }
 
         $encryptedContent = Storage::disk('private')->get($filePath);
-        $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+        $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
 
         $tempPath = storage_path('app/private/temp_' . $file->id);
         file_put_contents($tempPath, $decryptedContent);

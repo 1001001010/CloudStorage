@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services\Cryptography;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class EncryptionController extends Controller
+class FileEncryptionService
 {
     /**
      * Шифрование данных
@@ -12,15 +12,12 @@ class EncryptionController extends Controller
      * @param string $data
      * @return string
      */
-    public function encryptFile(string $data): string {
-        $key = base64_decode(env('FILE_ENCRYPTION_KEY'));
+    public function encryptFile(string $data): string
+    {
+        $key = base64_decode(Auth::user()->getEncryptionKeyAttribute());
         $iv = random_bytes(16);
 
         $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
-
-        if ($encrypted === false) {
-            throw new \Exception('Ошибка шифрования файла');
-        }
 
         return base64_encode($iv . $encrypted);
     }
@@ -31,8 +28,9 @@ class EncryptionController extends Controller
      * @param string $data
      * @return string
      */
-    public function decryptFile(string $data): string {
-        $key = base64_decode(env('FILE_ENCRYPTION_KEY'));
+    public function decryptFile(string $data): string
+    {
+        $key = base64_decode(Auth::user()->getEncryptionKeyAttribute());
         $decoded = base64_decode($data);
 
         $iv = substr($decoded, 0, 16);
@@ -40,10 +38,8 @@ class EncryptionController extends Controller
 
         $decrypted = openssl_decrypt($encryptedData, 'aes-256-cbc', $key, 0, $iv);
 
-        if ($decrypted === false) {
-            throw new \Exception('Ошибка дешифрования файла');
-        }
-
         return $decrypted;
     }
+
+
 }

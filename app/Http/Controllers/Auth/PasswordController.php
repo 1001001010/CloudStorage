@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\User\UserService;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\{
     RedirectResponse,
     Request
 };
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class PasswordController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Обновление пароля пользователя
+     *
      */
-    public function update(Request $request): RedirectResponse
+    public function update(UpdatePasswordRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
+        $data = $request->validated();
+        $this->userService->updatePassword($data['password']);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        return back();
+        return back()->with('msg', 'Пароль успешно обновлён');
     }
 }

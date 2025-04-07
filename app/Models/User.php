@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\{
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'provider',
+        'encryption_key',
         'password',
     ];
 
@@ -31,7 +33,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected function casts() : array
     {
         return [
             'password' => 'hashed',
@@ -63,7 +65,7 @@ class User extends Authenticatable
      *
      * @return int
      */
-    public function folderCount(): int
+    public function folderCount() : int
     {
         return $this->folders()->count();
     }
@@ -83,7 +85,7 @@ class User extends Authenticatable
      *
      * @return int
      */
-    public function fileCount(): int
+    public function fileCount() : int
     {
         return $this->files()->count();
     }
@@ -96,5 +98,25 @@ class User extends Authenticatable
     public function fileUserAccesses()
     {
         return $this->hasMany(FileUserAccess::class);
+    }
+
+    /**
+     * Генерация ключа шифрования для пользователя
+     *
+     * @return string
+     */
+    public static function generateEncryptionKey() : string
+    {
+        return base64_encode(random_bytes(32));
+    }
+
+    /**
+     * Получаем ключ шифрования
+     *
+     * @return string
+     */
+    public function getEncryptionKeyAttribute() : string
+    {
+        return $this->attributes['encryption_key'];
     }
 }

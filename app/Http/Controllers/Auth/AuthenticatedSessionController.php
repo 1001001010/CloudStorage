@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\User\GitHubAuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\{
     RedirectResponse,
     Request
@@ -19,10 +21,16 @@ use Inertia\{
     Inertia,
     Response
 };
-use App\Models\User;
 
-class AuthenticatedSessionController extends Controller
-{
+class AuthenticatedSessionController extends Controller {
+
+    protected GitHubAuthService $githubAuthService;
+
+    public function __construct(GitHubAuthService $githubAuthService)
+    {
+        $this->githubAuthService = $githubAuthService;
+    }
+
     /**
      * Рендер страницы входа
      *
@@ -73,31 +81,18 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Получение пользователя GitHub
+     * Callback для GitHub
      *
      * @return RedirectResponse
      */
-    public function CallbackGithub() : RedirectResponse {
-        $user = Socialite::driver('github')->user();
-        $existingUser = User::where('email', $user->email)->first();
+    public function CallbackGithub(): RedirectResponse
+    {
+        $user = $this->githubAuthService->handleGithubCallback();
 
-        if (!$existingUser) {
-            $newUser = User::create([
-                'name' => $user->nickname,
-                'email' => $user->email,
-                'provider' => 'github',
-                'password' => Hash::make(Str::random(16))
-            ]);
-
-            Auth::login($newUser);
-            return redirect(route('profile.index'));
-        } else {
-            if ($existingUser->provider === 'github') {
-                Auth::login($existingUser);
-                return redirect(route('profile.index'));
-            } else {
-                return redirect(route('login'))->with('error', 'Используйте логин-пароль для входа');
-            }
+        if ($user === null) {
+            return redirect(route('login'))->with('error', 'Используйте логин-пароль для входа');
         }
+
+        return redirect(route('profile.index'));
     }
 }
