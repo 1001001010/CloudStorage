@@ -2,6 +2,7 @@ export interface User {
     id: number
     name: string
     email: string
+    quota: Quota
     is_admin: boolean
     created_at: string
     provider: 'email' | 'github'
@@ -14,6 +15,11 @@ export interface Session {
     user_agent: string
     payload: string
     last_activity: number
+}
+
+export interface Quota {
+    id: string
+    size: number
 }
 
 export interface Folder {

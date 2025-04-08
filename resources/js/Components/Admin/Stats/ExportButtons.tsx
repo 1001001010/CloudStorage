@@ -253,8 +253,7 @@ export default function ExportButtons() {
                             </Badge>
                         </div>
 
-                        {/* Кнопки скачивания для Excel */}
-                        <div className="mt-3 grid grid-cols-1 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
+                        <div className="mt-3 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                             <a
                                 href={route('statistics.export')}
                                 target="_blank"
@@ -263,18 +262,6 @@ export default function ExportButtons() {
                                 <Button className="w-full bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700 sm:px-3 sm:py-2 sm:text-sm">
                                     <FileSpreadsheet className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
                                     Полный отчет
-                                </Button>
-                            </a>
-                            <a
-                                href={route('statistics.export', {
-                                    period: 'month',
-                                })}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full">
-                                <Button className="w-full bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700 sm:px-3 sm:py-2 sm:text-sm">
-                                    <Clock className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                                    За текущий месяц
                                 </Button>
                             </a>
                         </div>

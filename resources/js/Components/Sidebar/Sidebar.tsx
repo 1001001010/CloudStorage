@@ -28,7 +28,7 @@ import { Folder as FolderType } from '@/types'
 import UserDataLink from './data/UsersData'
 import AdminDataLink from './data/AdminData'
 import FileUploadButton from '@/Components/Sidebar/FileUploadButton'
-import { formatFileSize } from '@/formatFileSize'
+import { formatFileSize, AutoFormatFileSize } from '@/formatFileSize'
 
 export const iframeHeight = '800px'
 
@@ -41,6 +41,8 @@ export default function SideBarComponent({
 }) {
     const { open, isMobile } = useSidebar()
     const auth = usePage().props.auth
+
+    console.log(auth.user)
 
     return (
         <>
@@ -121,8 +123,13 @@ export default function SideBarComponent({
                                     />
                                     <AlertTitle className="pt-2 text-center">
                                         <p className="text-nowrap">
-                                            Занято {formatFileSize(totalSize)}{' '}
-                                            из 5 ГБ
+                                            Занято{' '}
+                                            {AutoFormatFileSize(totalSize)} из{' '}
+                                            {formatFileSize(
+                                                auth.user.quota.size,
+                                                'МБ',
+                                                'ГБ'
+                                            )}
                                         </p>
                                     </AlertTitle>
                                 </Alert>

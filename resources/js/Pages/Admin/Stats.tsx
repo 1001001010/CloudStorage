@@ -13,7 +13,6 @@ import {
     ExportButtons,
 } from '@/Components/Admin/Stats/index'
 import Layout from '@/Layouts/Layout'
-import FileLoadChart from '@/Components/Admin/Stats/FileLoadChart'
 
 export default function Stats({
     auth,
@@ -42,7 +41,6 @@ export default function Stats({
             <div className="expend-h m-1 flex min-h-screen flex-wrap rounded-lg border shadow">
                 <div className="flex h-full w-full flex-col gap-3 p-5">
                     <UserChart chartData={chartData} auth={auth} />
-                    <FileLoadChart chartData={chartData} auth={auth} />
                     <div className="flex w-full flex-row justify-between gap-3 max-lg:flex-col">
                         <FileChart
                             auth={auth}

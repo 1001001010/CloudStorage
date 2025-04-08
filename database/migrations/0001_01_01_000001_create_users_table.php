@@ -18,6 +18,8 @@ return new class extends Migration
             $table->boolean('is_admin')->default(false);
             $table->enum('provider', ['email', 'github'])->default('email');
             $table->string('encryption_key', 44);
+            $table->unsignedBigInteger('quota_id')->default(1);
+            $table->foreign('quota_id')->references('id')->on('quotas')->onDelete('restrict');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

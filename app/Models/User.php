@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'provider',
         'encryption_key',
+        'quota_id',
         'password',
     ];
 
@@ -45,9 +46,19 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function sessions(): HasMany
+    public function sessions() : HasMany
     {
         return $this->hasMany(Session::class);
+    }
+
+    /**
+     * Связь с моделью Quota
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function quota()
+    {
+        return $this->belongsTo(Quota::class);
     }
 
     /**
@@ -55,7 +66,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function folders()
+    public function folders() : HasMany
     {
         return $this->hasMany(Folder::class);
     }
@@ -75,7 +86,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function files()
+    public function files() : HasMany
     {
         return $this->hasMany(File::class);
     }
@@ -95,7 +106,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function fileUserAccesses()
+    public function fileUserAccesses() : HasMany
     {
         return $this->hasMany(FileUserAccess::class);
     }
