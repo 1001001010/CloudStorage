@@ -18,7 +18,7 @@ export const useProfileStore = create<ProfileState>()(
             setUserAgent: (agent) => set({ userAgent: agent }),
         }),
         {
-            name: 'profile-store', // Ключ в localStorage
+            name: 'profile-store',
         }
     )
 )

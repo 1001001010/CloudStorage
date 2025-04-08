@@ -6,6 +6,7 @@ import { Link, useForm } from '@inertiajs/react'
 import { Button } from '@/Components/ui/button'
 import { ChevronLeft, RotateCcw, Save } from 'lucide-react'
 import { Editor } from '@monaco-editor/react'
+import { useSettingsStore } from '@/store/settings-store'
 
 export default function CodeTabs({
     file,
@@ -15,12 +16,7 @@ export default function CodeTabs({
         fileText: file.content || '',
     })
 
-    const [isDarkMode] = useState(() =>
-        typeof window !== 'undefined'
-            ? localStorage.getItem('theme') === 'dark'
-            : false
-    )
-
+    const { theme } = useSettingsStore()
     const [content, setContent] = useState(file.content)
     const editorContainerRef = useRef<HTMLDivElement>(null)
 
@@ -75,7 +71,7 @@ export default function CodeTabs({
                         setContent(value || '')
                         setData('fileText', value || '')
                     }}
-                    theme={isDarkMode ? 'vs-dark' : 'light'}
+                    theme={theme === 'dark' ? 'vs-dark' : 'light'}
                     options={{
                         scrollBeyondLastLine: false,
                         minimap: { enabled: false },

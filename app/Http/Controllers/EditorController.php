@@ -85,7 +85,7 @@ class EditorController extends Controller
         $language = $this->getLanguageByExtension($file->extension->extension);
 
         $encryptedContent = Storage::disk('local')->get($file->path);
-        $decryptedContent = $this->encryptionController->decryptFile($encryptedContent);
+        $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
 
         $file->content = $decryptedContent;
 

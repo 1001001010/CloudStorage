@@ -1,35 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { MoonStar, SunMedium } from 'lucide-react'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import { useSettingsStore } from '@/store/settings-store'
 
 export default function ThemeButton() {
-    const [isDarkMode, setIsDarkMode] = useState(() =>
-        typeof window !== 'undefined'
-            ? localStorage.getItem('theme') === 'dark'
-            : false
-    )
+    const { theme, setTheme } = useSettingsStore()
 
     useEffect(() => {
-        if (isDarkMode) {
+        if (theme === 'dark') {
             document.documentElement.classList.add('dark')
-            localStorage.setItem('theme', 'dark')
         } else {
             document.documentElement.classList.remove('dark')
-            localStorage.setItem('theme', 'light')
         }
-    }, [isDarkMode])
+    }, [theme])
 
-    const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode)
+    const toggleTheme = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark')
     }
 
     return (
         <SidebarMenu>
             <SidebarMenuItem>
                 <SidebarMenuButton size="lg" asChild>
-                    <button onClick={toggleDarkMode}>
+                    <button onClick={toggleTheme}>
                         <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-muted-foreground">
-                            {isDarkMode ? (
+                            {theme === 'dark' ? (
                                 <SunMedium className="size-4" />
                             ) : (
                                 <MoonStar className="size-4" />
