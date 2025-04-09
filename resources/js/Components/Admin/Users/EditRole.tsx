@@ -61,7 +61,10 @@ export default function EditRole({ user }: PageProps<{ user: User }>) {
                 <DialogHeader>
                     <DialogTitle>Изменение роли</DialogTitle>
                     <DialogDescription>
-                        Выберите роль для {user.email}
+                        Выберите роль для{' '}
+                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            {user.email}
+                        </code>
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit}>

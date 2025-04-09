@@ -19,16 +19,24 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\StorageStatisticsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\Admin\UserService;
 use PDF;
 
-class AdminController extends Controller
-{
+class AdminController extends Controller {
+
+    protected UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Отображает список пользователей в админке
      *
      * @return Response
      */
-    public function index(): Response {
+    public function index() : Response {
         return Inertia::render('Admin/Users', [
             'users' => User::withCount(['files', 'folders'])->get(),
         ]);
@@ -41,7 +49,7 @@ class AdminController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update_role(User $user, Request $request): RedirectResponse {
+    public function update_role(User $user, Request $request) : RedirectResponse {
         $request->merge([
             'is_admin' => filter_var($request->input('is_admin'), FILTER_VALIDATE_BOOLEAN),
         ]);
@@ -67,11 +75,26 @@ class AdminController extends Controller
     }
 
     /**
+     * Обновление пароля пользователя
+     *
+     * @param User $user
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function update_password(User $user, Request $request) : RedirectResponse {
+        $newPassword = $request->input('password');
+
+        $this->userService->updatePassword($newPassword, $user);
+
+        return back()->with('msg', ['title' => 'Пароль успешно сброшен']);
+    }
+
+    /**
      * Отображение статистики
      *
      * @return Response
      */
-    public function stats(): Response
+    public function stats() : Response
     {
         $userStats = $this->getUserStats();
         $storageStats = $this->getStorageStats();
@@ -89,7 +112,7 @@ class AdminController extends Controller
      *
      * @return array
      */
-    private function getUserStats(): array
+    private function getUserStats() : array
     {
         $endDate = Carbon::now();
         $startDate = $endDate->copy()->subDays(90);
@@ -115,7 +138,7 @@ class AdminController extends Controller
      *
      * @return array
      */
-    private function getStorageStats(): array
+    private function getStorageStats() : array
     {
         $totalSpace = disk_total_space(storage_path()) / 1024 / 1024 / 1024;
         $freeSpace = disk_free_space(storage_path()) / 1024 / 1024 / 1024;
@@ -135,7 +158,7 @@ class AdminController extends Controller
      *
      * @return array
      */
-    private function getFileStats(): array
+    private function getFileStats() : array
     {
         $fileCategories = [
             'Документы' => ['docx', 'xlsx', 'pdf', 'pptx', 'txt'],
@@ -178,9 +201,7 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function excel(Request $request)
-    {
-
+    public function excel(Request $request) {
         $filename = 'статистика_хранилища_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
 
         return Excel::download(new StorageStatisticsExport(), $filename);
@@ -192,8 +213,7 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function generateReport(Request $request)
-    {
+    public function generateReport(Request $request) {
         $request->validate([
             'period' => 'nullable|in:week,month,year',
             'user_id' => 'nullable|exists:users,id',
@@ -306,8 +326,7 @@ class AdminController extends Controller
      * @param int $precision
      * @return string
      */
-    private function formatBytes($bytes, $precision = 2)
-    {
+    private function formatBytes($bytes, $precision = 2) {
         $units = ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'];
 
         $bytes = max((int)$bytes, 0);

@@ -104,40 +104,43 @@ export default function SideBarComponent({
                     </SidebarGroup>
                 </SidebarContent>
 
-                <SidebarFooter>
-                    <ThemeButton></ThemeButton>
-                    <AnimatePresence>
-                        {open && (
-                            <motion.div
-                                initial={{ opacity: 0, x: -100 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -100 }}
-                                transition={{ duration: 0.1 }}>
-                                <Alert>
-                                    <Progress
-                                        value={
-                                            (totalSize /
-                                                (5 * 1024 * 1024 * 1024)) *
-                                            100
-                                        }
-                                    />
-                                    <AlertTitle className="pt-2 text-center">
-                                        <p className="text-nowrap">
-                                            Занято{' '}
-                                            {AutoFormatFileSize(totalSize)} из{' '}
-                                            {formatFileSize(
-                                                auth.user.quota.size,
-                                                'МБ',
-                                                'ГБ'
-                                            )}
-                                        </p>
-                                    </AlertTitle>
-                                </Alert>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                    <UserDropDownMenu auth={auth} isMobile={isMobile} />
-                </SidebarFooter>
+                {auth.user?.quota ? (
+                    <SidebarFooter>
+                        <ThemeButton></ThemeButton>
+                        <AnimatePresence>
+                            {open && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: -100 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -100 }}
+                                    transition={{ duration: 0.1 }}>
+                                    <Alert>
+                                        <Progress
+                                            value={
+                                                (totalSize /
+                                                    (5 * 1024 * 1024 * 1024)) *
+                                                100
+                                            }
+                                        />
+                                        <AlertTitle className="pt-2 text-center">
+                                            <p className="text-nowrap">
+                                                Занято{' '}
+                                                {AutoFormatFileSize(totalSize)}{' '}
+                                                из{' '}
+                                                {formatFileSize(
+                                                    auth.user.quota.size,
+                                                    'МБ',
+                                                    'ГБ'
+                                                )}
+                                            </p>
+                                        </AlertTitle>
+                                    </Alert>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                        <UserDropDownMenu auth={auth} isMobile={isMobile} />
+                    </SidebarFooter>
+                ) : null}
             </Sidebar>
         </>
     )
