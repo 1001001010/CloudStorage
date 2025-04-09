@@ -1,30 +1,23 @@
-'use client'
-
-import type {
-    Folder as FolderTypes,
-    PageProps,
-    File as FileTypes,
-} from '@/types'
-import { useForm } from '@inertiajs/react'
-import type React from 'react'
-import { useEffect, useState } from 'react'
-import FoldersAndFiles from './MainFilesComponents/FoldersAndFiles'
-import BreadcrumbFile from './MainFilesComponents/BreadcrumbFile'
-import { Upload } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { router, useForm } from '@inertiajs/react'
+import FoldersAndFiles from '@/Components/Files/MainFilesComponents/FoldersAndFiles'
+import BreadcrumbFile from '@/Components/Files/MainFilesComponents/BreadcrumbFile'
 import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
-import { router } from '@inertiajs/react'
-import ViewControls from './MainFilesComponents/FoldersAndFiles/ViewControls'
+import ViewControls from '@/Components/Files/MainFilesComponents/FoldersAndFiles/ViewControls'
+import FilterControls from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
 import { useSettingsStore } from '@/store/settings-store'
-import FilterControls from './MainFilesComponents/FoldersAndFiles/FilterControls'
+import { useDragHandlers } from '@/hooks/use-drag-handlers'
+import { Upload } from 'lucide-react'
 
-export type FolderOrFile = any
+type BreadcrumbItem = {
+    title: string
+    folderId: number
+}
 
 export default function MainFiles({
     FoldersFilesTree,
     accessLink,
 }: {
-    auth: PageProps['auth']
-    FoldersTree: FolderTypes[]
     FoldersFilesTree: any[]
     accessLink?: string
 }) {
@@ -46,66 +39,32 @@ export default function MainFiles({
     } = useSettingsStore()
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
-    const [currentPath, setCurrentPath] = useState<FolderOrFile[][]>([
-        FoldersFilesTree,
+    const [currentPath, setCurrentPath] = useState<any[]>([FoldersFilesTree])
+    const [breadcrumbPath, setBreadcrumbPath] = useState<BreadcrumbItem[]>([
+        { title: 'Файлы', folderId: 0 },
     ])
-
-    const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
 
-    const handleFolderClick = (
-        children: FolderTypes[] | undefined,
-        files: FileTypes[] | undefined,
+    const handleFolderClick = async (
+        folder: any,
         title: string,
         folderId: number
     ) => {
-        const combinedItems: FolderOrFile[] = []
-
-        if (Array.isArray(children)) {
-            combinedItems.push(...children)
-        }
-
-        if (files && !Array.isArray(files)) {
-            combinedItems.push(...Object.values(files))
-        } else if (Array.isArray(files)) {
-            combinedItems.push(...files)
-        }
-
-        if (combinedItems.length === 0 && Array.isArray(files)) {
-            combinedItems.push(...files)
-        }
-
-        setCurrentPath([...currentPath, combinedItems])
-        setBreadcrumbPath([...breadcrumbPath, title])
-        setCurrentFolderId(folderId)
-    }
-
-    function dragStartHandler(e: any) {
-        e.preventDefault()
-        setDrag(true)
-    }
-
-    const dragLeaveHandler = (e: any) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
-            setDrag(false)
+        try {
+            const response = await fetch(`/api/folder/${folderId}/contents`)
+            const data = await response.json()
+            setCurrentPath([data])
+            setBreadcrumbPath([...breadcrumbPath, { title, folderId }])
+            setCurrentFolderId(folderId)
+        } catch (err) {
+            console.error('Ошибка при получении содержимого папки:', err)
         }
     }
 
-    const onDrophandler = (e: any) => {
-        e.preventDefault()
-        const files = [...e.dataTransfer.files]
-        setData({
-            folder_id: currentFolderId !== 0 ? currentFolderId : null,
-            files: files,
-            file_name: null,
-        })
-        const fileName = files[0].name
-        const fileExt = fileName.slice(fileName.lastIndexOf('.') + 1)
-        setFileExtension(fileExt)
-        setDrag(false)
-    }
+    const { dragStartHandler, dragLeaveHandler, onDrophandler } =
+        useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
 
     useEffect(() => {
         if (data.files) {
@@ -119,22 +78,24 @@ export default function MainFiles({
         }
     }, [FoldersFilesTree, currentPath.length])
 
+    // Поиск по названию
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchFileName(e.target.value)
     }
 
+    // Фильтрация
     const getFilteredItems = () => {
         const currentItems = currentPath[currentPath.length - 1] || []
 
         const filtered = currentItems.filter(
-            (item) =>
+            (item: any) =>
                 item.name
                     ?.toLowerCase()
                     .includes(searchFileName.toLowerCase()) ||
                 item.title?.toLowerCase().includes(searchFileName.toLowerCase())
         )
 
-        return filtered.sort((a, b) => {
+        return filtered.sort((a: any, b: any) => {
             const aIsFolder = a.hasOwnProperty('title')
             const bIsFolder = b.hasOwnProperty('title')
 
@@ -157,6 +118,7 @@ export default function MainFiles({
 
     const filteredItems = getFilteredItems()
 
+    // Сброс фильтров
     const resetFilters = () => {
         setFilterType('name')
         setSortDirection('asc')
@@ -183,9 +145,6 @@ export default function MainFiles({
                             <div className="flex flex-col gap-px">
                                 <p className="text-center text-xl font-medium text-muted-foreground">
                                     Перетащите файлы, чтобы загрузить
-                                </p>
-                                <p className="text-m text-center text-muted-foreground/70">
-                                    Максимальный размер одного файла - 2ГБ
                                 </p>
                             </div>
                         </div>
@@ -229,6 +188,7 @@ export default function MainFiles({
                                 setCurrentPath={setCurrentPath}
                                 setBreadcrumbPath={setBreadcrumbPath}
                                 setCurrentFolderId={setCurrentFolderId}
+                                currentFolderId={currentFolderId}
                             />
 
                             <FoldersAndFiles

@@ -34,6 +34,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'encryption_key' => Str::random(10),
             'created_at' => fake()->dateTimeBetween('-3 month', 'now'),
         ];
     }

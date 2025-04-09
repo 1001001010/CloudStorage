@@ -21,8 +21,7 @@ export default function Welcome({
             <Layout FoldersTree={FoldersTree} msg={msg} totalSize={totalSize}>
                 {auth.user ? (
                     <MainFiles
-                        auth={auth}
-                        FoldersTree={FoldersTree}
+                        // FoldersTree={FoldersTree}
                         FoldersFilesTree={FoldersAndFiles}
                         accessLink={msg?.access_link}
                     />

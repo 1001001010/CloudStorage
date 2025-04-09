@@ -27,7 +27,7 @@ import {
     FileRename,
     FileInfo,
 } from '@/Components/Files/Actions/File/index'
-import { AutoFormatFileSize } from '@/formatFileSize'
+import { AutoFormatFileSize, formatDate } from '@/lib/utils'
 
 export default function FileContext({
     file,
@@ -143,10 +143,8 @@ export default function FileContext({
                                         {`${file.name}.${file.extension.extension}`}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        {AutoFormatFileSize(file.size)} •{' '}
-                                        {new Date(
-                                            file.updated_at
-                                        ).toLocaleDateString()}
+                                        {formatDate(file.created_at)} •{' '}
+                                        {AutoFormatFileSize(file.size)}
                                     </p>
                                 </>
                             )}

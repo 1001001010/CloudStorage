@@ -28,7 +28,7 @@ import { Folder as FolderType } from '@/types'
 import UserDataLink from './data/UsersData'
 import AdminDataLink from './data/AdminData'
 import FileUploadButton from '@/Components/Sidebar/FileUploadButton'
-import { formatFileSize, AutoFormatFileSize } from '@/formatFileSize'
+import { formatFileSize, AutoFormatFileSize } from '@/lib/utils'
 
 export const iframeHeight = '800px'
 
@@ -42,7 +42,7 @@ export default function SideBarComponent({
     const { open, isMobile } = useSidebar()
     const auth = usePage().props.auth
 
-    console.log(auth.user)
+    console.log(totalSize)
 
     return (
         <>

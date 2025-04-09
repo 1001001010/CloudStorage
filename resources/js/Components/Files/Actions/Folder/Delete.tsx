@@ -27,19 +27,23 @@ export default function FolderDelete({ folder }: { folder: FolderType }) {
                 <Trash2 className="mr-2 h-4 w-4" />
                 Удалить
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Вы точно уверены?</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogTitle className="text-xl font-medium">
+                        Вы точно уверены?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-sm leading-relaxed text-muted-foreground">
                         Все файлы, находящиеся в папке тоже будут удалены
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Закрыть</AlertDialogCancel>
+                <AlertDialogFooter className="gap-2 sm:gap-0">
+                    <AlertDialogCancel className="mt-0">
+                        Закрыть
+                    </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleSubmit}
                         disabled={processing}>
-                        Удалить
+                        {processing ? 'Удаление...' : 'Удалить'}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

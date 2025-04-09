@@ -21,7 +21,8 @@ use App\Http\Middleware\{
 
 require __DIR__.'/auth.php';
 
-Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
+Route::middleware([GetUserFolders::class])->group(function () {
+// Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
     Route::middleware('auth')->group(function () {
         Route::controller(ProfileController::class)->group(function () {
             Route::get('/profile', 'index')->name('profile.index');
@@ -29,6 +30,7 @@ Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group
             Route::delete('/profile/session/destroy','destroy')->name('session.destroy');
         });
         Route::controller(FolderController::class)->group(function () {
+            Route::get('/api/folder/{id}/contents', 'getContents')->middleware('auth')->name('folder.contents');
             Route::post('/folder/upload', 'upload')->name('folder.upload');
             Route::delete('/folder/delete/{folder}', 'delete')->name('folder.delete')->whereNumber('folder');
             Route::patch('/folder/rename/{folder}', 'rename')->name('folder.rename')->whereNumber('folder');

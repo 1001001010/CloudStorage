@@ -1,6 +1,5 @@
 import { PageProps, File as FileTypes } from '@/types'
-
-import FileContext from './MainFilesComponents/FoldersAndFiles/FileContext'
+import FileContext from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FileContext'
 import { Trash2 } from 'lucide-react'
 
 export type FolderOrFile = any

@@ -5,43 +5,59 @@ import {
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbSeparator,
 } from '@/Components/ui/breadcrumb'
-import { Slash } from 'lucide-react'
 import type React from 'react'
 
 export type FolderOrFile = any
 
+type BreadcrumbItemType = {
+    title: string
+    folderId: number
+}
+
 export default function BreadcrumbFile({
-    breadcrumbPath,
-    currentPath,
+    breadcrumbPath, // Путь
     setCurrentPath,
     setBreadcrumbPath,
     setCurrentFolderId,
 }: {
-    breadcrumbPath: string[]
+    breadcrumbPath: BreadcrumbItemType[]
     currentPath: FolderOrFile[][]
     setCurrentPath: React.Dispatch<React.SetStateAction<FolderOrFile[][]>>
-    setBreadcrumbPath: React.Dispatch<React.SetStateAction<string[]>>
+    setBreadcrumbPath: React.Dispatch<
+        React.SetStateAction<BreadcrumbItemType[]>
+    >
     setCurrentFolderId: React.Dispatch<React.SetStateAction<number>>
+    currentFolderId: number
 }) {
-    const handleBreadcrumbClick = (index: number) => {
-        setCurrentPath(currentPath.slice(0, index + 1))
-        setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
-        setCurrentFolderId(index === 0 ? 0 : currentPath[index][0].id)
+    const handleBreadcrumbClick = async (folderId: number) => {
+        try {
+            const index = breadcrumbPath.findIndex(
+                (item) => item.folderId === folderId
+            )
+
+            const response = await fetch(`/api/folder/${folderId}/contents`)
+            const data = await response.json()
+
+            setCurrentPath([data])
+            setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
+            setCurrentFolderId(folderId)
+        } catch (err) {
+            console.error('Ошибка при получении содержимого папки:', err)
+        }
     }
 
     return (
         <div className="w-max overflow-x-auto pl-2">
             <Breadcrumb>
                 <BreadcrumbList className="flex-nowrap">
-                    {breadcrumbPath.map((title, index) => (
+                    {breadcrumbPath.map(({ title, folderId }, index) => (
                         <BreadcrumbItem
                             key={index}
                             className="whitespace-nowrap">
                             <BreadcrumbLink
                                 className="cursor-pointer"
-                                onClick={() => handleBreadcrumbClick(index)}>
+                                onClick={() => handleBreadcrumbClick(folderId)}>
                                 {title}
                             </BreadcrumbLink>
                             {index < breadcrumbPath.length - 1 && '/'}

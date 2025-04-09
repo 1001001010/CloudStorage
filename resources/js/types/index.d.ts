@@ -30,6 +30,9 @@ export interface Folder {
     user_id: number
     children?: Folder[]
     files?: File[]
+    files_count?: number
+    children_count?: number
+    created_at: string
 }
 
 export interface File {

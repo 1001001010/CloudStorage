@@ -8,8 +8,9 @@ import {
 import type { Folder as FolderType } from '@/types'
 import { Folder } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
-import FolderDelete from '../../Actions/Folder/Delete'
+import FolderDelete from '@/Components/Files/Actions/Folder/Delete'
 import { FolderRename } from '@/Components/Files/Actions/Folder'
+import { formatDate } from '@/lib/utils'
 
 export default function FolderContext({
     folder,
@@ -23,12 +24,7 @@ export default function FolderContext({
     itemSize?: number
 }) {
     const handleClick = () => {
-        handleFolderClick(
-            folder.children,
-            folder.files,
-            folder.title,
-            folder.id
-        )
+        handleFolderClick(folder, folder.title, folder.id)
     }
 
     const iconSize = Math.max(40, Math.min(100, itemSize * 0.8))
@@ -99,8 +95,7 @@ export default function FolderContext({
                                 {folder.title}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                                {folder.children?.length || 0} папок •{' '}
-                                {folder.files?.length || 0} файлов
+                                {formatDate(folder.created_at)}
                             </p>
                         </div>
                     </Button>
