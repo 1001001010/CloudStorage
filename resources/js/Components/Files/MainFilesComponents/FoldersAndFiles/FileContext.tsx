@@ -44,16 +44,6 @@ export default function FileContext({
     viewMode?: 'grid' | 'list'
     itemSize?: number
 }) {
-    const [isEditing, setIsEditing] = useState(false)
-
-    const handleRenameCancel = () => {
-        setIsEditing(false)
-    }
-
-    const handleRenameSuccess = () => {
-        setIsEditing(false)
-    }
-
     const isTextOrCodeFile = textAndCodeExtensions.includes(
         file.extension.extension
     )
@@ -130,24 +120,13 @@ export default function FileContext({
                             <FilePreview file={file} iconSize={iconSize} />
                         </div>
                         <div className="min-w-0 flex-1">
-                            {isEditing ? (
-                                <FileRename
-                                    fileId={file.id}
-                                    initialName={file.name}
-                                    onCancel={handleRenameCancel}
-                                    onRename={handleRenameSuccess}
-                                />
-                            ) : (
-                                <>
-                                    <p className="truncate font-medium">
-                                        {`${file.name}.${file.extension.extension}`}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        {formatDate(file.created_at)} •{' '}
-                                        {AutoFormatFileSize(file.size)}
-                                    </p>
-                                </>
-                            )}
+                            <p className="truncate font-medium">
+                                {`${file.name}.${file.extension.extension}`}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                                {formatDate(file.created_at)} •{' '}
+                                {AutoFormatFileSize(file.size)}
+                            </p>
                         </div>
                     </Button>
                 </div>
@@ -184,12 +163,7 @@ export default function FileContext({
                     {file.access_tokens ? (
                         <FileInfo file={file} role={'Sender'} />
                     ) : null}
-                    <ContextMenuItem
-                        onClick={() => setIsEditing(true)}
-                        disabled={false}>
-                        <PenLine className="mr-2 h-4 w-4" />
-                        Переименовать
-                    </ContextMenuItem>
+                    <FileRename file={file} />
                     <FileDelete file={file} />
                 </>
             )

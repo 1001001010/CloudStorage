@@ -19,7 +19,7 @@ import submit = Simulate.submit
 export default function FolderRename({ folder }: { folder: FolderType }) {
     const [isOpen, setIsOpen] = useState(false)
 
-    const { patch, processing, setData } = useForm({
+    const { patch, processing, setData, reset } = useForm({
         name: '',
     })
 
@@ -27,7 +27,7 @@ export default function FolderRename({ folder }: { folder: FolderType }) {
         event.preventDefault()
         patch(route('folder.rename', { folder: folder.id }), {
             onSuccess: () => {
-                setIsOpen(false)
+                reset(), setIsOpen(false)
             },
         })
     }
@@ -58,7 +58,10 @@ export default function FolderRename({ folder }: { folder: FolderType }) {
                         onChange={(e) => setData('name', e.target.value)}
                     />
                     <DialogFooter>
-                        <Button className={'mt-3'} type="submit">
+                        <Button
+                            className={'mt-3'}
+                            type="submit"
+                            disabled={processing}>
                             Сохранить
                         </Button>
                     </DialogFooter>
