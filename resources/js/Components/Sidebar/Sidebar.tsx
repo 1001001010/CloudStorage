@@ -42,8 +42,6 @@ export default function SideBarComponent({
     const { open, isMobile } = useSidebar()
     const auth = usePage().props.auth
 
-    console.log(totalSize)
-
     return (
         <>
             <Sidebar variant="floating" collapsible="icon">

@@ -203,7 +203,6 @@ class AdminController extends Controller {
      */
     public function excel(Request $request) {
         $filename = 'статистика_хранилища_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
-
         return Excel::download(new StorageStatisticsExport(), $filename);
     }
 

@@ -62,14 +62,14 @@ Route::middleware([GetUserFolders::class])->group(function () {
         });
     });
 
-    Route::get('/{category?}', [MainController::class, 'index'])->name('index');
-
     Route::middleware(IsAdmin::class)->prefix('admin')->controller(AdminController::class)->group(function () {
         Route::get('/users', 'index')->name('admin.users');
         Route::get('/stats', 'stats')->name('admin.stats');
         Route::patch('/user/{user}/role/update', 'update_role')->name('admin.role.update')->whereNumber('user');
         Route::patch('/user/{user}/password/update', 'update_password')->name('admin.password.update')->whereNumber('user');
-        Route::get('/statistics/export', 'excel')->middleware('auth')->name('statistics.export');
+        Route::get('/statistics/export', 'excel')->name('statistics.export');
         Route::get('/reports/pdf', 'generateReport')->name('reports.pdf');
     });
+
+    Route::get('/{category?}', [MainController::class, 'index'])->name('index');
 });

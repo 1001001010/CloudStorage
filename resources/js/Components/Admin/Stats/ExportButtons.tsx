@@ -138,7 +138,7 @@ export default function ExportButtons() {
 
                         <div className="mt-3 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                             <a
-                                href={route('reports.pdf')}
+                                href="reports/pdf"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-full">
@@ -255,7 +255,7 @@ export default function ExportButtons() {
 
                         <div className="mt-3 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
                             <a
-                                href={route('statistics.export')}
+                                href="statistics/export"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-full">
