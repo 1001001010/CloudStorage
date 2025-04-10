@@ -16,6 +16,7 @@ import moment from 'moment'
 import EditRole from './EditRole'
 import { usePage } from '@inertiajs/react'
 import ResetPassword from './ResetPassword'
+import { AutoFormatFileSize, formatDate, formatFileSize } from '@/lib/utils'
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -46,22 +47,35 @@ export const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: 'folders_count',
-        header: 'Кол-во Папок',
+        header: 'Кол-во папок',
         cell: ({ row }) => <div>{row.getValue('folders_count')}</div>,
     },
     {
         accessorKey: 'files_count',
-        header: 'Кол-во Файлов',
+        header: 'Кол-во файлов',
         cell: ({ row }) => <div>{row.getValue('files_count')}</div>,
+    },
+    {
+        accessorKey: 'quota_size',
+        header: 'Квота',
+        cell: ({ row }) => {
+            const quota = row.original.quota
+            const size = row.original.total_file_size
+
+            return (
+                <div>
+                    {size ? AutoFormatFileSize(size) : null} из{' '}
+                    {quota ? formatFileSize(quota.size, 'МБ', 'ГБ') : null}
+                </div>
+            )
+        },
     },
     {
         accessorKey: 'created_at',
         header: 'Регистрация',
         cell: ({ row }) => {
             const createdAt: string = row.getValue('created_at')
-            const formattedDate = moment(createdAt).format(
-                'YYYY-MM-DD HH:mm:ss'
-            )
+            const formattedDate = formatDate(createdAt)
             return <div>{formattedDate}</div>
         },
     },

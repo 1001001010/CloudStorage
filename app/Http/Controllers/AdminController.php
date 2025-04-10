@@ -36,9 +36,14 @@ class AdminController extends Controller {
      *
      * @return Response
      */
-    public function index() : Response {
+    public function index(): Response
+    {
         return Inertia::render('Admin/Users', [
-            'users' => User::withCount(['files', 'folders'])->get(),
+            'users' => User::with('quota')
+            ->withCount(['files', 'folders'])
+            ->addSelect(['total_file_size' => File::select(DB::raw('COALESCE(SUM(size),0)'))
+                ->whereColumn('user_id', 'users.id')
+            ])->get(),
         ]);
     }
 

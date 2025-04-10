@@ -5,6 +5,7 @@ export interface User {
     quota?: Quota
     is_admin: boolean
     created_at: string
+    total_file_size?: number
     provider: 'email' | 'github'
 }
 

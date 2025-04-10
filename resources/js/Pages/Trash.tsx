@@ -6,6 +6,7 @@ export default function Trash({
     auth,
     FoldersTree,
     totalSize,
+    trashSize,
     files,
     msg,
 }: PageProps<{
@@ -13,6 +14,7 @@ export default function Trash({
     toast: string
     FoldersAndFiles: any
     totalSize: number
+    trashSize: number
     files: any
     msg: ToastMessage
 }>) {
@@ -23,7 +25,13 @@ export default function Trash({
                 msg={msg}
                 totalSize={totalSize}
                 breadcrumbs={['Корзина']}>
-                {auth.user ? <TrashFiles auth={auth} files={files} /> : null}
+                {auth.user ? (
+                    <TrashFiles
+                        auth={auth}
+                        files={files}
+                        trashSize={trashSize}
+                    />
+                ) : null}
             </Layout>
         </>
     )

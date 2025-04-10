@@ -2,6 +2,7 @@ import { File as FileType } from '@/types'
 import { Dialog, DialogTrigger, DialogContent } from '@/Components/ui/dialog'
 import { Info } from 'lucide-react'
 import UserAccessList from './UserAccessList'
+import { formatDate } from '@/lib/utils'
 
 const formatFileSize = (bytes: number) => {
     const kb = 1024 // 1KB = 1024 байт
@@ -47,7 +48,7 @@ export default function FileInfo({
                             {file.name}
                         </p>
                         <p>
-                            <span className="font-bold">Расширение: </span>
+                            <span className="font-bold">Расширение: </span>.
                             {file.extension.extension}
                         </p>
                         <p>
@@ -55,14 +56,8 @@ export default function FileInfo({
                             {formatFileSize(file.size)}
                         </p>
                         <p>
-                            <span className="font-bold">Дата обновления: </span>
-                            {new Date(file.updated_at).toLocaleString('ru-RU', {
-                                day: '2-digit',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                            })}
+                            <span className="font-bold">Дата загрузки: </span>
+                            {formatDate(file.created_at)}
                         </p>
                     </div>
                     {role === 'Receiver' ? (

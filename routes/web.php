@@ -54,6 +54,7 @@ Route::middleware([GetUserFolders::class])->group(function () {
         });
         Route::controller(TrashController::class)->group(function () {
             Route::get('/trash', 'index')->name('trash.index');
+            Route::delete('/trash/clean', 'destroy')->name('trash.destroy');
         });
         Route::controller(FileAccessTokenController::class)->group(function () {
             Route::get('/shared', 'index')->name('shared.index');
