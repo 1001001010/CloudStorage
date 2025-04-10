@@ -16,7 +16,7 @@ export default function SearchFileInput({
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
                 className="w-full pl-9"
-                placeholder="Поиск по всем файлам"
+                placeholder="Поиск по файлам"
                 value={searchFileName}
                 onChange={handleSearchChange}
             />

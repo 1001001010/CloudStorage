@@ -12,9 +12,18 @@ use Inertia\{
     Inertia
 };
 use App\Models\File;
+use App\Services\Trash\TrashService;
 
 class TrashController extends Controller
 {
+
+    protected TrashService $trashService;
+
+    public function __construct(TrashService $trashService)
+    {
+        $this->trashService = $trashService;
+    }
+
     /**
      * Отображение корзины
      *
@@ -37,14 +46,7 @@ class TrashController extends Controller
      */
     public function destroy(): RedirectResponse
     {
-        $trashedFiles = File::onlyTrashed()
-            ->where('user_id', Auth::id())
-            ->get();
-
-        foreach ($trashedFiles as $file) {
-            Storage::disk('private')->delete($file->path);
-            $file->forceDelete();
-        }
+        $this->trashService->emptyTrashForUser(Auth::id());
 
         return redirect()->back()->with('msg', ['title' => 'Корзина очищена']);
     }
