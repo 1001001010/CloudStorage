@@ -8,6 +8,7 @@ import FilterControls from '@/Components/Files/MainFilesComponents/FoldersAndFil
 import { useSettingsStore } from '@/store/settings-store'
 import { useDragHandlers } from '@/hooks/use-drag-handlers'
 import { Upload } from 'lucide-react'
+import { useFilesStore } from '@/store/use-file-store'
 
 type BreadcrumbItem = {
     title: string
@@ -38,14 +39,25 @@ export default function MainFiles({
         setSortDirection,
     } = useSettingsStore()
 
+    const {
+        currentPath,
+        setCurrentPath,
+        breadcrumbPath,
+        setBreadcrumbPath,
+        currentFolderId,
+        setCurrentFolderId,
+    } = useFilesStore()
+
     const [fileExtension, setFileExtension] = useState<string | null>(null)
-    const [currentPath, setCurrentPath] = useState<any[]>([FoldersFilesTree])
-    const [breadcrumbPath, setBreadcrumbPath] = useState<BreadcrumbItem[]>([
-        { title: 'Файлы', folderId: 0 },
-    ])
-    const [currentFolderId, setCurrentFolderId] = useState<number>(0)
+    // const [currentPath, setCurrentPath] = useState<any[]>([FoldersFilesTree])
+    // const [breadcrumbPath, setBreadcrumbPath] = useState<BreadcrumbItem[]>([
+    //     { title: 'Файлы', folderId: 0 },
+    // ])
+    // const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
+    const { dragStartHandler, dragLeaveHandler, onDrophandler } =
+        useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
 
     const handleFolderClick = async (
         folder: any,
@@ -63,17 +75,29 @@ export default function MainFiles({
         }
     }
 
-    const { dragStartHandler, dragLeaveHandler, onDrophandler } =
-        useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
-
     useEffect(() => {
         if (data.files) {
-            router.post(route('file.upload'), data)
+            router.post(route('file.upload'), data, {
+                onSuccess: async () => {
+                    try {
+                        const response = await fetch(
+                            `/api/folder/${currentFolderId}/contents`
+                        )
+                        const updatedData = await response.json()
+                        setCurrentPath([updatedData])
+                    } catch (error) {
+                        console.error(
+                            'Ошибка при обновлении содержимого папки после загрузки:',
+                            error
+                        )
+                    }
+                },
+            })
         }
     }, [data])
 
     useEffect(() => {
-        if (currentPath.length === 1) {
+        if (currentPath.length === 0) {
             setCurrentPath([FoldersFilesTree])
         }
     }, [FoldersFilesTree, currentPath.length])
@@ -183,12 +207,12 @@ export default function MainFiles({
                             </div>
 
                             <BreadcrumbFile
-                                breadcrumbPath={breadcrumbPath}
-                                currentPath={currentPath}
-                                setCurrentPath={setCurrentPath}
-                                setBreadcrumbPath={setBreadcrumbPath}
-                                setCurrentFolderId={setCurrentFolderId}
-                                currentFolderId={currentFolderId}
+                            // breadcrumbPath={breadcrumbPath}
+                            // currentPath={currentPath}
+                            // setCurrentPath={setCurrentPath}
+                            // setBreadcrumbPath={setBreadcrumbPath}
+                            // setCurrentFolderId={setCurrentFolderId}
+                            // currentFolderId={currentFolderId}
                             />
 
                             <FoldersAndFiles

@@ -6,6 +6,7 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
 } from '@/Components/ui/breadcrumb'
+import { useFilesStore } from '@/store/use-file-store'
 import type React from 'react'
 
 export type FolderOrFile = any
@@ -15,21 +16,32 @@ type BreadcrumbItemType = {
     folderId: number
 }
 
-export default function BreadcrumbFile({
-    breadcrumbPath, // Путь
-    setCurrentPath,
-    setBreadcrumbPath,
-    setCurrentFolderId,
-}: {
-    breadcrumbPath: BreadcrumbItemType[]
-    currentPath: FolderOrFile[][]
-    setCurrentPath: React.Dispatch<React.SetStateAction<FolderOrFile[][]>>
-    setBreadcrumbPath: React.Dispatch<
-        React.SetStateAction<BreadcrumbItemType[]>
-    >
-    setCurrentFolderId: React.Dispatch<React.SetStateAction<number>>
-    currentFolderId: number
-}) {
+export default function BreadcrumbFile(
+    {
+        // breadcrumbPath, // Путь
+        // setCurrentPath,
+        // setBreadcrumbPath,
+        // setCurrentFolderId,
+    }: {
+        // breadcrumbPath: BreadcrumbItemType[]
+        // currentPath: FolderOrFile[][]
+        // setCurrentPath: React.Dispatch<React.SetStateAction<FolderOrFile[][]>>
+        // setBreadcrumbPath: React.Dispatch<
+        //     React.SetStateAction<BreadcrumbItemType[]>
+        // >
+        // setCurrentFolderId: React.Dispatch<React.SetStateAction<number>>
+        // currentFolderId: number
+    }
+) {
+    const {
+        currentPath,
+        setCurrentPath,
+        breadcrumbPath,
+        setBreadcrumbPath,
+        currentFolderId,
+        setCurrentFolderId,
+    } = useFilesStore()
+
     const handleBreadcrumbClick = async (folderId: number) => {
         try {
             const index = breadcrumbPath.findIndex(
