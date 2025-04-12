@@ -28,7 +28,11 @@ export default function FileDelete({
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
-        destroy(route('file.delete', { file: file.id }))
+        destroy(route('file.delete', { file: file.id }), {
+            onSuccess: () => {
+                setIsOpen(false)
+            },
+        })
     }
 
     const Content = (
