@@ -14,7 +14,13 @@ import {
 import { PencilIcon } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 
-export default function FileRename({ file }: { file: FileType }) {
+export default function FileRename({
+    file,
+    variant,
+}: {
+    file: FileType
+    variant: 'context' | 'button'
+}) {
     const [isOpen, setIsOpen] = useState(false)
 
     const { setData, processing, patch, reset } = useForm({
@@ -30,12 +36,26 @@ export default function FileRename({ file }: { file: FileType }) {
         })
     }
 
+    const Content = (
+        <>
+            <PencilIcon className="mr-2 h-4 w-4" />
+            Переименовать
+        </>
+    )
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                <PencilIcon className="mr-2 h-4 w-4" />
-                Переименовать
-            </DialogTrigger>
+            {variant === 'button' ? (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsOpen(true)}>
+                    {Content}
+                </Button>
+            ) : (
+                <DialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                    {Content}
+                </DialogTrigger>
+            )}
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>

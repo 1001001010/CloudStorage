@@ -13,8 +13,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/Components/ui/alert-dialog'
+import { Button } from '@/Components/ui/button'
+import { useState } from 'react'
 
-export default function FileDelete({ file }: { file: FileType }) {
+export default function FileDelete({
+    file,
+    variant,
+}: {
+    file: FileType
+    variant: 'context' | 'button'
+}) {
+    const [isOpen, setIsOpen] = useState(false)
     const { delete: destroy, processing } = useForm()
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -22,12 +31,26 @@ export default function FileDelete({ file }: { file: FileType }) {
         destroy(route('file.delete', { file: file.id }))
     }
 
+    const Content = (
+        <>
+            <Trash2 className="mr-2 h-4 w-4" />
+            Удалить
+        </>
+    )
     return (
-        <AlertDialog>
-            <AlertDialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Удалить
-            </AlertDialogTrigger>
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+            {variant === 'button' ? (
+                <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setIsOpen(true)}>
+                    {Content}
+                </Button>
+            ) : (
+                <AlertDialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                    {Content}
+                </AlertDialogTrigger>
+            )}
             <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-xl font-medium">

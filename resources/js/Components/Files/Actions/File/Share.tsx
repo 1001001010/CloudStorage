@@ -17,9 +17,11 @@ import AccessFileLink from '../../AccessFileLink'
 export default function FileShare({
     file,
     accessLink,
+    variant,
 }: {
     file: FileType
     accessLink?: string
+    variant: 'context' | 'button'
 }) {
     const [val, setVal] = useState(1)
     const [open, setIsOpen] = useState(false)
@@ -60,15 +62,31 @@ export default function FileShare({
         }
     }
 
+    const Content = (
+        <>
+            <Share2 className="mr-2 h-4 w-4" />
+            Поделиться
+        </>
+    )
+
     return (
         <>
             <Dialog open={open} onOpenChange={setIsOpen}>
-                <DialogTrigger
-                    onClick={() => setIsOpen(true)}
-                    className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                    <Share2 className="mr-2 h-4 w-4" />
-                    Поделиться
-                </DialogTrigger>
+                {variant === 'button' ? (
+                    <Button
+                        onClick={() => setIsOpen(true)}
+                        variant="outline"
+                        size="sm">
+                        {Content}
+                    </Button>
+                ) : (
+                    <DialogTrigger
+                        onClick={() => setIsOpen(true)}
+                        className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                        {Content}
+                    </DialogTrigger>
+                )}
+
                 <DialogContent className="min-w-fit">
                     <DialogHeader className="h-min">
                         <DialogTitle>

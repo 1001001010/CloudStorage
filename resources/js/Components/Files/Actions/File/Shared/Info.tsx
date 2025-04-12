@@ -3,6 +3,8 @@ import { Dialog, DialogTrigger, DialogContent } from '@/Components/ui/dialog'
 import { Info } from 'lucide-react'
 import UserAccessList from './UserAccessList'
 import { formatDate } from '@/lib/utils'
+import { Button } from '@/Components/ui/button'
+import { useState } from 'react'
 
 const formatFileSize = (bytes: number) => {
     const kb = 1024 // 1KB = 1024 байт
@@ -23,16 +25,37 @@ const formatFileSize = (bytes: number) => {
 export default function FileInfo({
     file,
     role,
+    variant,
 }: {
     file: FileType
     role: 'Sender' | 'Receiver'
+    variant: 'context' | 'button'
 }) {
+    const [open, setIsOpen] = useState(false)
+
+    const Content = (
+        <>
+            <Info className="mr-2 h-4 w-4" />
+            Информация
+        </>
+    )
+
     return (
-        <Dialog>
-            <DialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                <Info className="mr-2 h-4 w-4" />
-                Информация
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={setIsOpen}>
+            {variant === 'button' ? (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsOpen(true)}>
+                    {Content}
+                </Button>
+            ) : (
+                <DialogTrigger
+                    onClick={() => setIsOpen(true)}
+                    className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                    {Content}
+                </DialogTrigger>
+            )}
 
             {role === 'Receiver' || role === 'Sender' ? (
                 <DialogContent className="">

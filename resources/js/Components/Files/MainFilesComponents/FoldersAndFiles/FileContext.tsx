@@ -146,25 +146,37 @@ export default function FileContext({
         } else if (shared) {
             return (
                 <>
-                    <FileDownload file={file} />
-                    <FileInfo file={file} role={'Receiver'} />
-                    {isImageFile && <FilePhotoView file={file} />}
+                    <FileDownload file={file} variant="context" />
+                    <FileInfo file={file} role={'Receiver'} variant="context" />
+                    {isImageFile && (
+                        <FilePhotoView file={file} accessLink={accessLink} />
+                    )}
                     {isVideoFile && <FileVideoView file={file} />}
                 </>
             )
         } else {
             return (
                 <>
-                    <FileDownload file={file} />
-                    <FileShare file={file} accessLink={accessLink} />
+                    <FileDownload file={file} variant="context" />
+                    <FileShare
+                        file={file}
+                        accessLink={accessLink}
+                        variant="context"
+                    />
                     {canEdit && <FileEdit file={file} />}
-                    {isImageFile && <FilePhotoView file={file} />}
+                    {isImageFile && (
+                        <FilePhotoView file={file} accessLink={accessLink} />
+                    )}
                     {isVideoFile && <FileVideoView file={file} />}
                     {file.access_tokens ? (
-                        <FileInfo file={file} role={'Sender'} />
+                        <FileInfo
+                            file={file}
+                            role={'Sender'}
+                            variant="context"
+                        />
                     ) : null}
-                    <FileRename file={file} />
-                    <FileDelete file={file} />
+                    <FileRename file={file} variant="context" />
+                    <FileDelete file={file} variant="context" />
                 </>
             )
         }
