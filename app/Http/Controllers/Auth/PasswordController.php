@@ -11,14 +11,10 @@ use Illuminate\Http\{
 };
 use Illuminate\Support\Facades\Hash;
 
-class PasswordController extends Controller
-{
-    protected $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+class PasswordController extends Controller {
+    public function __construct(
+        protected UserService $userService,
+    ) {}
 
     /**
      * Обновление пароля пользователя

@@ -24,12 +24,9 @@ use Inertia\{
 
 class AuthenticatedSessionController extends Controller {
 
-    protected GitHubAuthService $githubAuthService;
-
-    public function __construct(GitHubAuthService $githubAuthService)
-    {
-        $this->githubAuthService = $githubAuthService;
-    }
+    public function __construct(
+        protected GitHubAuthService $githubAuthService,
+    ) {}
 
     /**
      * Рендер страницы входа

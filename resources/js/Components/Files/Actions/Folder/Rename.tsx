@@ -13,8 +13,6 @@ import {
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import React, { useState } from 'react'
-import { Simulate } from 'react-dom/test-utils'
-import submit = Simulate.submit
 import { useFilesStore } from '@/store/use-file-store'
 
 export default function FolderRename({ folder }: { folder: FolderType }) {

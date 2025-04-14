@@ -2,7 +2,7 @@ export interface User {
     id: number
     name: string
     email: string
-    quota?: Quota
+    quota: Quota
     is_admin: boolean
     created_at: string
     total_file_size?: number

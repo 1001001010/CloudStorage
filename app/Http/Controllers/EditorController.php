@@ -18,15 +18,11 @@ use Illuminate\Support\Facades\{
 use App\Models\File;
 use App\Services\Cryptography\FileEncryptionService;
 
-class EditorController extends Controller
-{
-    protected FileEncryptionService $encryptService;
+class EditorController extends Controller {
 
     public function __construct(
-        FileEncryptionService $encryptService,
-    ) {
-        $this->encryptService = $encryptService;
-    }
+        protected FileEncryptionService $encryptService,
+    ) {}
 
     /**
      * Отображение страницы редактирования текстовых файлов
@@ -140,7 +136,7 @@ class EditorController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function upload(Request $request, File $file): RedirectResponse
+    public function upload(File $file, Request $request): RedirectResponse
     {
         $file = File::where('user_id', Auth::id())->find($file->id);
 

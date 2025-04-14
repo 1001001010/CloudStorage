@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     EditorController,
     AdminController,
     FileAccessTokenController,
-    PrivateFileController
+    PrivateFileController,
+    QuotaController
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,6 @@ use App\Http\Middleware\{
 require __DIR__.'/auth.php';
 
 Route::middleware([GetUserFolders::class])->group(function () {
-// Route::middleware([GetUserFolders::class, GetUserFoldersAndFiles::class])->group(function () {
     Route::middleware('auth')->group(function () {
         Route::controller(ProfileController::class)->group(function () {
             Route::get('/profile', 'index')->name('profile.index');
@@ -70,6 +70,9 @@ Route::middleware([GetUserFolders::class])->group(function () {
         Route::patch('/user/{user}/password/update', 'update_password')->name('admin.password.update')->whereNumber('user');
         Route::get('/statistics/export', 'excel')->name('statistics.export');
         Route::get('/reports/pdf', 'generateReport')->name('reports.pdf');
+        Route::controller(QuotaController::class)->group(function () {
+            Route::patch('/user/{user}/quota/update', 'update')->name('admin.quota.update')->whereNumber('user');
+        });
     });
 
     Route::get('/{category?}', [MainController::class, 'index'])->name('index');

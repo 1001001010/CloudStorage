@@ -12,16 +12,12 @@ use App\Services\Cryptography\FileEncryptionService;
 class PrivateFileController extends Controller
 {
 
-    protected FileEncryptionService $encryptService;
-
     public function __construct(
-        FileEncryptionService $encryptService,
-    ) {
-        $this->encryptService = $encryptService;
-    }
+        protected FileEncryptionService $encryptService,
+    ) {}
 
     /**
-     * Получение URL для файла.
+     * Получение URL для файла
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
@@ -40,7 +36,7 @@ class PrivateFileController extends Controller
     }
 
     /**
-     * Показ изображения.
+     * Показ изображения
      *
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
@@ -67,7 +63,7 @@ class PrivateFileController extends Controller
     }
 
     /**
-     * Показ видео.
+     * Показ видео
      *
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse

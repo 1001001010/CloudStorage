@@ -24,12 +24,9 @@ use PDF;
 
 class AdminController extends Controller {
 
-    protected UserService $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+    public function __construct(
+        protected UserService $userService,
+    ) {}
 
     /**
      * Отображает список пользователей в админке

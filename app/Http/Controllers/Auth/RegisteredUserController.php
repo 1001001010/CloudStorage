@@ -20,12 +20,9 @@ use Inertia\{
 
 class RegisteredUserController extends Controller {
 
-    protected $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+    public function __construct(
+        protected UserService $userService,
+    ) {}
 
     /**
      * Рендер страницы регистрации
