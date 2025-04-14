@@ -49,11 +49,6 @@ export default function MainFiles({
     } = useFilesStore()
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
-    // const [currentPath, setCurrentPath] = useState<any[]>([FoldersFilesTree])
-    // const [breadcrumbPath, setBreadcrumbPath] = useState<BreadcrumbItem[]>([
-    //     { title: 'Файлы', folderId: 0 },
-    // ])
-    // const [currentFolderId, setCurrentFolderId] = useState<number>(0)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
     const { dragStartHandler, dragLeaveHandler, onDrophandler } =

@@ -13,6 +13,7 @@ import {
 } from '@/Components/ui/dialog'
 import { PencilIcon } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
+import { useFilesStore } from '@/store/use-file-store'
 
 export default function FileRename({
     file,
@@ -21,17 +22,29 @@ export default function FileRename({
     file: FileType
     variant: 'context' | 'button'
 }) {
+    const { currentFolderId, setCurrentPath } = useFilesStore()
     const [isOpen, setIsOpen] = useState(false)
-
     const { setData, processing, patch, reset } = useForm({
         name: '',
     })
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
         patch(route('file.rename', { file: file.id }), {
-            onSuccess: () => {
+            onSuccess: async () => {
                 reset(), setIsOpen(false)
+                try {
+                    const response = await fetch(
+                        `/api/folder/${currentFolderId}/contents`
+                    )
+                    const updatedData = await response.json()
+                    setCurrentPath([updatedData])
+                } catch (error) {
+                    console.error(
+                        'Ошибка при обновлении содержимого папки после удаления:',
+                        error
+                    )
+                }
             },
         })
     }

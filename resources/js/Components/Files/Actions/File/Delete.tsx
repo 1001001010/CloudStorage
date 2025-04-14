@@ -15,6 +15,7 @@ import {
 } from '@/Components/ui/alert-dialog'
 import { Button } from '@/Components/ui/button'
 import { useState } from 'react'
+import { useFilesStore } from '@/store/use-file-store'
 
 export default function FileDelete({
     file,
@@ -23,14 +24,27 @@ export default function FileDelete({
     file: FileType
     variant: 'context' | 'button'
 }) {
+    const { currentFolderId, setCurrentPath } = useFilesStore()
     const [isOpen, setIsOpen] = useState(false)
     const { delete: destroy, processing } = useForm()
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
         destroy(route('file.delete', { file: file.id }), {
-            onSuccess: () => {
+            onSuccess: async () => {
                 setIsOpen(false)
+                try {
+                    const response = await fetch(
+                        `/api/folder/${currentFolderId}/contents`
+                    )
+                    const updatedData = await response.json()
+                    setCurrentPath([updatedData])
+                } catch (error) {
+                    console.error(
+                        'Ошибка при обновлении содержимого папки после удаления:',
+                        error
+                    )
+                }
             },
         })
     }
