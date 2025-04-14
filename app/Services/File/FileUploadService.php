@@ -16,8 +16,7 @@ use App\Models\{
     FileUserAccess
 };
 
-class FileService
-{
+class FileUploadService {
     protected FileEncryptionService $encryptService;
 
     public function __construct(
@@ -89,95 +88,5 @@ class FileService
             'totalSize' => $totalSize + $fileSize,
             'success' => true
         ];
-    }
-
-    /**
-     * Получение расшифрованного файла для скачивания
-     *
-     * @param File $file
-     * @param FileEncryptionService $encryptService
-     * @return BinaryFileResponse|null
-     */
-    public function getDecryptedDownloadResponse(File $file, FileEncryptionService $encryptService): ?BinaryFileResponse
-    {
-        $filePath = $file->path;
-        if (!Storage::disk('private')->exists($filePath)) {
-            return null;
-        }
-
-        $encryptedContent = Storage::disk('private')->get($filePath);
-        $decryptedContent = $encryptService->decryptFile($encryptedContent);
-
-        $tempPath = storage_path('app/private/temp_' . $file->id);
-        file_put_contents($tempPath, $decryptedContent);
-
-        return response()->download($tempPath, $file->name . '.' . $file->extension->extension)->deleteFileAfterSend();
-    }
-
-    /**
-     * Мягкое удаление файла
-     *
-     * @param File $file
-     * @return bool
-     */
-    public function softDeleteFile(File $file): bool
-    {
-        if ($file->user_id !== Auth::id()) {
-            return false;
-        }
-
-        $file->delete();
-        return true;
-    }
-
-    /**
-     * Переименование файла
-     *
-     * @param File $file
-     * @param string $newName
-     * @return bool
-     */
-    public function renameFile(File $file, string $newName): bool
-    {
-        if ($file->user_id !== Auth::id()) {
-            return false;
-        }
-
-        $file->update(['name' => $newName]);
-        return true;
-    }
-
-    /**
-     * Восстановление мягко удаленного файла
-     *
-     * @param File $file
-     * @return bool
-     */
-    public function restoreFile(File $file): bool
-    {
-        if (!$file->trashed()) {
-            return false;
-        }
-
-        $file->restore();
-        return true;
-    }
-
-    /**
-     * Полное удаление файла
-     *
-     * @param File $file
-     * @return bool
-     */
-    public function forceDeleteFile(File $file): bool
-    {
-        if (!Storage::disk('private')->exists($file->path)) {
-            return false;
-        }
-
-        Storage::disk('private')->delete($file->path);
-        $file->forceDelete();
-
-        return true;
     }
 }

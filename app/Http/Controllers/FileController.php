@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\Cryptography\FileEncryptionService;
-use App\Services\File\FileService;
+use App\Services\File\{
+    FileUploadService,
+    FileRenameService,
+    FileDownloadService,
+    FileDeleteService
+};
 use Illuminate\Http\{
     Request,
     RedirectResponse
@@ -26,16 +31,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FileController extends Controller
 {
 
-    protected FileEncryptionService $encryptService;
-    protected FileService $FileService;
-
     public function __construct(
-        FileEncryptionService $encryptService,
-        FileService $fileService,
-    ) {
-        $this->encryptService = $encryptService;
-        $this->fileService = $fileService;
-    }
+        protected FileEncryptionService $encryptService,
+        protected FileUploadService $fileUploadService,
+        protected FileRenameService $fileRenameService,
+        protected FileDownloadService $fileDownloadService,
+        protected FileDeleteService $fileDeleteService
+    ) {}
 
     /**
      * Обработка загрузки файлов
@@ -56,7 +58,7 @@ class FileController extends Controller
         $successfulFiles = [];
 
         foreach ($request->file('files') as $file) {
-            $result = $this->fileService->handleUploadFile($file, $folder?->id);
+            $result = $this->fileUploadService->handleUploadFile($file, $folder?->id);
             if ($result['success']) {
                 $successCount++;
                 $successfulFiles[] = $file->getClientOriginalName();
@@ -135,7 +137,7 @@ class FileController extends Controller
      */
     protected function serveFile(File $file): BinaryFileResponse|RedirectResponse
     {
-        $response = $this->fileService->getDecryptedDownloadResponse($file, $this->encryptService);
+        $response = $this->fileDownloadService->getDecryptedDownloadResponse($file, $this->encryptService);
 
         if (!$response) {
             return $this->redirectWithError('Файл не найден', '');
@@ -159,7 +161,7 @@ class FileController extends Controller
             ]);
         }
 
-        $deleted = $this->fileService->softDeleteFile($file);
+        $deleted = $this->fileDeleteService->softDeleteFile($file);
 
         if (!$deleted) {
             return $this->redirectWithError('Ошибка', 'Удаление файла невозможно');
@@ -187,7 +189,7 @@ class FileController extends Controller
             'name' => 'string|min:1'
         ]);
 
-        $renamed = $this->fileService->renameFile($file, $request->name);
+        $renamed = $this->fileRenameService->renameFile($file, $request->name);
 
         if (!$renamed) {
             return $this->redirectWithError('Ошибка', 'Не удалось переименовать файл');
@@ -215,7 +217,7 @@ class FileController extends Controller
             ]);
         }
 
-        $restored = $this->fileService->restoreFile($file);
+        $restored = $this->fileDeleteService->restoreFile($file);
 
         if (!$restored) {
             return $this->redirectWithError('Ошибка восстановления', 'Файл не может быть восстановлен');
@@ -241,7 +243,7 @@ class FileController extends Controller
             return $this->redirectWithError('Файл не найден', '');
         }
 
-        $deleted = $this->fileService->forceDeleteFile($file);
+        $deleted = $this->fileDeleteService->forceDeleteFile($file);
 
         if (!$deleted) {
             return $this->redirectWithError('Файл не найден на диске', '');

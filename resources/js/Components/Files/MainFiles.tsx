@@ -206,14 +206,7 @@ export default function MainFiles({
                                 </div>
                             </div>
 
-                            <BreadcrumbFile
-                            // breadcrumbPath={breadcrumbPath}
-                            // currentPath={currentPath}
-                            // setCurrentPath={setCurrentPath}
-                            // setBreadcrumbPath={setBreadcrumbPath}
-                            // setCurrentFolderId={setCurrentFolderId}
-                            // currentFolderId={currentFolderId}
-                            />
+                            <BreadcrumbFile />
 
                             <FoldersAndFiles
                                 filteredItems={filteredItems}
