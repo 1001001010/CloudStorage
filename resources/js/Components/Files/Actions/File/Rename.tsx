@@ -93,7 +93,7 @@ export default function FileRename({
                             className={'mt-3'}
                             type="submit"
                             disabled={processing}>
-                            Сохранить
+                            {processing ? 'Сохранение...' : 'Сохранить'}
                         </Button>
                     </DialogFooter>
                 </form>
