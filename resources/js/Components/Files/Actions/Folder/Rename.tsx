@@ -15,19 +15,32 @@ import { Input } from '@/Components/ui/input'
 import React, { useState } from 'react'
 import { Simulate } from 'react-dom/test-utils'
 import submit = Simulate.submit
+import { useFilesStore } from '@/store/use-file-store'
 
 export default function FolderRename({ folder }: { folder: FolderType }) {
+    const { currentFolderId, setCurrentPath } = useFilesStore()
     const [isOpen, setIsOpen] = useState(false)
-
     const { patch, processing, setData, reset } = useForm({
         name: '',
     })
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
         patch(route('folder.rename', { folder: folder.id }), {
-            onSuccess: () => {
+            onSuccess: async () => {
                 reset(), setIsOpen(false)
+                try {
+                    const response = await fetch(
+                        `/api/folder/${currentFolderId}/contents`
+                    )
+                    const updatedData = await response.json()
+                    setCurrentPath([updatedData])
+                } catch (error) {
+                    console.error(
+                        'Ошибка при обновлении содержимого папки после удаления:',
+                        error
+                    )
+                }
             },
         })
     }

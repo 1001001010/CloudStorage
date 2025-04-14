@@ -12,13 +12,30 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/Components/ui/alert-dialog'
+import { useFilesStore } from '@/store/use-file-store'
 
 export default function FolderDelete({ folder }: { folder: FolderType }) {
+    const { currentFolderId, setCurrentPath } = useFilesStore()
     const { delete: destroy, processing } = useForm()
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
-        destroy(route('folder.delete', { folder: folder.id }))
+        destroy(route('folder.delete', { folder: folder.id }), {
+            onSuccess: async () => {
+                try {
+                    const response = await fetch(
+                        `/api/folder/${currentFolderId}/contents`
+                    )
+                    const updatedData = await response.json()
+                    setCurrentPath([updatedData])
+                } catch (error) {
+                    console.error(
+                        'Ошибка при обновлении содержимого папки после удаления:',
+                        error
+                    )
+                }
+            },
+        })
     }
 
     return (
