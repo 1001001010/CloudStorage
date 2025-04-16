@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\Update\ProfileUpdateRequest;
 use Illuminate\Http\{
     Request,
     RedirectResponse

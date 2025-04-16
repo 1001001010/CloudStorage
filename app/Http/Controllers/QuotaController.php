@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Quota\QuotaService;
-use App\Http\Requests\QuotaUpdateRequest;
+use App\Http\Requests\Update\QuotaUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\{
     Request,
