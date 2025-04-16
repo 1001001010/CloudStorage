@@ -13,13 +13,20 @@ import {
 } from '@/Components/ui/dialog'
 import { Skeleton } from '@/Components/ui/skeleton'
 import { Button } from '@/Components/ui/button'
-import { LucideMousePointerSquareDashed, X } from 'lucide-react'
+import { Info, LucideMousePointerSquareDashed, X } from 'lucide-react'
 import type { File as FileType } from '@/types'
-import FileDownload from './Download'
-import FileShare from './Share'
 import FileInfo from './Shared/Info'
-import FileRename from './Rename'
-import FileDelete from './Delete'
+import {
+    FileDelete,
+    FileRename,
+    FileShare,
+    FileDownload,
+} from '@/Components/Files/Actions/File/index'
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from '@/Components/ui/hover-card'
 
 export default function FilePhotoView({
     file,
@@ -72,6 +79,30 @@ export default function FilePhotoView({
                         <code className="relative max-w-xs truncate rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
                             <span>{file.name}</span>.{file.extension.extension}
                         </code>
+                        <HoverCard>
+                            <HoverCardTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="ml-2 inline-flex h-auto w-auto p-0">
+                                    <Info width={16} height={16} />
+                                </Button>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80">
+                                <div className="flex justify-between space-x-4">
+                                    <div className="space-y-1">
+                                        <h4 className="text-sm font-semibold">
+                                            <code className="relative max-w-xs truncate rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                                                Ctrl + Enter
+                                            </code>
+                                        </h4>
+                                        <p className="text-sm">
+                                            Используйте комбинацию, чтобы
+                                            расширить изображение
+                                        </p>
+                                    </div>
+                                </div>
+                            </HoverCardContent>
+                        </HoverCard>
                     </DialogTitle>
                     <DialogClose asChild>
                         <Button
