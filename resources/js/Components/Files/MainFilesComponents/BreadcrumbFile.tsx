@@ -16,29 +16,11 @@ type BreadcrumbItemType = {
     folderId: number
 }
 
-export default function BreadcrumbFile(
-    {
-        // breadcrumbPath, // Путь
-        // setCurrentPath,
-        // setBreadcrumbPath,
-        // setCurrentFolderId,
-    }: {
-        // breadcrumbPath: BreadcrumbItemType[]
-        // currentPath: FolderOrFile[][]
-        // setCurrentPath: React.Dispatch<React.SetStateAction<FolderOrFile[][]>>
-        // setBreadcrumbPath: React.Dispatch<
-        //     React.SetStateAction<BreadcrumbItemType[]>
-        // >
-        // setCurrentFolderId: React.Dispatch<React.SetStateAction<number>>
-        // currentFolderId: number
-    }
-) {
+export default function BreadcrumbFile() {
     const {
-        currentPath,
         setCurrentPath,
         breadcrumbPath,
         setBreadcrumbPath,
-        currentFolderId,
         setCurrentFolderId,
     } = useFilesStore()
 

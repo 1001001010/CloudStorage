@@ -30,8 +30,8 @@ class FileUploadRequest extends FormRequest
             'files.*' => [
                 'file',
                 'max:2048000',
-                'regex:/^[^\\/:*?"<>|]*$/',
-                'regex:/^(?!.*(\.|\.\.|\bCON\b|\bPRN\b|\bAUX\b|\bNUL\b|\bCOM\d\b|\bLPT\d\b)).*$/i'
+                // 'regex:/^[^\\/:*?"<>|]*$/',
+                // 'regex:/^(?!.*(\.|\.\.|\bCON\b|\bPRN\b|\bAUX\b|\bNUL\b|\bCOM\d\b|\bLPT\d\b)).*$/i'
             ],
         ];
     }

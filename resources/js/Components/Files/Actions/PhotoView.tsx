@@ -21,7 +21,7 @@ import {
     FileRename,
     FileShare,
     FileDownload,
-} from '@/Components/Files/Actions/File/index'
+} from '@/Components/Files/Actions/index'
 import {
     HoverCard,
     HoverCardContent,

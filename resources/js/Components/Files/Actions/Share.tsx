@@ -12,7 +12,7 @@ import { Slider } from '@/Components/ui/slider'
 import { FormEventHandler, useState, useEffect } from 'react'
 import { Button } from '@/Components/ui/button'
 import { useForm } from '@inertiajs/react'
-import AccessFileLink from '../../AccessFileLink'
+import AccessFileLink from '@/Components/Files/AccessFileLink'
 
 export default function FileShare({
     file,

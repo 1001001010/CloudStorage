@@ -26,7 +26,7 @@ import {
     FileEdit,
     FileRename,
     FileInfo,
-} from '@/Components/Files/Actions/File/index'
+} from '@/Components/Files/Actions/index'
 import { AutoFormatFileSize, formatDate } from '@/lib/utils'
 
 export default function FileContext({

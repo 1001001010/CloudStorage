@@ -8,8 +8,7 @@ import {
 import type { Folder as FolderType } from '@/types'
 import { Folder } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
-import FolderDelete from '@/Components/Files/Actions/Folder/Delete'
-import { FolderRename } from '@/Components/Files/Actions/Folder'
+import { FolderRename, FolderDelete } from '@/Components/Folder/Actions/index'
 import { formatDate } from '@/lib/utils'
 
 export default function FolderContext({
