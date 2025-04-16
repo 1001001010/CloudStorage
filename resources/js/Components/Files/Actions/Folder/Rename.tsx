@@ -75,6 +75,8 @@ export default function FolderRename({ folder }: { folder: FolderType }) {
                     <Input
                         placeholder="Название папки"
                         name="name"
+                        min={1}
+                        max={50}
                         defaultValue={folder.title}
                         onChange={(e) => setData('name', e.target.value)}
                     />

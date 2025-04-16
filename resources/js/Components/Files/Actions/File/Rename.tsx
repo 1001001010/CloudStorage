@@ -93,6 +93,8 @@ export default function FileRename({
                     <Input
                         placeholder="Название папки"
                         name="name"
+                        min={1}
+                        max={50}
                         defaultValue={file.name}
                         onChange={(e) => setData('name', e.target.value)}
                     />
