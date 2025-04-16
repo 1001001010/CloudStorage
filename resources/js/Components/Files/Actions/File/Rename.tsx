@@ -14,6 +14,7 @@ import {
 import { PencilIcon } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 import { useFilesStore } from '@/store/use-file-store'
+import { FolderFileSchema } from '@/lib/utils'
 
 export default function FileRename({
     file,
@@ -24,12 +25,19 @@ export default function FileRename({
 }) {
     const { currentFolderId, setCurrentPath } = useFilesStore()
     const [isOpen, setIsOpen] = useState(false)
-    const { setData, processing, patch, reset } = useForm({
+    const [error, setError] = useState<string | null>(null)
+    const { data, setData, processing, patch, reset } = useForm({
         name: '',
     })
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
+        const result = FolderFileSchema.safeParse({ name: data.name })
+        if (!result.success) {
+            setError(result.error.errors[0].message)
+            return
+        }
+
         patch(route('file.rename', { file: file.id }), {
             onSuccess: async () => {
                 reset(), setIsOpen(false)
@@ -88,6 +96,11 @@ export default function FileRename({
                         defaultValue={file.name}
                         onChange={(e) => setData('name', e.target.value)}
                     />
+                    {error && (
+                        <p className="mt-3 text-center text-sm font-medium text-red-500">
+                            {error}
+                        </p>
+                    )}
                     <DialogFooter>
                         <Button
                             className={'mt-3'}

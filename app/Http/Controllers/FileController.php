@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\{
     Auth
 };
 use Illuminate\Support\Str;
-use App\Http\Requests\FileUploadRequest;
+use App\Http\Requests\Upload\FileUploadRequest;
+use App\Http\Requests\Rename\FileRenameRequest;
 use App\Models\{
     File,
     Folder,
@@ -180,16 +181,13 @@ class FileController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function rename(Request $request, File $file): RedirectResponse {
+    public function rename(File $file, FileRenameRequest $request): RedirectResponse {
         if ($file->user_id !== Auth::id()) {
             abort(404);
         }
 
-        $validate_data = $request->validate([
-            'name' => 'string|min:1'
-        ]);
-
-        $renamed = $this->fileRenameService->renameFile($file, $request->name);
+        $data = $request->validated();
+        $renamed = $this->fileRenameService->renameFile($file, $data['name']);
 
         if (!$renamed) {
             return $this->redirectWithError('Ошибка', 'Не удалось переименовать файл');

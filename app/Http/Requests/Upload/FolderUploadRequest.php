@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Upload;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -25,8 +25,15 @@ class FolderUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:20',
+            'title' => [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^[^\\/:*?"<>|]*$/',
+                'regex:/^(?!.*(\.|\.\.|\bCON\b|\bPRN\b|\bAUX\b|\bNUL\b|\bCOM\d\b|\bLPT\d\b)).*$/i'
+            ],
             'folder' => 'required|integer|min:0'
         ];
     }
+
 }

@@ -21,6 +21,13 @@ export default function Register() {
         })
     }
 
+    const fields = [
+        'name',
+        'email',
+        'password',
+        'password_confirmation',
+    ] as const
+
     return (
         <div className="flex h-screen items-center justify-center">
             <div className="lg:p-8">
@@ -50,11 +57,6 @@ export default function Register() {
                                     }
                                     required
                                 />
-                                {errors.name && (
-                                    <p className="mt-1 text-sm text-red-500">
-                                        {errors.name}
-                                    </p>
-                                )}
                                 <Input
                                     id="email"
                                     type="email"
@@ -70,11 +72,6 @@ export default function Register() {
                                     }
                                     required
                                 />
-                                {errors.email && (
-                                    <p className="mt-1 text-sm text-red-500">
-                                        {errors.email}
-                                    </p>
-                                )}
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="relative">
                                         <Input
@@ -95,11 +92,6 @@ export default function Register() {
                                             }
                                             required
                                         />
-                                        {errors.password && (
-                                            <p className="mt-1 text-sm text-red-500">
-                                                {errors.password}
-                                            </p>
-                                        )}
                                     </div>
 
                                     <div className="relative">
@@ -121,13 +113,19 @@ export default function Register() {
                                             }
                                             required
                                         />
-                                        {errors.password_confirmation && (
-                                            <p className="mt-1 text-sm text-red-500">
-                                                {errors.password_confirmation}
-                                            </p>
-                                        )}
                                     </div>
                                 </div>
+                                {fields.some((field) => errors[field]) && (
+                                    <p className="mt-3 text-center text-sm font-medium text-red-500">
+                                        {fields.map((field) =>
+                                            errors[field] ? (
+                                                <div key={field}>
+                                                    {errors[field]}
+                                                </div>
+                                            ) : null
+                                        )}
+                                    </p>
+                                )}
                                 <Button disabled={processing}>
                                     Регистрация
                                 </Button>

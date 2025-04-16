@@ -14,19 +14,29 @@ import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import React, { useState } from 'react'
 import { useFilesStore } from '@/store/use-file-store'
+import { FolderFileSchema } from '@/lib/utils'
 
 export default function FolderRename({ folder }: { folder: FolderType }) {
     const { currentFolderId, setCurrentPath } = useFilesStore()
     const [isOpen, setIsOpen] = useState(false)
-    const { patch, processing, setData, reset } = useForm({
+    const [error, setError] = useState<string | null>(null)
+    const { data, patch, processing, setData, reset } = useForm({
         name: '',
     })
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
+
+        const result = FolderFileSchema.safeParse({ name: data.name })
+        if (!result.success) {
+            setError(result.error.errors[0].message)
+            return
+        }
+
         patch(route('folder.rename', { folder: folder.id }), {
             onSuccess: async () => {
-                reset(), setIsOpen(false)
+                reset()
+                setIsOpen(false)
                 try {
                     const response = await fetch(
                         `/api/folder/${currentFolderId}/contents`
@@ -68,6 +78,11 @@ export default function FolderRename({ folder }: { folder: FolderType }) {
                         defaultValue={folder.title}
                         onChange={(e) => setData('name', e.target.value)}
                     />
+                    {error && (
+                        <p className="mt-3 text-center text-sm font-medium text-red-500">
+                            {error}
+                        </p>
+                    )}
                     <DialogFooter>
                         <Button
                             className={'mt-3'}

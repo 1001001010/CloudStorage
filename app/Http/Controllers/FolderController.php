@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\Auth;
 use App\Models\{Folder, File, FolderRelation};
-use App\Http\Requests\FolderUploadRequest;
+use App\Http\Requests\Upload\FolderUploadRequest;
+use App\Http\Requests\Rename\FolderRenameRequest;
 
 class FolderController extends Controller
 {
@@ -95,20 +96,17 @@ class FolderController extends Controller
      * @param Folder $folder
      * @return RedirectResponse
      */
-    public function rename(Request $request, Folder $folder) : RedirectResponse
+    public function rename(Folder $folder, FolderRenameRequest $request) : RedirectResponse
     {
         if (!$folder->belongsToUser(Auth::id())) {
             return redirect()->back()->with('msg', [
                 'title' => 'Папка не найдена или не принадлежит вам',
             ]);
         }
-
-        $validate = $request->validate([
-            'name' => 'string|required',
-        ]);
+        $data = $request->validated();
 
         $folder->update([
-            'title' => $validate['name']
+            'title' => $data['name']
         ]);
 
         return redirect()->back()->with('msg', [

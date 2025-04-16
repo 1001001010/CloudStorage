@@ -20,8 +20,7 @@ class QuotaService {
      * @param int|float $newQuotaGb Квота в гигабайтах
      * @return void
      */
-    public function updateUserQuota(User $user, $newQuotaGb): void
-    {
+    public function updateUserQuota(User $user, $newQuotaGb): void {
         $quotaSizeMb = $newQuotaGb * 1024;
         $quota = Quota::firstOrCreate(
             ['size' => $quotaSizeMb],

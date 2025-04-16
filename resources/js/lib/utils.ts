@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { z } from 'zod'
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -49,3 +50,29 @@ export const AutoFormatFileSize = (bytes: number) => {
 export const formatDate = (date: Date | string): string => {
     return format(new Date(date), 'yyyy-MM-dd', { locale: ru })
 }
+
+// Валидация имен папок и файлов
+const forbiddenNames = [
+    '.',
+    '..',
+    'CON',
+    'PRN',
+    'AUX',
+    'NUL',
+    ...Array.from({ length: 9 }, (_, i) => `COM${i + 1}`),
+    ...Array.from({ length: 9 }, (_, i) => `LPT${i + 1}`),
+]
+
+export const FolderFileSchema = z.object({
+    name: z
+        .string()
+        .trim()
+        .min(1, 'Имя не должно быть пустым')
+        .max(50, 'Слишком длинное имя')
+        .refine((val) => !forbiddenNames.includes(val.toUpperCase()), {
+            message: 'Недопустимое имя',
+        })
+        .refine((val) => !/[\\/:\*\?"<>|]/.test(val), {
+            message: 'Имя содержит недопустимые символы',
+        }),
+})

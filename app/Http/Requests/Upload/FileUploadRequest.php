@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Upload;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +29,9 @@ class FileUploadRequest extends FormRequest
             'files' => 'required|array|min:1',
             'files.*' => [
                 'file',
-                'max:2048000'
+                'max:2048000',
+                'regex:/^[^\\/:*?"<>|]*$/',
+                'regex:/^(?!.*(\.|\.\.|\bCON\b|\bPRN\b|\bAUX\b|\bNUL\b|\bCOM\d\b|\bLPT\d\b)).*$/i'
             ],
         ];
     }

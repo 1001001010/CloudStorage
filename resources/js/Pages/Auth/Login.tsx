@@ -50,11 +50,6 @@ export default function Login() {
                                     }
                                     required
                                 />
-                                {errors.email && (
-                                    <p className="mt-1 text-sm text-red-500">
-                                        {errors.email}
-                                    </p>
-                                )}
                                 <div className="relative">
                                     <Input
                                         id="password"
@@ -71,13 +66,18 @@ export default function Login() {
                                         }
                                         required
                                     />
-                                    {errors.password && (
-                                        <p className="mt-1 text-sm text-red-500">
-                                            {errors.password}
-                                        </p>
-                                    )}
                                 </div>
                                 <Button disabled={processing}>Вход</Button>
+                                {(errors.email || errors.password) && (
+                                    <p className="mt-3 text-center text-sm font-medium text-red-500">
+                                        {errors.email && (
+                                            <div>{errors.email}</div>
+                                        )}
+                                        {errors.password && (
+                                            <div>{errors.password}</div>
+                                        )}
+                                    </p>
+                                )}
                             </div>
                         </form>
                         <div className="relative">

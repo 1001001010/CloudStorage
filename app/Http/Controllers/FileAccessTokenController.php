@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AccessUploadRequest;
+use App\Http\Requests\Upload\AccessUploadRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\{
     Request,
