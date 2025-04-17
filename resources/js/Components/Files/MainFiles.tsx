@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react'
 import { router, useForm } from '@inertiajs/react'
-import FoldersAndFiles from '@/Components/Files/MainFilesComponents/FoldersAndFiles'
-import BreadcrumbFile from '@/Components/Files/MainFilesComponents/BreadcrumbFile'
-import SearchFileInput from '@/Components/Files/MainFilesComponents/SearchFileInput'
-import ViewControls from '@/Components/Files/MainFilesComponents/FoldersAndFiles/ViewControls'
-import FilterControls from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FilterControls'
+import {
+    FoldersAndFiles,
+    BreadcrumbFile,
+    SearchFileInput,
+    FilterControls,
+    ViewControls,
+} from '@/Components/Files/MainFilesComponents/index'
 import { useSettingsStore } from '@/store/settings-store'
 import { useDragHandlers } from '@/hooks/use-drag-handlers'
 import { Upload } from 'lucide-react'
 import { useFilesStore } from '@/store/use-file-store'
-
-type BreadcrumbItem = {
-    title: string
-    folderId: number
-}
+import { getFilteredItems } from '@/lib/utils'
 
 export default function MainFiles({
     FoldersFilesTree,
@@ -38,7 +36,6 @@ export default function MainFiles({
         sortDirection,
         setSortDirection,
     } = useSettingsStore()
-
     const {
         currentPath,
         setCurrentPath,
@@ -47,7 +44,6 @@ export default function MainFiles({
         currentFolderId,
         setCurrentFolderId,
     } = useFilesStore()
-
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [drag, setDrag] = useState(false)
     const [searchFileName, setSearchFileName] = useState('')
@@ -103,39 +99,7 @@ export default function MainFiles({
     }
 
     // Фильтрация
-    const getFilteredItems = () => {
-        const currentItems = currentPath[currentPath.length - 1] || []
-
-        const filtered = currentItems.filter(
-            (item: any) =>
-                item.name
-                    ?.toLowerCase()
-                    .includes(searchFileName.toLowerCase()) ||
-                item.title?.toLowerCase().includes(searchFileName.toLowerCase())
-        )
-
-        return filtered.sort((a: any, b: any) => {
-            const aIsFolder = a.hasOwnProperty('title')
-            const bIsFolder = b.hasOwnProperty('title')
-
-            if (aIsFolder && !bIsFolder) return -1
-            if (!aIsFolder && bIsFolder) return 1
-
-            if (filterType === 'name') {
-                const aName = (a.name || a.title || '').toLowerCase()
-                const bName = (b.name || b.title || '').toLowerCase()
-                return sortDirection === 'asc'
-                    ? aName.localeCompare(bName)
-                    : bName.localeCompare(aName)
-            } else {
-                const aDate = new Date(a[filterType] || 0).getTime()
-                const bDate = new Date(b[filterType] || 0).getTime()
-                return sortDirection === 'asc' ? aDate - bDate : bDate - aDate
-            }
-        })
-    }
-
-    const filteredItems = getFilteredItems()
+    const filteredItems = getFilteredItems(searchFileName)
 
     // Сброс фильтров
     const resetFilters = () => {

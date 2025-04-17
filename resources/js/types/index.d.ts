@@ -83,6 +83,11 @@ export interface ChartData {
     desktop: number
 }
 
+export interface BreadcrumbItem {
+    title: string
+    folderId: number
+}
+
 interface ToastAction {
     label: string
     onClick: () => void

@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Запуск миграции
+     *
      */
     public function up(): void
     {

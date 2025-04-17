@@ -3,6 +3,9 @@ import { twMerge } from 'tailwind-merge'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { z } from 'zod'
+import { PageProps } from '@/types'
+import { useFilesStore } from '@/store/use-file-store'
+import { useSettingsStore } from '@/store/settings-store'
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -76,3 +79,45 @@ export const FolderFileSchema = z.object({
             message: 'Имя содержит недопустимые символы',
         }),
 })
+
+// Фильтрация
+export const getFilteredItems = (searchFileName: string) => {
+    const {
+        currentPath,
+        setCurrentPath,
+        breadcrumbPath,
+        setBreadcrumbPath,
+        currentFolderId,
+        setCurrentFolderId,
+    } = useFilesStore()
+
+    const { filterType, sortDirection } = useSettingsStore()
+
+    const currentItems = currentPath[currentPath.length - 1] || []
+
+    const filtered = currentItems.filter(
+        (item: any) =>
+            item.name?.toLowerCase().includes(searchFileName.toLowerCase()) ||
+            item.title?.toLowerCase().includes(searchFileName.toLowerCase())
+    )
+
+    return filtered.sort((a: any, b: any) => {
+        const aIsFolder = a.hasOwnProperty('title')
+        const bIsFolder = b.hasOwnProperty('title')
+
+        if (aIsFolder && !bIsFolder) return -1
+        if (!aIsFolder && bIsFolder) return 1
+
+        if (filterType === 'name') {
+            const aName = (a.name || a.title || '').toLowerCase()
+            const bName = (b.name || b.title || '').toLowerCase()
+            return sortDirection === 'asc'
+                ? aName.localeCompare(bName)
+                : bName.localeCompare(aName)
+        } else {
+            const aDate = new Date(a[filterType] || 0).getTime()
+            const bDate = new Date(b[filterType] || 0).getTime()
+            return sortDirection === 'asc' ? aDate - bDate : bDate - aDate
+        }
+    })
+}

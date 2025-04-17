@@ -8,6 +8,7 @@ return new class extends Migration
 {
     /**
      * Запуск миграции
+     *
      */
     public function up(): void
     {

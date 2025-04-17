@@ -9,9 +9,9 @@ return new class extends Migration
 {
     /**
      * Запуск миграции
+     *
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('folders', function (Blueprint $table) {
             $table->id();
             $table->string('title', 50);
