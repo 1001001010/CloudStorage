@@ -30,13 +30,7 @@ class TrashController extends Controller
      * @return Response
      */
     public function index(): Response {
-        $trashedFiles = File::onlyTrashed()->with(['extension', 'mimeType'])->where('user_id', Auth::id())->get();
-        $trashSize = $trashedFiles->sum('size');
-
-        return Inertia::render('Trash', [
-            'files' => $trashedFiles,
-            'trashSize' => $trashSize,
-        ]);
+        return Inertia::render('Trash', $this->trashService->getTrashDataForUser(Auth::id()));
     }
 
     /**
