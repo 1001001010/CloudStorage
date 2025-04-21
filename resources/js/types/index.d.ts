@@ -7,6 +7,7 @@ export interface User {
     created_at: string
     total_file_size?: number
     provider: 'email' | 'github'
+    encryption_key: string
 }
 
 export interface Session {

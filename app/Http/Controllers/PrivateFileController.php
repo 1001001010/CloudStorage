@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\{
 use App\Models\File;
 use App\Services\Cryptography\FileEncryptionService;
 
-class PrivateFileController extends Controller
-{
+class PrivateFileController extends Controller {
 
     public function __construct(
         protected FileEncryptionService $encryptService,
@@ -22,9 +21,9 @@ class PrivateFileController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFileUrl($id)
-    {
-        $file = File::where('id', $id)->where('user_id', Auth::id())->first();
+    public function getFileUrl($id) {
+        // $file = File::where('id', $id)->where('user_id', Auth::id())->first();
+        $file = File::where('id', $id)->first();
 
         if (!$file) {
             return response()->json(['error' => 'File not found'], 404);
@@ -41,9 +40,8 @@ class PrivateFileController extends Controller
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function showImage($id)
-    {
-        $file = File::where('id', $id)->where('user_id', Auth::id())->first();
+    public function showImage($id) {
+        $file = File::with('user')->where('id', $id)->first();
         if (!$file) {
             abort(404, 'Файл не найден или у вас нет доступа.');
         }
@@ -51,7 +49,7 @@ class PrivateFileController extends Controller
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
             $encryptedContent = Storage::get($filePath);
-            $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
+            $decryptedContent = $this->encryptService->decryptFile($encryptedContent, $file->user);
 
             $tempPath = storage_path('app/private/temp_' . $file->id);
             file_put_contents($tempPath, $decryptedContent);
@@ -68,8 +66,7 @@ class PrivateFileController extends Controller
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function showVideo($id)
-    {
+    public function showVideo($id) {
         $file = File::where('id', $id)->where('user_id', Auth::id())->first();
         if (!$file) {
             abort(404, 'Файл не найден или у вас нет доступа.');
@@ -78,7 +75,7 @@ class PrivateFileController extends Controller
         $filePath = $file->path;
         if (Storage::exists($filePath)) {
             $encryptedContent = Storage::get($filePath);
-            $decryptedContent = $this->encryptService->decryptFile($encryptedContent);
+            $decryptedContent = $this->encryptService->decryptFile($encryptedContent, $file->user);
 
             $tempPath = storage_path('app/private/temp_' . $file->id);
             file_put_contents($tempPath, $decryptedContent);
