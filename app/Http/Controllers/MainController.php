@@ -25,14 +25,12 @@ class MainController extends Controller
      */
     public function index($category = null): Response
     {
-        $userId = Auth::id();
-
         $files = File::with(['extension', 'mimeType', 'accessTokens.usersWithAccess.user'])
-            ->where('user_id', $userId)
+            ->where('user_id', Auth::id())
             ->whereNull('folder_id')
             ->get();
 
-        $folders = Folder::where('user_id', $userId)
+        $folders = Folder::where('user_id', Auth::id())
             ->whereNull('parent_id')
             ->get();
 

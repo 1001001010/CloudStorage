@@ -4,7 +4,7 @@ import AuthAlert from './Auth/AuthAlert'
 import FileContext from '@/Components/Files/MainFilesComponents/FoldersAndFiles/FileContext'
 import { FileQuestion } from 'lucide-react'
 
-export default function Welcome({
+export default function Shared({
     auth,
     FoldersTree,
     totalSize,

@@ -39,7 +39,7 @@ class FileAccessToken extends Model
      */
     public function usersWithAccess()
     {
-        return $this->hasMany(FileUserAccess::class);
+        return $this->hasMany(FileUserAccess::class)->withTrashed();
     }
 
     /**

@@ -46,6 +46,7 @@ return new class extends Migration
 
     /**
      * Откат миграции
+     *
      */
     public function down(): void
     {

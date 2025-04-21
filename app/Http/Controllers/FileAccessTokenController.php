@@ -103,4 +103,21 @@ class FileAccessTokenController extends Controller
             ]);
         }
     }
+
+    public function delete(FileAccessToken $token, Request $request) {
+        $data = $request->validate([
+            'user_id' => 'required|numeric|min:1'
+        ]);
+
+        $access = $token->usersWithAccess()->where('user_id', $data['user_id'])->first();
+        if($access->trashed()) {
+            $access->restore();
+            $content = "Доступ успешно востановлен";
+        } else {
+            $content = "Доступ успешно отозван";
+            $access->delete();
+        }
+
+        return back()->with('msg', ['title' => $content]);
+    }
 }

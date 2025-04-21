@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('file_access_token_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('file_access_token_id')->references('id')->on('file_access_tokens')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -25,7 +26,8 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Откат миграций
+     *
      */
     public function down(): void
     {

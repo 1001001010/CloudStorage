@@ -60,6 +60,7 @@ Route::middleware([GetUserFolders::class])->group(function () {
             Route::get('/shared', 'index')->name('shared.index');
             Route::post('/access/create', 'upload')->name('access.upload');
             Route::get('/access/{token}', 'invite')->name('access.user.upload');
+            Route::delete('/access/delete/{token}', 'delete')->name('access.delete');
         });
     });
 

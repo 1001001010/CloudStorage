@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEventHandler, useState } from 'react'
 import { FileAccessToken } from '@/types'
 import {
     Dialog,
@@ -16,13 +16,30 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table'
-import { Button } from '@/Components/ui/button'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
-import { Copy } from 'lucide-react'
+import { Check, Copy, X } from 'lucide-react'
 import { toast } from 'sonner'
+import { formatDate } from '@/lib/utils'
+import { Button } from '@/Components/ui/button'
+import { useForm } from '@inertiajs/react'
 
 export default function UserAccessList({ token }: { token: FileAccessToken }) {
+    const {
+        data,
+        setData,
+        processing,
+        delete: destroy,
+    } = useForm({
+        user_id: 0,
+    })
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault()
+
+        destroy(route('access.delete', token.id))
+    }
+
     const [selectedToken, setSelectedToken] = useState<FileAccessToken | null>(
         null
     )
@@ -55,72 +72,93 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
                     <DialogDescription>
                         Токен - {token.access_token.substring(0, 10)}
                     </DialogDescription>
-                    <div className="flex items-center space-x-2">
-                        <div className="grid flex-1 gap-2">
-                            <Label htmlFor="link" className="sr-only">
-                                Link
-                            </Label>
-                            <Input
-                                id="link"
-                                defaultValue={routeUrl}
-                                readOnly
-                                className="h-9"
-                            />
-                        </div>
-                        <Button
-                            type="button"
-                            size="sm"
-                            className="px-3"
-                            onClick={handleCopy}>
-                            <span className="sr-only">Скопировать</span>
-                            <Copy />
-                        </Button>
-                    </div>
-                    <Table>
-                        {selectedToken &&
-                        Array.isArray(selectedToken.users_with_access) &&
-                        selectedToken.users_with_access.length > 0 ? (
-                            <>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Пользователь</TableHead>
-                                        <TableHead className="text-right">
-                                            Дата
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {selectedToken.users_with_access.map(
-                                        (userAccess, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell className="w-full">
-                                                    {userAccess.user.name}
-                                                </TableCell>
-                                                <TableCell className="w-full text-right">
-                                                    {new Date(
-                                                        userAccess.created_at
-                                                    ).toLocaleDateString(
-                                                        'ru-RU'
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    )}
-                                </TableBody>
-                            </>
-                        ) : (
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={2}
-                                        className="mt-4 text-center text-sm text-muted-foreground">
-                                        Пользователей с доступом нет
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        )}
-                    </Table>
                 </DialogHeader>
+                <div className="flex items-center space-x-2">
+                    <div className="grid flex-1 gap-2">
+                        <Label htmlFor="link" className="sr-only">
+                            Link
+                        </Label>
+                        <Input
+                            id="link"
+                            defaultValue={routeUrl}
+                            readOnly
+                            className="h-9"
+                        />
+                    </div>
+                    <Button
+                        type="button"
+                        size="sm"
+                        className="px-3"
+                        onClick={handleCopy}>
+                        <span className="sr-only">Скопировать</span>
+                        <Copy />
+                    </Button>
+                </div>
+                <Table>
+                    {selectedToken &&
+                    Array.isArray(selectedToken.users_with_access) &&
+                    selectedToken.users_with_access.length > 0 ? (
+                        <>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Пользователь</TableHead>
+                                    <TableHead>Дата</TableHead>
+                                    <TableHead className="text-right">
+                                        Действия
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {selectedToken.users_with_access.map(
+                                    (userAccess, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                {userAccess.user.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {formatDate(
+                                                    userAccess.created_at
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="flex justify-end">
+                                                <form onSubmit={submit}>
+                                                    <Button
+                                                        variant="outline"
+                                                        type="submit"
+                                                        onClick={() =>
+                                                            setData(
+                                                                'user_id',
+                                                                userAccess.user
+                                                                    .id
+                                                            )
+                                                        }
+                                                        disabled={processing}>
+                                                        {userAccess.deleted_at ===
+                                                        null ? (
+                                                            <X />
+                                                        ) : (
+                                                            <Check />
+                                                        )}
+                                                    </Button>
+                                                </form>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                )}
+                            </TableBody>
+                        </>
+                    ) : (
+                        <TableBody>
+                            <TableRow>
+                                <TableCell
+                                    colSpan={2}
+                                    className="mt-4 text-center text-sm text-muted-foreground">
+                                    Пользователей с доступом нет
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    )}
+                </Table>
             </DialogContent>
         </Dialog>
     )

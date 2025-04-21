@@ -67,6 +67,7 @@ export interface FileUsersAccess {
     file_access_token_id: FileAccessToken
     user: User
     created_at: string
+    deleted_at: string
 }
 
 export interface FileExtension {

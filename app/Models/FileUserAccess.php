@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\{
     Model,
+    SoftDeletes,
     Factories\HasFactory
 };
 
 class FileUserAccess extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * Атрибуты, которые могут быть массово присвоены
