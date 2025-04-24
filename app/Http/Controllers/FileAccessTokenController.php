@@ -17,23 +17,23 @@ use App\Models\{
     FileAccessToken,
     FileUserAccess
 };
+use App\Service\FileAccessService;
 
-class FileAccessTokenController extends Controller
-{
+class FileAccessTokenController extends Controller {
+
+    public function __construct(
+        protected FileAccessService $fileAccessService,
+    ) {}
+
+
     /**
      * Отображение страницы со списком файлов с общим доступом
      *
      * @return Response
      */
-    public function index(): Response {
+    public function index() : Response {
+        $files = $this->fileAccessService->getSharedFilesForCurrentUser();
 
-        $files = FileUserAccess::with(['accessToken.file',
-                                        'accessToken.file.extension',
-                                        'accessToken.file.user',
-                                        'accessToken.file.mimeType'])->where('user_id', Auth::id())->get()
-        ->map(function ($fileUserAccess) {
-            return $fileUserAccess->accessToken->file;
-        })->unique();
         return Inertia::render('Shared', [
             'files' => $files,
         ]);
@@ -45,79 +45,49 @@ class FileAccessTokenController extends Controller
      * @param AccessUploadRequest $request
      * @return RedirectResponse
      */
-    public function upload(AccessUploadRequest $request): RedirectResponse {
-        $file = File::findOrFail($request->file_id);
+    public function upload(AccessUploadRequest $request): RedirectResponse
+    {
+        $result = $this->fileAccessService->createAccessToken(
+            $request->file_id,
+            $request->user_limit
+        );
 
-        if ($file->user_id != Auth::id()) {
+        if (!$result) {
             return redirect()->back()->with('msg', [
                 'title' => 'Файл не найден',
             ]);
         }
 
-        $accessToken = bin2hex(random_bytes(32));
-        $access = FileAccessToken::create([
-            'file_id' => $file->id,
-            'access_token' => $accessToken,
-            'user_limit' => $request->user_limit,
-        ]);
-
-        return redirect()->back()->with('msg', [
-            'access_link' => url(route('access.user.upload', ['token' => $access->access_token])),
-            'title' => 'Ссылка успешно создана'
-        ]);
+        return redirect()->back()->with('msg', $result);
     }
 
     /**
-     * Получение доступа к файлу по предоставленной ссылке с токеном
+     * Получает доступ к файлу по токену и перенаправляет с уведомлением
      *
      * @param string $token
      * @return RedirectResponse
      */
-    public function invite($token): RedirectResponse {
-        $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
-        if($access->file->user_id == Auth::id()) {
-            return redirect()->back()->with('msg', [
-                'title' => 'Вы не можете поделиться файлом с собой'
-            ]);
-        }
-        if($access->canAddUser()) {
-            $userAcess = FileUserAccess::where('file_access_token_id', $access->id)->where('user_id', Auth::id())->first();
-            if ($userAcess) {
-                return redirect()->back()->with('msg', [
-                    'title' => 'Файлы успешно загружен',
-                ]);
-            } else {
-                FileUserAccess::create([
-                    'file_access_token_id' => $access->id,
-                    'user_id' => Auth::id()
-                ]);
-
-                return redirect(route('shared.index'))->with('msg', [
-                    'title' => 'Доступ получен',
-                    'description' => 'Можете просмотреть его в вкладке "Общий доступ"'
-                ]);
-            }
-        } else {
-            return redirect()->back()->with('msg', [
-                'title' => 'Доступ к файлу закрыт',
-            ]);
-        }
+    public function invite(string $token): RedirectResponse
+    {
+        $result = $this->fileAccessService->handleInvite($token);
+        return redirect($result['redirect'])->with('msg', $result['msg']);
     }
 
-    public function delete(FileAccessToken $token, Request $request) {
+    /**
+     * Переключает доступ пользователя к файлу
+     *
+     * @param FileAccessToken $token
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function delete(FileAccessToken $token, Request $request): RedirectResponse
+    {
         $data = $request->validate([
-            'user_id' => 'required|numeric|min:1'
+            'user_id' => 'required|numeric|min:1',
         ]);
 
-        $access = $token->usersWithAccess()->where('user_id', $data['user_id'])->first();
-        if($access->trashed()) {
-            $access->restore();
-            $content = "Доступ успешно востановлен";
-        } else {
-            $content = "Доступ успешно отозван";
-            $access->delete();
-        }
+        $message = $this->fileAccessService->toggleUserAccess($token, $data['user_id']);
 
-        return back()->with('msg', ['title' => $content]);
+        return back()->with('msg', ['title' => $message]);
     }
 }
