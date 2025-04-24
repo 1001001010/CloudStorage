@@ -28,7 +28,7 @@ const roleOptions = [
 
 export default function EditRole({ user }: PageProps<{ user: User }>) {
     const { data, setData, patch, processing, errors, reset } = useForm({
-        is_admin: user.is_admin ? 'true' : 'false',
+        is_admin: user.is_admin ? true : false,
     })
 
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -37,7 +37,7 @@ export default function EditRole({ user }: PageProps<{ user: User }>) {
         e.preventDefault()
 
         const payload = {
-            is_admin: data.is_admin === 'true',
+            is_admin: data.is_admin === true,
         }
 
         patch(route('admin.role.update', { user: user.id }), {
@@ -49,7 +49,7 @@ export default function EditRole({ user }: PageProps<{ user: User }>) {
     }
 
     const selectedRoleOption = roleOptions.find(
-        (role) => role.value === data.is_admin
+        (role) => role.value === String(data.is_admin)
     )
 
     return (
@@ -69,8 +69,10 @@ export default function EditRole({ user }: PageProps<{ user: User }>) {
                 </DialogHeader>
                 <form onSubmit={submit}>
                     <Select
-                        value={data.is_admin}
-                        onValueChange={(value) => setData('is_admin', value)}>
+                        value={data.is_admin ? 'true' : 'false'}
+                        onValueChange={(value) =>
+                            setData('is_admin', value === 'true')
+                        }>
                         <SelectTrigger id="role">
                             <SelectValue>
                                 <div className="flex items-center space-x-2">

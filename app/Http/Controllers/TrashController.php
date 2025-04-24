@@ -17,12 +17,9 @@ use App\Services\Trash\TrashService;
 class TrashController extends Controller
 {
 
-    protected TrashService $trashService;
-
-    public function __construct(TrashService $trashService)
-    {
-        $this->trashService = $trashService;
-    }
+    public function __construct(
+        protected TrashService $trashService,
+    ) {}
 
     /**
      * Отображение корзины

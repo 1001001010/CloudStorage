@@ -51,28 +51,22 @@ class AdminController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update_role(User $user, Request $request) : RedirectResponse {
-        $request->merge([
-            'is_admin' => filter_var($request->input('is_admin'), FILTER_VALIDATE_BOOLEAN),
-        ]);
-
+    public function update_role(User $user, Request $request): RedirectResponse
+    {
         $validated = $request->validate([
             'is_admin' => 'required|boolean',
         ]);
 
         $user = User::find($user->id);
-
         if (!$user) {
             return redirect()->back()->with('msg', [
                 'title' => "Пользователь не найден",
             ]);
         }
 
-        $user->is_admin = $validated['is_admin'];
-        $user->save();
-
+        $this->userService->updateRole($user, $validated['is_admin']);
         return redirect()->back()->with('msg', [
-            'title' => "Роль пользователя $user->name изменена",
+            'title' => "Роль пользователя {$user->name} изменена",
         ]);
     }
 
