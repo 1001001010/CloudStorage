@@ -46,15 +46,15 @@ export default function MainFiles({
     } = useFilesStore()
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [drag, setDrag] = useState(false)
+    const [select, setSelect] = useState<{
+        type: 'file' | 'folder'
+        id: number
+    } | null>(null)
     const [searchFileName, setSearchFileName] = useState('')
     const { dragStartHandler, dragLeaveHandler, onDrophandler } =
         useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
 
-    const handleFolderClick = async (
-        folder: any,
-        title: string,
-        folderId: number
-    ) => {
+    const handleFolderClick = async (title: string, folderId: number) => {
         try {
             const response = await fetch(`/api/folder/${folderId}/contents`)
             const data = await response.json()
@@ -168,6 +168,8 @@ export default function MainFiles({
                             <BreadcrumbFile />
 
                             <FoldersAndFiles
+                                select={select}
+                                setSelect={setSelect}
                                 filteredItems={filteredItems}
                                 currentPath={currentPath}
                                 handleFolderClick={handleFolderClick}

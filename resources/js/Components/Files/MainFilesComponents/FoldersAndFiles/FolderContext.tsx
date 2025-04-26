@@ -16,11 +16,23 @@ export default function FolderContext({
     handleFolderClick,
     viewMode = 'grid',
     itemSize = 100,
+    select,
+    setSelect,
 }: {
     folder: FolderType
     handleFolderClick: any
     viewMode?: 'grid' | 'list'
     itemSize?: number
+    select?: {
+        type: 'file' | 'folder'
+        id: number
+    } | null
+    setSelect?: React.Dispatch<
+        React.SetStateAction<{
+            type: 'file' | 'folder'
+            id: number
+        } | null>
+    >
 }) {
     const handleClick = () => {
         handleFolderClick(folder, folder.title, folder.id)
@@ -31,10 +43,21 @@ export default function FolderContext({
     if (viewMode === 'grid') {
         return (
             <ContextMenu>
-                <ContextMenuTrigger>
+                <ContextMenuTrigger
+                    onClick={() =>
+                        setSelect?.({ type: 'folder', id: folder.id })
+                    }
+                    onContextMenu={() =>
+                        setSelect?.({ type: 'folder', id: folder.id })
+                    }>
                     <Button
                         variant="ghost"
-                        className="flex h-full w-full flex-col items-center justify-center"
+                        className={`flex h-full w-full flex-col items-center justify-center ${
+                            select?.type === 'folder' &&
+                            select?.id === folder.id
+                                ? 'bg-muted'
+                                : ''
+                        }`}
                         onClick={handleClick}>
                         <div
                             className="flex flex-col items-center justify-center"

@@ -36,6 +36,8 @@ export default function FileContext({
     shared,
     viewMode = 'grid',
     itemSize = 100,
+    select,
+    setSelect,
 }: {
     file: FileType
     trash?: boolean
@@ -43,6 +45,16 @@ export default function FileContext({
     accessLink?: string
     viewMode?: 'grid' | 'list'
     itemSize?: number
+    select?: {
+        type: 'file' | 'folder'
+        id: number
+    } | null
+    setSelect?: React.Dispatch<
+        React.SetStateAction<{
+            type: 'file' | 'folder'
+            id: number
+        } | null>
+    >
 }) {
     const isTextOrCodeFile = textAndCodeExtensions.includes(
         file.extension.extension
@@ -76,10 +88,18 @@ export default function FileContext({
     if (viewMode === 'grid') {
         return (
             <ContextMenu>
-                <ContextMenuTrigger>
+                <ContextMenuTrigger
+                    onClick={() => setSelect?.({ type: 'file', id: file.id })}
+                    onContextMenu={() =>
+                        setSelect?.({ type: 'file', id: file.id })
+                    }>
                     <Button
                         variant="ghost"
-                        className="flex h-full w-full flex-col items-center justify-center">
+                        className={`flex h-full w-full flex-col items-center justify-center ${
+                            select?.type === 'file' && select?.id === file.id
+                                ? 'bg-muted'
+                                : ''
+                        }`}>
                         <div
                             className="flex flex-col items-center justify-center"
                             style={{

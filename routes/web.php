@@ -31,17 +31,17 @@ Route::middleware([GetUserFolders::class])->group(function () {
         });
         Route::controller(FolderController::class)->group(function () {
             Route::get('/api/folder/{id}/contents', 'getContents')->middleware('auth')->name('folder.contents');
-            Route::post('/folder/upload', 'upload')->name('folder.upload');
-            Route::delete('/folder/delete/{folder}', 'delete')->name('folder.delete')->whereNumber('folder');
-            Route::patch('/folder/rename/{folder}', 'rename')->name('folder.rename')->whereNumber('folder');
+            Route::post('/folder', 'upload')->name('folder.upload');
+            Route::delete('/folder/{folder}', 'delete')->name('folder.delete')->whereNumber('folder');
+            Route::patch('/folder/{folder}', 'rename')->name('folder.rename')->whereNumber('folder');
         });
         Route::controller(FileController::class)->group(function () {
             Route::post('/file', 'upload')->name('file.upload');
             Route::get('/file/download/{file}', 'download')->name('file.download')->whereNumber('file');
-            Route::patch('/file/rename/{file}', 'rename')->name('file.rename')->whereNumber('file');
-            Route::delete('/file/delete/{file}', 'delete')->name('file.delete')->whereNumber('file');
-            Route::put('/file/restore/{file}', 'restore')->name('file.restore')->withTrashed()->whereNumber('file');
-            Route::delete('/file/delete/force/{file}', 'forceDelete')->withTrashed()->name('file.force.delete')->whereNumber('file');
+            Route::patch('/file/{file}', 'rename')->name('file.rename')->whereNumber('file');
+            Route::delete('/file/{file}', 'delete')->name('file.delete')->whereNumber('file');
+            Route::put('/file/{file}', 'restore')->name('file.restore')->withTrashed()->whereNumber('file');
+            Route::delete('/file/force/{file}', 'forceDelete')->withTrashed()->name('file.force.delete')->whereNumber('file');
         });
         Route::controller(PrivateFileController::class)->group(function () {
             Route::get('/api/file-url/{id}', 'getFileUrl');

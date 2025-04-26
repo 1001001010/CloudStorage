@@ -11,6 +11,8 @@ export default function FoldersAndFiles({
     filteredItems,
     viewMode = 'grid',
     itemSize = 100,
+    select,
+    setSelect,
 }: {
     currentPath: FolderOrFile[][]
     handleFolderClick: any
@@ -18,6 +20,16 @@ export default function FoldersAndFiles({
     filteredItems: any
     viewMode?: 'grid' | 'list'
     itemSize?: number
+    select?: {
+        type: 'file' | 'folder'
+        id: number
+    } | null
+    setSelect?: React.Dispatch<
+        React.SetStateAction<{
+            type: 'file' | 'folder'
+            id: number
+        } | null>
+    >
 }) {
     const gridClasses =
         'grid min-h-[150px] grids items-center justify-center gap-5'
@@ -32,6 +44,8 @@ export default function FoldersAndFiles({
                         <div key={index}>
                             {item.hasOwnProperty('name') ? (
                                 <FileContext
+                                    select={select}
+                                    setSelect={setSelect}
                                     file={item}
                                     accessLink={accessLink}
                                     viewMode={viewMode}
@@ -39,6 +53,8 @@ export default function FoldersAndFiles({
                                 />
                             ) : (
                                 <FolderContext
+                                    select={select}
+                                    setSelect={setSelect}
                                     folder={item}
                                     handleFolderClick={handleFolderClick}
                                     viewMode={viewMode}
