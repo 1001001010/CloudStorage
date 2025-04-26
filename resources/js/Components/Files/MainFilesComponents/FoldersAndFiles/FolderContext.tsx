@@ -44,12 +44,14 @@ export default function FolderContext({
         return (
             <ContextMenu>
                 <ContextMenuTrigger
-                    onClick={() =>
+                    onClick={(e) => {
+                        e.stopPropagation()
                         setSelect?.({ type: 'folder', id: folder.id })
-                    }
-                    onContextMenu={() =>
+                    }}
+                    onContextMenu={(e) => {
+                        e.stopPropagation()
                         setSelect?.({ type: 'folder', id: folder.id })
-                    }>
+                    }}>
                     <Button
                         variant="ghost"
                         className={`flex h-full w-full flex-col items-center justify-center ${

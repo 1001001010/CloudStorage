@@ -50,8 +50,13 @@ export const AutoFormatFileSize = (bytes: number) => {
     }
 }
 
-export const formatDate = (date: Date | string): string => {
-    return format(new Date(date), 'yyyy-MM-dd', { locale: ru })
+export const formatDate = (
+    date: Date | string,
+    full: boolean | null = null
+): string => {
+    return format(new Date(date), full ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd', {
+        locale: ru,
+    })
 }
 
 // Валидация имен папок и файлов

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('file_id');
             $table->string('access_token', 64)->unique();
             $table->unsignedInteger('user_limit')->default(1);
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');

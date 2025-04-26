@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service\Access;
+namespace App\Services\Access;
 
 use App\Models\{FileUserAccess, File, FileAccessToken};
 use Illuminate\Support\Facades\{Auth, URL};
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 
 class FileAccessService {
 
@@ -14,8 +15,7 @@ class FileAccessService {
      *
      * @return Collection
      */
-    public function getSharedFilesForCurrentUser(): Collection
-    {
+    public function getSharedFilesForCurrentUser(): Collection {
         return FileUserAccess::with([
                 'accessToken.file',
                 'accessToken.file.extension',
@@ -33,13 +33,12 @@ class FileAccessService {
      *
      * @param int $fileId
      * @param int|null $userLimit
+     * @param string|null $expires_at
      * @return array|null
      * @throws ModelNotFoundException
      */
-    public function createAccessToken(int $fileId, ?int $userLimit = null): ?array
-    {
+    public function createAccessToken(int $fileId, ?int $userLimit = null, ?string $expires_at = null): ?array {
         $file = File::findOrFail($fileId);
-
         if ($file->user_id !== Auth::id()) {
             return null;
         }
@@ -50,6 +49,7 @@ class FileAccessService {
             'file_id' => $file->id,
             'access_token' => $accessToken,
             'user_limit' => $userLimit,
+            'expires_at' => $expires_at ? Carbon::parse($expires_at) : null,
         ]);
 
         return [
@@ -68,16 +68,23 @@ class FileAccessService {
     {
         $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
 
+        if ($access->expires_at && $access->expires_at->isPast()) {
+            return [
+                'redirect' => url()->previous(),
+                'msg' => ['title' => 'Срок действия ссылки истёк']
+            ];
+        }
+
         if ($access->file->user_id == Auth::id()) {
             return [
-                'redirect' => back(),
+                'redirect' => url()->previous(),
                 'msg' => ['title' => 'Вы не можете поделиться файлом с собой']
             ];
         }
 
         if (!$access->canAddUser()) {
             return [
-                'redirect' => back(),
+                'redirect' => url()->previous(),
                 'msg' => ['title' => 'Доступ к файлу закрыт']
             ];
         }
@@ -88,8 +95,8 @@ class FileAccessService {
 
         if ($existingAccess) {
             return [
-                'redirect' => back(),
-                'msg' => ['title' => 'Файлы успешно загружен']
+                'redirect' => url()->previous(),
+                'msg' => ['title' => 'Файл уже загружен']
             ];
         }
 
@@ -102,7 +109,7 @@ class FileAccessService {
             'redirect' => route('shared.index'),
             'msg' => [
                 'title' => 'Доступ получен',
-                'description' => 'Можете просмотреть его в вкладке "Общий доступ"'
+                'description' => 'Можете просмотреть его во вкладке "Общий доступ"'
             ]
         ];
     }

@@ -17,7 +17,7 @@ use App\Models\{
     FileAccessToken,
     FileUserAccess
 };
-use App\Service\FileAccessService;
+use App\Services\Access\FileAccessService;
 
 class FileAccessTokenController extends Controller {
 
@@ -45,11 +45,11 @@ class FileAccessTokenController extends Controller {
      * @param AccessUploadRequest $request
      * @return RedirectResponse
      */
-    public function upload(AccessUploadRequest $request): RedirectResponse
-    {
+    public function upload(AccessUploadRequest $request): RedirectResponse {
         $result = $this->fileAccessService->createAccessToken(
             $request->file_id,
-            $request->user_limit
+            $request->user_limit,
+            $request->expires_at
         );
 
         if (!$result) {
@@ -70,7 +70,7 @@ class FileAccessTokenController extends Controller {
     public function invite(string $token): RedirectResponse
     {
         $result = $this->fileAccessService->handleInvite($token);
-        return redirect($result['redirect'])->with('msg', $result['msg']);
+        return redirect()->to($result['redirect'])->with('msg', $result['msg']);
     }
 
     /**

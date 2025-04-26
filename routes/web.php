@@ -16,7 +16,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\{
     GetUserFolders,
-    GetUserFoldersAndFiles,
     IsAdmin
 };
 
@@ -30,7 +29,7 @@ Route::middleware([GetUserFolders::class])->group(function () {
             Route::delete('/profile/session/destroy','destroy')->name('session.destroy');
         });
         Route::controller(FolderController::class)->group(function () {
-            Route::get('/api/folder/{id}/contents', 'getContents')->middleware('auth')->name('folder.contents');
+            Route::get('/api/folder/{id}/contents', 'getContents')->name('folder.contents');
             Route::post('/folder', 'upload')->name('folder.upload');
             Route::delete('/folder/{folder}', 'delete')->name('folder.delete')->whereNumber('folder');
             Route::patch('/folder/{folder}', 'rename')->name('folder.rename')->whereNumber('folder');
@@ -58,9 +57,9 @@ Route::middleware([GetUserFolders::class])->group(function () {
         });
         Route::controller(FileAccessTokenController::class)->group(function () {
             Route::get('/shared', 'index')->name('shared.index');
-            Route::post('/access/create', 'upload')->name('access.upload');
+            Route::post('/access', 'upload')->name('access.upload');
             Route::get('/access/{token}', 'invite')->name('access.user.upload');
-            Route::delete('/access/delete/{token}', 'delete')->name('access.delete');
+            Route::delete('/access/{token}', 'delete')->name('access.delete');
         });
     });
 

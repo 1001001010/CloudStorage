@@ -7,6 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
+    DialogClose,
 } from '@/Components/ui/dialog'
 import {
     Table,
@@ -67,12 +68,32 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
+                <DialogHeader className="flex flex-row items-center justify-between">
                     <DialogTitle>Информация о токене</DialogTitle>
-                    <DialogDescription>
-                        Токен - {token.access_token.substring(0, 10)}
-                    </DialogDescription>
+                    <DialogClose asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full">
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Закрыть</span>
+                        </Button>
+                    </DialogClose>
                 </DialogHeader>
+                <DialogDescription>
+                    <p className="mb-2">
+                        Токен:{' '}
+                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            {token.access_token.substring(0, 10)}
+                        </code>
+                    </p>
+                    <p>
+                        Срок действия:{' '}
+                        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                            {formatDate(token.expires_at, true)}
+                        </code>
+                    </p>
+                </DialogDescription>
                 <div className="flex items-center space-x-2">
                     <div className="grid flex-1 gap-2">
                         <Label htmlFor="link" className="sr-only">

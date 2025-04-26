@@ -89,10 +89,14 @@ export default function FileContext({
         return (
             <ContextMenu>
                 <ContextMenuTrigger
-                    onClick={() => setSelect?.({ type: 'file', id: file.id })}
-                    onContextMenu={() =>
+                    onClick={(e) => {
+                        e.stopPropagation()
                         setSelect?.({ type: 'file', id: file.id })
-                    }>
+                    }}
+                    onContextMenu={(e) => {
+                        e.stopPropagation()
+                        setSelect?.({ type: 'file', id: file.id })
+                    }}>
                     <Button
                         variant="ghost"
                         className={`flex h-full w-full flex-col items-center justify-center ${

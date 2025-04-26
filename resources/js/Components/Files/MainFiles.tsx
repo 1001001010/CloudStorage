@@ -54,7 +54,11 @@ export default function MainFiles({
     const { dragStartHandler, dragLeaveHandler, onDrophandler } =
         useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
 
-    const handleFolderClick = async (title: string, folderId: number) => {
+    const handleFolderClick = async (
+        folder: any,
+        title: string,
+        folderId: number
+    ) => {
         try {
             const response = await fetch(`/api/folder/${folderId}/contents`)
             const data = await response.json()
@@ -139,7 +143,8 @@ export default function MainFiles({
                         className="h-full w-full p-5"
                         onDragStart={(e) => dragStartHandler(e)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
-                        onDragOver={(e) => dragStartHandler(e)}>
+                        onDragOver={(e) => dragStartHandler(e)}
+                        onClick={() => setSelect(null)}>
                         <div className="space-y-4">
                             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                 <div className="flex w-full flex-col gap-4 md:w-auto md:min-w-[240px] md:max-w-sm">

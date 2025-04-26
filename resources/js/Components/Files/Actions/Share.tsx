@@ -1,5 +1,5 @@
 import { File as FileType } from '@/types'
-import { Share2 } from 'lucide-react'
+import { CalendarIcon, Share2 } from 'lucide-react'
 import {
     Dialog,
     DialogTrigger,
@@ -14,6 +14,18 @@ import { Button } from '@/Components/ui/button'
 import { useForm } from '@inertiajs/react'
 import AccessFileLink from '@/Components/Files/AccessFileLink'
 
+import * as React from 'react'
+import { format } from 'date-fns'
+
+import { cn } from '@/lib/utils'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/Components/ui/popover'
+import { ScrollArea, ScrollBar } from '@/Components/ui/scroll-area'
+import { Calendar } from '@/Components/ui/calendar'
+
 export default function FileShare({
     file,
     accessLink,
@@ -25,15 +37,53 @@ export default function FileShare({
 }) {
     const [val, setVal] = useState(1)
     const [open, setIsOpen] = useState(false)
+    const [date, setDate] = React.useState<Date>()
     const [openLink, setIsOpenLink] = useState(false)
+
     const { post, reset, errors, processing, setData } = useForm({
         file_id: file.id,
         user_limit: val,
+        expires_at: null as string | null,
     })
+
+    const [isCalendarOpen, setIsCalendarOpen] = React.useState(false)
+
+    const hours = Array.from({ length: 24 }, (_, i) => i)
+
+    const handleDateSelect = (selectedDate: Date | undefined) => {
+        if (selectedDate) {
+            const withTime = new Date(selectedDate)
+            if (date) {
+                withTime.setHours(date.getHours())
+                withTime.setMinutes(date.getMinutes())
+            }
+            setDate(withTime)
+        }
+    }
+
+    const handleTimeChange = (type: 'hour' | 'minute', value: string) => {
+        if (date) {
+            const newDate = new Date(date)
+            if (type === 'hour') {
+                newDate.setHours(parseInt(value))
+            } else if (type === 'minute') {
+                newDate.setMinutes(parseInt(value))
+            }
+            setDate(newDate)
+        }
+    }
 
     useEffect(() => {
         setData('user_limit', val)
     }, [val])
+
+    useEffect(() => {
+        if (date) {
+            setData('expires_at', format(date, 'yyyy-MM-dd HH:mm:ss'))
+        } else {
+            setData('expires_at', null)
+        }
+    }, [date])
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault()
@@ -114,6 +164,102 @@ export default function FileShare({
                             step={1}
                             onValueChange={(i) => setVal(i[0])}
                         />
+                        <p className="text-center">Срок действия ссылки до:</p>
+                        <Popover
+                            open={isCalendarOpen}
+                            onOpenChange={setIsCalendarOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        'w-full justify-start text-left font-normal',
+                                        !date && 'text-muted-foreground'
+                                    )}>
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? (
+                                        format(date, 'dd.MM.yyyy HH:mm')
+                                    ) : (
+                                        <span>ДД.ММ.ГГГГ чч:мм</span>
+                                    )}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                                <div className="sm:flex">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={handleDateSelect}
+                                        initialFocus
+                                        disabled={(date) => date < new Date()}
+                                    />
+                                    <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
+                                        <ScrollArea className="w-64 sm:w-auto">
+                                            <div className="flex p-2 sm:flex-col">
+                                                {hours.map((hour) => (
+                                                    <Button
+                                                        key={hour}
+                                                        size="icon"
+                                                        variant={
+                                                            date &&
+                                                            date.getHours() ===
+                                                                hour
+                                                                ? 'default'
+                                                                : 'ghost'
+                                                        }
+                                                        className="aspect-square shrink-0 sm:w-full"
+                                                        onClick={() =>
+                                                            handleTimeChange(
+                                                                'hour',
+                                                                hour.toString()
+                                                            )
+                                                        }>
+                                                        {hour}
+                                                    </Button>
+                                                ))}
+                                            </div>
+                                            <ScrollBar
+                                                orientation="horizontal"
+                                                className="sm:hidden"
+                                            />
+                                        </ScrollArea>
+                                        <ScrollArea className="w-64 sm:w-auto">
+                                            <div className="flex p-2 sm:flex-col">
+                                                {Array.from(
+                                                    { length: 12 },
+                                                    (_, i) => i * 5
+                                                ).map((minute) => (
+                                                    <Button
+                                                        key={minute}
+                                                        size="icon"
+                                                        variant={
+                                                            date &&
+                                                            date.getMinutes() ===
+                                                                minute
+                                                                ? 'default'
+                                                                : 'ghost'
+                                                        }
+                                                        className="aspect-square shrink-0 sm:w-full"
+                                                        onClick={() =>
+                                                            handleTimeChange(
+                                                                'minute',
+                                                                minute.toString()
+                                                            )
+                                                        }>
+                                                        {minute
+                                                            .toString()
+                                                            .padStart(2, '0')}
+                                                    </Button>
+                                                ))}
+                                            </div>
+                                            <ScrollBar
+                                                orientation="horizontal"
+                                                className="sm:hidden"
+                                            />
+                                        </ScrollArea>
+                                    </div>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
                         <Button type="submit" disabled={processing}>
                             Поделиться
                         </Button>

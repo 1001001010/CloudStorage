@@ -60,6 +60,7 @@ export interface FileAccessToken {
     user_limit: number
     users: FileUsersAccess[]
     users_with_access: FileUsersAccess[]
+    expires_at: string
 }
 
 export interface FileUsersAccess {

@@ -27,6 +27,7 @@ class AccessUploadRequest extends FormRequest
         return [
             'file_id' => 'required|numeric|min:1',
             'user_limit' => 'required|numeric|min:1|max:50',
+            'expires_at' => 'nullable|date'
         ];
     }
 }

@@ -20,6 +20,16 @@ class FileAccessToken extends Model
         'file_id',
         'access_token',
         'user_limit',
+        'expires_at'
+    ];
+
+    /**
+     * Атрибуты модели, которые должны быть приведены к определённым типам
+     *
+     * @var array
+     */
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     /**

@@ -15,7 +15,7 @@ class FolderController extends Controller
         $userId = Auth::id();
 
         if ((int)$id === 0) {
-            // Корневая папка (нет родителя)
+            // Корневая папка
             $childFolders = Folder::whereNull('parent_id')
                 ->where('user_id', $userId)
                 ->get();
@@ -46,7 +46,6 @@ class FolderController extends Controller
 
         return response()->json($combined);
     }
-
 
     /**
      * Создание новой папки
