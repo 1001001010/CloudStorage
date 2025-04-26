@@ -100,11 +100,24 @@ export default function FolderContext({
 
     return (
         <ContextMenu>
-            <ContextMenuTrigger>
+            <ContextMenuTrigger
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setSelect?.({ type: 'folder', id: folder.id })
+                }}
+                onContextMenu={(e) => {
+                    e.stopPropagation()
+                    setSelect?.({ type: 'folder', id: folder.id })
+                }}>
                 <div className="w-full">
                     <Button
                         variant="ghost"
-                        className="flex h-full w-full items-center justify-start gap-3 px-3 py-2 text-left"
+                        className={`flex h-full w-full items-center justify-start gap-3 px-3 py-2 text-left ${
+                            select?.type === 'folder' &&
+                            select?.id === folder.id
+                                ? 'bg-muted'
+                                : ''
+                        }`}
                         onClick={handleClick}>
                         <div className="flex-shrink-0">
                             <Folder
