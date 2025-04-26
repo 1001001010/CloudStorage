@@ -97,7 +97,7 @@ export default function FileInfo({
                                     <h4 className="font-bold">
                                         Список токенов доступа:
                                     </h4>
-                                    <div className="flex justify-between gap-2 pt-2">
+                                    <div className="grid grid-cols-3 gap-2 pt-2">
                                         {file.access_tokens
                                             .slice(0, 5)
                                             .map((token, index) => (

@@ -90,7 +90,9 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
                     <p>
                         Срок действия:{' '}
                         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-                            {formatDate(token.expires_at, true)}
+                            {token.expires_at
+                                ? formatDate(token.expires_at, true)
+                                : 'Бессрочен'}
                         </code>
                     </p>
                 </DialogDescription>
