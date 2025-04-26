@@ -44,7 +44,7 @@ class FileUploadService {
         $totalSize = File::where('user_id', $userId)->sum('size');
 
         if (($totalSize + $fileSize) > $maxSize) {
-            return ['message' => 'Превышен лимит хранения (5 ГБ)', 'totalSize' => $totalSize, 'success' => false];
+            return ['message' => 'Превышен лимит хранения', 'totalSize' => $totalSize, 'success' => false];
         }
 
         $fileExtension = strtolower($file->getClientOriginalExtension());
@@ -56,8 +56,20 @@ class FileUploadService {
         $mimeType = $file->getMimeType();
         $fileHash = hash_file('sha256', $file->getRealPath());
 
-        if (File::withTrashed()->where('file_hash', $fileHash)->where('user_id', $userId)->exists()) {
-            return ['message' => "Файл уже существует", 'totalSize' => $totalSize, 'success' => false];
+        $existingFile = File::withTrashed()
+        ->with('folder.parent')
+        ->where('file_hash', $fileHash)
+        ->where('user_id', $userId)
+        ->first();
+
+        if ($existingFile) {
+            $fullPath = $this->buildFullPath($existingFile);
+
+            return [
+                'message' => "Файл уже существует\nПуть: {$fullPath}",
+                'totalSize' => $totalSize,
+                'success' => false
+            ];
         }
 
         // Чтение и шифрование файла
@@ -88,5 +100,17 @@ class FileUploadService {
             'totalSize' => $totalSize + $fileSize,
             'success' => true
         ];
+    }
+
+    public function buildFullPath(File $file): string {
+        $parts = [$file->name . '.' . $file->extension->extension];
+
+        $folder = $file->folder;
+        while ($folder) {
+            array_unshift($parts, $folder->title);
+            $folder = $folder->parent;
+        }
+
+        return '/' . implode('/', $parts);
     }
 }

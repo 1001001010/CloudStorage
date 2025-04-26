@@ -61,7 +61,9 @@ export default function Layout({
     useEffect(() => {
         if (msg && !hasShownMessage.current) {
             toast(msg.title, {
-                description: msg.description ? msg.description : undefined,
+                description: msg.description ? (
+                    <div className="whitespace-pre-line">{msg.description}</div>
+                ) : undefined,
             })
             hasShownMessage.current = true
         }
