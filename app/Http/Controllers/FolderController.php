@@ -47,6 +47,27 @@ class FolderController extends Controller
         return response()->json($combined);
     }
 
+    public function getChildren($id)
+    {
+        $userId = Auth::id();
+
+        if ((int) $id === 0) {
+            // Корневая папка
+            $childFolders = Folder::whereNull('parent_id')
+                ->where('user_id', $userId)
+                ->get();
+        } else {
+            // Вложенные папки
+            $childFolders = Folder::where('parent_id', $id)
+                ->where('user_id', $userId)
+                ->get();
+        }
+
+        return response()->json(
+            $childFolders->map(fn ($folder) => array_merge($folder->toArray(), ['is_file' => false]))
+        );
+    }
+
     /**
      * Создание новой папки
      *

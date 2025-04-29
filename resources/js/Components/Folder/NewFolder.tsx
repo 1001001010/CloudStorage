@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Folder as FolderTypes, PageProps } from '@/types'
 import { Link } from '@inertiajs/react'
 import {
@@ -27,33 +27,53 @@ export default function NewFolder({
     FoldersTree,
 }: PageProps<{ open: boolean; FoldersTree: FolderTypes[] }>) {
     const [isOpen, setIsOpen] = useState(false)
-    const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([
-        FoldersTree,
-    ])
-    const [breadcrumbPath, setBreadcrumbPath] = useState<string[]>(['Файлы'])
+    const [currentPath, setCurrentPath] = useState<FolderTypes[][]>([])
+    const [breadcrumbPath, setBreadcrumbPath] = useState<
+        { title: string; folderId: number }[]
+    >([{ title: 'Файлы', folderId: 0 }])
     const [currentFolderId, setCurrentFolderId] = useState<number>(0)
 
-    const handleFolderClick = (
-        children: FolderTypes[] | undefined,
-        title: string,
-        folderId: number
-    ) => {
-        if (children) {
-            setCurrentPath([...currentPath, children])
-            setBreadcrumbPath([...breadcrumbPath, title])
+    const handleFolderClick = async (title: string, folderId: number) => {
+        try {
+            const response = await fetch(`/api/folder/${folderId}/children`)
+            const folders = await response.json()
+
+            setCurrentPath([...currentPath, folders])
+            setBreadcrumbPath([...breadcrumbPath, { title, folderId }])
             setCurrentFolderId(folderId)
-        } else {
-            setCurrentPath([...currentPath, []])
-            setBreadcrumbPath([...breadcrumbPath, title])
-            setCurrentFolderId(folderId)
+        } catch (err) {
+            console.error('Ошибка при получении дочерних папок:', err)
         }
     }
 
-    const handleBreadcrumbClick = (index: number) => {
-        setCurrentPath(currentPath.slice(0, index + 1))
-        setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
-        setCurrentFolderId(index === 0 ? 0 : currentPath[index][0].id)
+    const handleBreadcrumbClick = async (index: number) => {
+        const folderId = breadcrumbPath[index].folderId
+
+        try {
+            const response = await fetch(`/api/folder/${folderId}/children`)
+            const folders = await response.json()
+
+            setCurrentPath(currentPath.slice(0, index + 1))
+            setBreadcrumbPath(breadcrumbPath.slice(0, index + 1))
+            setCurrentFolderId(folderId)
+        } catch (err) {
+            console.error('Ошибка при переходе по хлебным крошкам:', err)
+        }
     }
+
+    useEffect(() => {
+        const fetchRootFolders = async () => {
+            try {
+                const response = await fetch('/api/folder/0/children')
+                const folders = await response.json()
+                setCurrentPath([folders])
+            } catch (err) {
+                console.error('Ошибка при загрузке корневых папок:', err)
+            }
+        }
+
+        fetchRootFolders()
+    }, [])
 
     return (
         <>
@@ -74,7 +94,7 @@ export default function NewFolder({
                             <div>
                                 <Breadcrumb>
                                     <BreadcrumbList>
-                                        {breadcrumbPath.map((title, index) => (
+                                        {breadcrumbPath.map((item, index) => (
                                             <BreadcrumbItem key={index}>
                                                 <BreadcrumbLink
                                                     className="cursor-pointer"
@@ -83,7 +103,7 @@ export default function NewFolder({
                                                             index
                                                         )
                                                     }>
-                                                    {title}
+                                                    {item.title}
                                                 </BreadcrumbLink>
                                                 {index <
                                                     breadcrumbPath.length -
@@ -106,7 +126,6 @@ export default function NewFolder({
                                                     className="m-2 flex h-full w-full flex-col items-center"
                                                     onClick={() =>
                                                         handleFolderClick(
-                                                            item.children,
                                                             item.title,
                                                             item.id
                                                         )
@@ -134,6 +153,23 @@ export default function NewFolder({
                         <ForderNameForm
                             auth={auth}
                             folderId={currentFolderId}
+                            onSuccessCreate={async () => {
+                                try {
+                                    const response = await fetch(
+                                        `/api/folder/${currentFolderId}/children`
+                                    )
+                                    const updatedFolders = await response.json()
+                                    setCurrentPath([
+                                        ...currentPath.slice(0, -1),
+                                        updatedFolders,
+                                    ])
+                                } catch (err) {
+                                    console.error(
+                                        'Ошибка при обновлении после создания папки:',
+                                        err
+                                    )
+                                }
+                            }}
                         />
                     </DialogFooter>
                 </DialogContent>
