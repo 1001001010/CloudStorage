@@ -14,10 +14,7 @@ use App\Http\Controllers\{
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\{
-    GetUserFolders,
-    IsAdmin
-};
+use App\Http\Middleware\IsAdmin;
 
 require __DIR__.'/auth.php';
 

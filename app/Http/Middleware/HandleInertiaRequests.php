@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\File;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -34,14 +35,22 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $totalSize = 0;
+
         if ($user) {
-            $user = $request->user()->load('quota');
+            $user->load('quota');
+
+            $totalSize = File::withTrashed()
+                ->where('user_id', $user->id)
+                ->sum('size');
         }
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
             ],
+            'totalSize' => $totalSize,
         ];
     }
 }
