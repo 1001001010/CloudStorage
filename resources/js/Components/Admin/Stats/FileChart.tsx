@@ -63,6 +63,22 @@ const chartConfig = {
         label: 'Другое',
         color: 'hsl(var(--chart-10))',
     },
+    customColor1: {
+        label: 'Тип 1',
+        color: 'hsl(200, 100%, 50%)',
+    },
+    customColor2: {
+        label: 'Тип 2',
+        color: 'hsl(300, 100%, 50%)',
+    },
+    customColor3: {
+        label: 'Тип 3',
+        color: 'hsl(100, 100%, 50%)',
+    },
+    customColor4: {
+        label: 'Тип 4',
+        color: 'hsl(150, 100%, 50%)',
+    },
 } satisfies ChartConfig
 
 export default function FileChart({

@@ -223,34 +223,6 @@ export default function ExportButtons() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="rounded-lg border p-2 sm:p-3">
-                                <div className="mb-1 flex items-center gap-1 sm:mb-2 sm:gap-2">
-                                    <Users className="h-3 w-3 text-indigo-500 sm:h-4 sm:w-4" />
-                                    <h3 className="text-xs font-medium sm:text-sm">
-                                        Пользовательская аналитика
-                                    </h3>
-                                </div>
-                                <ul className="ml-4 list-disc text-[10px] text-muted-foreground sm:ml-6 sm:text-xs">
-                                    <li>
-                                        Топ пользователей по количеству файлов
-                                    </li>
-                                    <li>Топ пользователей по объему данных</li>
-                                    <li>
-                                        Активность пользователей по периодам
-                                    </li>
-                                    <li>Средние показатели использования</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="mt-2 flex items-center justify-between rounded-lg bg-muted p-2 text-[10px] sm:text-xs">
-                            <span>Формат документа: XLSX</span>
-                            <Badge
-                                variant="outline"
-                                className="text-[10px] sm:text-xs">
-                                Интерактивные данные
-                            </Badge>
                         </div>
 
                         <div className="mt-3 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3">
@@ -268,13 +240,6 @@ export default function ExportButtons() {
                     </TabsContent>
                 </Tabs>
             </CardContent>
-            <CardFooter className="border-t px-3 pt-3 text-[10px] text-muted-foreground sm:px-6 sm:pt-4 sm:text-xs">
-                <p>
-                    Отчеты автоматически формируются на основе текущих данных
-                    хранилища. Для получения отчета за конкретный период
-                    используйте соответствующие параметры.
-                </p>
-            </CardFooter>
         </Card>
     )
 }
