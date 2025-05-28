@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('file_hash', 64)->nullable();
             $table->unsignedBigInteger('folder_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedInteger('size');
+            $table->unsignedBigInteger('size');
             $table->timestamps();
             $table->softDeletes();
 
@@ -47,5 +47,3 @@ return new class extends Migration
         Schema::dropIfExists('files');
     }
 };
-
-

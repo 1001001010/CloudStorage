@@ -42,7 +42,7 @@ export default function UserDataLink({
 
     return (
         <>
-            {navData.navMain.map((item) => (
+            {/* {navData.navMain.map((item) => (
                 <Collapsible
                     key={item.title}
                     asChild
@@ -71,7 +71,7 @@ export default function UserDataLink({
                         </CollapsibleContent>
                     </SidebarMenuItem>
                 </Collapsible>
-            ))}
+            ))} */}
         </>
     )
 }

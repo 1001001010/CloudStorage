@@ -20,6 +20,7 @@ export default function MainFiles({
     FoldersFilesTree: any[]
     accessLink?: string
 }) {
+    // Форма загрузки файла
     const { data, setData, post, processing } = useForm({
         folder_id: null as number | null,
         files: null as File[] | null,
@@ -35,7 +36,7 @@ export default function MainFiles({
         setFilterType,
         sortDirection,
         setSortDirection,
-    } = useSettingsStore()
+    } = useSettingsStore() // Получаем настройки из хранилища
     const {
         currentPath,
         setCurrentPath,
@@ -43,7 +44,8 @@ export default function MainFiles({
         setBreadcrumbPath,
         currentFolderId,
         setCurrentFolderId,
-    } = useFilesStore()
+    } = useFilesStore() // Получаем действительный пусть из хранилища
+
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [drag, setDrag] = useState(false)
     const [select, setSelect] = useState<{
@@ -54,6 +56,7 @@ export default function MainFiles({
     const { dragStartHandler, dragLeaveHandler, onDrophandler } =
         useDragHandlers(currentFolderId, setData, setFileExtension, setDrag)
 
+    // Обработка клика по папке
     const handleFolderClick = async (
         folder: any,
         title: string,
@@ -70,6 +73,7 @@ export default function MainFiles({
         }
     }
 
+    // Отслеживание изменения данных в форме
     useEffect(() => {
         if (data.files) {
             router.post(route('file.upload'), data, {
@@ -91,6 +95,7 @@ export default function MainFiles({
         }
     }, [data])
 
+    // Обновление пути
     useEffect(() => {
         if (currentPath.length === 0) {
             setCurrentPath([FoldersFilesTree])

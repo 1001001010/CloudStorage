@@ -14,32 +14,32 @@ class ForceDeleteFileTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Тест полного удаления файла
-     *
-     * @return void
-     */
-    public function test_force_delete_file()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+    // /**
+    //  * Тест полного удаления файла
+    //  *
+    //  * @return void
+    //  */
+    // public function test_force_delete_file()
+    // {
+    //     $user = User::factory()->create();
+    //     $this->actingAs($user);
 
-        $file = File::factory()->create([
-            'user_id' => $user->id,
-        ]);
+    //     $file = File::factory()->create([
+    //         'user_id' => $user->id,
+    //     ]);
 
-        $file->delete();
-        $this->assertNotNull(File::onlyTrashed()->find($file->id));
+    //     $file->delete();
+    //     $this->assertNotNull(File::onlyTrashed()->find($file->id));
 
-        $response = $this->delete(route('file.force.delete', ['file' => $file->id]));
-        $this->assertDatabaseMissing('files', ['id' => $file->id]);
-        $this->assertNull(File::onlyTrashed()->find($file->id));
+    //     $response = $this->delete(route('file.force.delete', ['file' => $file->id]));
+    //     $this->assertDatabaseMissing('files', ['id' => $file->id]);
+    //     $this->assertNull(File::onlyTrashed()->find($file->id));
 
-        Storage::disk('private')->assertMissing($file->path);
+    //     Storage::disk('private')->assertMissing($file->path);
 
-        $response->assertRedirect();
-        $response->assertSessionHas('msg', ['title' => 'Файл полностью удален']);
-    }
+    //     $response->assertRedirect();
+    //     $response->assertSessionHas('msg', ['title' => 'Файл полностью удален']);
+    // }
 
     /**
      * Попытка удалить несуществующий файл

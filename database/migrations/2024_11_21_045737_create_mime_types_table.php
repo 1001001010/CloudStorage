@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('mime_types', function (Blueprint $table) {
             $table->id();
-            $table->string('mime_type', 255)->unique();
+            $table->string('mime_type', 100)->unique();
             $table->timestamps();
         });
     }

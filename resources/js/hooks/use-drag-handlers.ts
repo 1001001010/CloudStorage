@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 export const useDragHandlers = (
     currentFolderId: number,
     setData: (data: any) => void,
