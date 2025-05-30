@@ -16,13 +16,18 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdmin;
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+// Публичный роут для доступа к файлам по токену (без middleware auth)
+Route::controller(FileAccessTokenController::class)->group(function () {
+    Route::get('/access/{token}', 'invite')->name('access.user.upload');
+});
 
 Route::middleware('auth')->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::patch('/profile/edit', 'update')->name('profile.update');
-        Route::delete('/profile/session/destroy','destroy')->name('session.destroy');
+        Route::delete('/profile/session/destroy', 'destroy')->name('session.destroy');
     });
     Route::controller(FolderController::class)->group(function () {
         Route::get('/api/folder/{id}/contents', 'getContents')->name('folder.contents');
@@ -55,8 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::controller(FileAccessTokenController::class)->group(function () {
         Route::get('/shared', 'index')->name('shared.index');
         Route::post('/access', 'upload')->name('access.upload');
-        Route::get('/access/{token}', 'invite')->name('access.user.upload');
         Route::delete('/access/{token}', 'delete')->name('access.delete');
+        Route::delete('/access/{token}/destroy', 'destroy')->name('access.destroy');
     });
 });
 

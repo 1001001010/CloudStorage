@@ -15,7 +15,8 @@ use Inertia\{
 use App\Models\File;
 
 
-class MainController extends Controller {
+class MainController extends Controller
+{
 
     /**
      * Рендеринг главной страницы
@@ -23,7 +24,8 @@ class MainController extends Controller {
      * @param string|null $category
      * @return Response
      */
-    public function index($category = null): Response {
+    public function index($category = null): Response
+    {
         $categoriesMap = [
             'photos' => [
                 'mimeTypes' => [
@@ -85,28 +87,34 @@ class MainController extends Controller {
             ],
         ];
 
-        $files = File::with(['extension', 'mimeType', 'accessTokens.usersWithAccess.user'])
+        $files = File::with([
+            'extension',
+            'mimeType',
+            'accessTokens.usersWithAccess.user',
+            'accessTokens.publicAccesses.user' // Добавляем загрузку публичных доступов
+        ])
             ->where('user_id', Auth::id())
-            ->whereNull('folder_id');
+            ->whereNull('folder_id')
+            ->get();
 
-        if ($category && isset($categoriesMap[$category])) {
-            $mimeTypes = $categoriesMap[$category]['mimeTypes'];
-            $files = $files->join('mime_types', 'mime_types.id', '=', 'files.mime_type_id')
-                ->whereIn('mime_types.mime_type', $mimeTypes);
-        }
+        // if ($category && isset($categoriesMap[$category])) {
+        //     $mimeTypes = $categoriesMap[$category]['mimeTypes'];
+        //     $files = $files->join('mime_types', 'mime_types.id', '=', 'files.mime_type_id')
+        //         ->whereIn('mime_types.mime_type', $mimeTypes);
+        // }
 
-        $files = $files->get();
+        // $files = $files->get();
 
         if ($category) {
-            $FoldersFilesTree = $files->map(fn ($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray();
+            $FoldersFilesTree = $files->map(fn($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray();
         } else {
             $folders = Folder::where('user_id', Auth::id())
                 ->whereNull('parent_id')
                 ->get();
 
             $FoldersFilesTree = array_merge(
-                $folders->map(fn ($f) => array_merge($f->toArray(), ['is_file' => false]))->toArray(),
-                $files->map(fn ($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray()
+                $folders->map(fn($f) => array_merge($f->toArray(), ['is_file' => false]))->toArray(),
+                $files->map(fn($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray()
             );
         }
 

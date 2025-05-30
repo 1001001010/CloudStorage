@@ -20,7 +20,9 @@ class FileAccessToken extends Model
         'file_id',
         'access_token',
         'user_limit',
-        'expires_at'
+        'expires_at',
+        'access_type',
+        'usage_count'
     ];
 
     /**
@@ -53,12 +55,71 @@ class FileAccessToken extends Model
     }
 
     /**
+     * Связь с моделью FilePublicAccess
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicAccesses()
+    {
+        return $this->hasMany(FilePublicAccess::class);
+    }
+
+    /**
      * Проверка, можно ли добавить нового пользователя
      *
      * @return bool
      */
     public function canAddUser()
     {
+        if ($this->access_type === 'public') {
+            return $this->usage_count < $this->user_limit;
+        }
+
         return $this->usersWithAccess()->count() < $this->user_limit;
+    }
+
+    /**
+     * Проверка, истек ли срок действия токена
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return $this->expires_at && $this->expires_at->isPast();
+    }
+
+    /**
+     * Проверка, можно ли получить доступ к файлу
+     *
+     * @return bool
+     */
+    public function canAccess()
+    {
+        return !$this->isExpired() && $this->canAddUser();
+    }
+
+    /**
+     * Получить статистику доступов
+     *
+     * @return array
+     */
+    public function getAccessStatistics()
+    {
+        if ($this->access_type === 'authenticated_only') {
+            return [
+                'type' => 'authenticated',
+                'total_accesses' => $this->usersWithAccess()->count(),
+                'active_accesses' => $this->usersWithAccess()->whereNull('deleted_at')->count(),
+                'users' => $this->usersWithAccess()->with('user')->get()
+            ];
+        }
+
+        return [
+            'type' => 'public',
+            'total_accesses' => $this->usage_count,
+            'unique_ips' => $this->publicAccesses()->distinct('ip_address')->count(),
+            'authenticated_users' => $this->publicAccesses()->whereNotNull('user_id')->distinct('user_id')->count(),
+            'recent_accesses' => $this->publicAccesses()->with('user')->latest()->take(10)->get()
+        ];
     }
 }

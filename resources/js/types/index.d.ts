@@ -54,21 +54,44 @@ export interface File {
     access_tokens: FileAccessToken[]
 }
 
+// Обновленный интерфейс FileAccessToken
 export interface FileAccessToken {
     id: number
+    file_id: number
     access_token: string
     user_limit: number
+    expires_at: string | null
+    access_type: 'authenticated_only' | 'public'
+    usage_count: number
+    created_at: string
+    updated_at: string
     users: FileUsersAccess[]
     users_with_access: FileUsersAccess[]
-    expires_at: string
+    public_accesses: FilePublicAccess[]
+    file?: File
 }
 
+// Обновленный интерфейс FileUsersAccess
 export interface FileUsersAccess {
     id: number
-    file_access_token_id: FileAccessToken
+    file_access_token_id: number
+    user_id: number
     user: User
     created_at: string
-    deleted_at: string
+    updated_at: string
+    deleted_at: string | null
+}
+
+// Новый интерфейс для публичных доступов
+export interface FilePublicAccess {
+    id: number
+    file_access_token_id: number
+    ip_address: string
+    user_agent: string | null
+    user_id: number | null
+    created_at: string
+    updated_at: string
+    user: User | null
 }
 
 export interface FileExtension {
@@ -101,6 +124,7 @@ interface ToastMessage {
     access_link?: string
     description?: string
     action?: ToastAction
+    access_type?: 'authenticated_only' | 'public'
 }
 
 export interface StoragePercentageType {
@@ -131,10 +155,86 @@ interface FileStatsType {
     Другое?: { count: number }
 }
 
+// Новые интерфейсы для статистики доступа
+export interface AccessStatistics {
+    type: 'authenticated' | 'public'
+    total_accesses: number
+    active_accesses?: number
+    unique_ips?: number
+    authenticated_users?: number
+    users?: FileUsersAccess[]
+    recent_accesses?: FilePublicAccess[]
+}
+
+export interface TokenStatistics {
+    token: FileAccessToken
+    file: File
+    statistics: AccessStatistics
+    access_link: string
+}
+
+// Интерфейс для формы создания токена доступа
+export interface AccessTokenFormData {
+    file_id: number
+    user_limit: number
+    expires_at: string | null
+    access_type: 'authenticated_only' | 'public'
+}
+
+// Интерфейс для ответа при создании токена
+export interface AccessTokenResponse {
+    title: string
+    description?: string
+    access_link: string
+    access_type: 'authenticated_only' | 'public'
+}
+
+// Интерфейс для страницы статистики
+export interface FileStatisticsPageProps {
+    token: FileAccessToken
+    file: File
+    statistics: AccessStatistics
+}
+
+// Интерфейс для страницы общих файлов
+export interface SharedPageProps {
+    files: File[]
+    created_tokens: TokenStatistics[]
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     auth: {
         user: User
     }
+}
+
+// Дополнительные типы для фильтрации и сортировки
+export type FilterType =
+    | 'all'
+    | 'documents'
+    | 'images'
+    | 'videos'
+    | 'archives'
+    | 'other'
+export type SortDirection = 'asc' | 'desc'
+export type AccessType = 'authenticated_only' | 'public'
+
+// Типы для компонентов
+export interface FileShareProps {
+    file: File
+    accessLink?: string
+    variant: 'context' | 'button'
+}
+
+export interface UserAccessListProps {
+    token: FileAccessToken
+}
+
+export interface AccessFileLinkProps {
+    file: File
+    accessLink?: string
+    openLink: boolean
+    setIsOpenLink: (open: boolean) => void
 }

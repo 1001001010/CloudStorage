@@ -2,30 +2,60 @@
 
 namespace App\Services\Access;
 
-use App\Models\{FileUserAccess, File, FileAccessToken};
+use App\Models\{FileUserAccess, File, FileAccessToken, FilePublicAccess};
 use Illuminate\Support\Facades\{Auth, URL};
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class FileAccessService {
+class FileAccessService
+{
 
     /**
      * Получаем список файлов, к которым пользователь имеет доступ
      *
      * @return Collection
      */
-    public function getSharedFilesForCurrentUser(): Collection {
+    public function getSharedFilesForCurrentUser(): Collection
+    {
         return FileUserAccess::with([
-                'accessToken.file',
-                'accessToken.file.extension',
-                'accessToken.file.user',
-                'accessToken.file.mimeType',
-            ])
+            'accessToken.file',
+            'accessToken.file.extension',
+            'accessToken.file.user',
+            'accessToken.file.mimeType',
+        ])
             ->where('user_id', Auth::id())
             ->get()
-            ->map(fn ($fileUserAccess) => $fileUserAccess->accessToken->file)
+            ->map(fn($fileUserAccess) => $fileUserAccess->accessToken->file)
             ->unique();
+    }
+
+    /**
+     * Получаем список токенов доступа, созданных текущим пользователем
+     *
+     * @return Collection
+     */
+    public function getCreatedAccessTokens(): Collection
+    {
+        return FileAccessToken::with([
+            'file',
+            'file.extension',
+            'usersWithAccess.user',
+            'publicAccesses.user'
+        ])
+            ->whereHas('file', function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->get()
+            ->map(function ($token) {
+                return [
+                    'token' => $token,
+                    'file' => $token->file,
+                    'statistics' => $token->getAccessStatistics(),
+                    'access_link' => URL::route('access.user.upload', ['token' => $token->access_token])
+                ];
+            });
     }
 
     /**
@@ -34,10 +64,12 @@ class FileAccessService {
      * @param int $fileId
      * @param int|null $userLimit
      * @param string|null $expires_at
+     * @param string $accessType
      * @return array|null
      * @throws ModelNotFoundException
      */
-    public function createAccessToken(int $fileId, ?int $userLimit = null, ?string $expires_at = null): ?array {
+    public function createAccessToken(int $fileId, ?int $userLimit = null, ?string $expires_at = null, string $accessType = 'authenticated_only'): ?array
+    {
         $file = File::findOrFail($fileId);
         if ($file->user_id !== Auth::id()) {
             return null;
@@ -50,42 +82,85 @@ class FileAccessService {
             'access_token' => $accessToken,
             'user_limit' => $userLimit,
             'expires_at' => $expires_at ? Carbon::parse($expires_at) : null,
+            'access_type' => $accessType,
         ]);
+
+        $description = $accessType === 'public'
+            ? 'Ссылка доступна для всех пользователей (включая неавторизованных)'
+            : 'Ссылка доступна только для авторизованных пользователей';
 
         return [
             'title' => 'Ссылка успешно создана',
+            'description' => $description,
             'access_link' => URL::route('access.user.upload', ['token' => $access->access_token]),
+            'access_type' => $accessType
         ];
     }
 
     /**
+     * Записывает публичный доступ в статистику
+     */
+    public function recordPublicAccess(FileAccessToken $accessToken, Request $request): void
+    {
+        FilePublicAccess::create([
+            'file_access_token_id' => $accessToken->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'user_id' => Auth::id(), // null если не авторизован
+        ]);
+
+        // Увеличиваем счетчик использований
+        $accessToken->increment('usage_count');
+    }
+
+    /**
+     * Добавляет пользователя в список доступа
+     */
+    public function addUserAccess(FileAccessToken $accessToken, int $userId): void
+    {
+        $existingAccess = FileUserAccess::where('file_access_token_id', $accessToken->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$existingAccess) {
+            FileUserAccess::create([
+                'file_access_token_id' => $accessToken->id,
+                'user_id' => $userId
+            ]);
+        }
+    }
+
+    /**
      * Обрабатывает приглашение по токену: проверка, создание доступа
+     * (Оставляем для совместимости с авторизованными пользователями)
      *
      * @param string $token
+     * @param Request|null $request
      * @return array ['redirect' => route, 'msg' => []]
      */
-    public function handleInvite(string $token): array
+    public function handleInvite(string $token, ?Request $request = null): array
     {
         $access = FileAccessToken::with('file')->where('access_token', $token)->firstOrFail();
 
-        if ($access->expires_at && $access->expires_at->isPast()) {
+        if ($access->isExpired()) {
             return [
                 'redirect' => url()->previous(),
                 'msg' => ['title' => 'Срок действия ссылки истёк']
             ];
         }
 
-        if ($access->file->user_id == Auth::id()) {
-            return [
-                'redirect' => url()->previous(),
-                'msg' => ['title' => 'Вы не можете поделиться файлом с собой']
-            ];
-        }
-
         if (!$access->canAddUser()) {
             return [
                 'redirect' => url()->previous(),
-                'msg' => ['title' => 'Доступ к файлу закрыт']
+                'msg' => ['title' => 'Доступ к файлу закрыт (достигнут лимит)']
+            ];
+        }
+
+        // Проверяем, не является ли пользователь владельцем файла
+        if (Auth::check() && $access->file->user_id == Auth::id()) {
+            return [
+                'redirect' => url()->previous(),
+                'msg' => ['title' => 'Вы не можете поделиться файлом с собой']
             ];
         }
 
@@ -95,7 +170,7 @@ class FileAccessService {
 
         if ($existingAccess) {
             return [
-                'redirect' => url()->previous(),
+                'redirect' => route('shared.index'),
                 'msg' => ['title' => 'Файл уже загружен']
             ];
         }
@@ -132,5 +207,22 @@ class FileAccessService {
 
         $access->delete();
         return 'Доступ успешно отозван';
+    }
+
+    /**
+     * Удаляет токен доступа
+     *
+     * @param FileAccessToken $token
+     * @return bool
+     */
+    public function deleteAccessToken(FileAccessToken $token): bool
+    {
+        // Проверяем, что пользователь является владельцем файла
+        if ($token->file->user_id !== Auth::id()) {
+            return false;
+        }
+
+        $token->delete();
+        return true;
     }
 }
