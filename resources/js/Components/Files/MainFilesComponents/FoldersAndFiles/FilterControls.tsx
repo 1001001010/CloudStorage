@@ -17,8 +17,8 @@ import {
     Tag,
 } from 'lucide-react'
 import { Badge } from '@/Components/ui/badge'
-import { FilterControlsProps } from '@/types'
-import { FilterType } from '@/store/settings-store'
+import { FilterControlsProps, FilterType } from '@/types'
+// import { FilterType } from ''
 
 export default function FilterControls({
     filterType,

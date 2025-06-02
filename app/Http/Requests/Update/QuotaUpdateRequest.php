@@ -24,7 +24,8 @@ class QuotaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quota' => 'required|numeric|min:1',
+            'quota' => ['required', 'numeric', 'min:0'],
+            'unit' => ['sometimes', 'string', 'in:MB,GB'],
         ];
     }
 
@@ -36,10 +37,10 @@ class QuotaUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'quota.required' => 'Поле "Квота" обязательно для заполнения',
-            'quota.numeric'  => 'Поле "Квота" должно быть числом',
-            'quota.min'      => 'Поле "Квота" не может быть отрицательным',
+            'quota.required' => 'Значение квоты обязательно',
+            'quota.numeric' => 'Значение квоты должно быть числом',
+            'quota.min' => 'Значение квоты должно быть положительным',
+            'unit.in' => 'Единица измерения должна быть MB или GB',
         ];
     }
-
 }

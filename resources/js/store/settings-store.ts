@@ -1,7 +1,7 @@
+import { FilterType } from '@/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type FilterType = 'name' | 'created_at' | 'updated_at'
 export type SortDirection = 'asc' | 'desc'
 export type Theme = 'light' | 'dark'
 

@@ -16,7 +16,8 @@ use App\Models\{
     FileUserAccess
 };
 
-class FileUploadService {
+class FileUploadService
+{
     protected FileEncryptionService $encryptService;
 
     public function __construct(
@@ -26,25 +27,34 @@ class FileUploadService {
     }
 
     /**
-     * Обработка одного файла
+     * Обрабатывает загрузку файла
      *
-     * @param UploadedFile $file
-     * @param int|null $folderId
-     * @return array
+     * @param UploadedFile $file Загружаемый файл
+     * @param int|null $folderId ID папки для загрузки
+     * @return array Результат операции
      */
     public function handleUploadFile(
         UploadedFile $file,
         ?int $folderId
     ): array {
-        $maxSize = Auth::user()->quota->size * 1024 * 1024 * 1024;
+        // Квота хранится в МБ, поэтому умножаем на 1024 * 1024 для получения байт
+        $maxSize = Auth::user()->quota->size * 1024 * 1024;
         $userId = Auth::id();
         $disallowedExtensions = ['exe', 'bat', 'sh'];
         $fileSize = $file->getSize();
-        $success = false;
         $totalSize = File::where('user_id', $userId)->sum('size');
 
+        // Проверка на превышение лимита хранения
         if (($totalSize + $fileSize) > $maxSize) {
-            return ['message' => 'Превышен лимит хранения', 'totalSize' => $totalSize, 'success' => false];
+            $remainingSpace = $maxSize - $totalSize;
+            $formattedRemainingSpace = $this->formatFileSize($remainingSpace);
+            $formattedFileSize = $this->formatFileSize($fileSize);
+
+            return [
+                'message' => "Превышен лимит хранения. Размер файла: {$formattedFileSize}, доступно: {$formattedRemainingSpace}",
+                'totalSize' => $totalSize,
+                'success' => false
+            ];
         }
 
         $fileExtension = strtolower($file->getClientOriginalExtension());
@@ -57,10 +67,10 @@ class FileUploadService {
         $fileHash = hash_file('sha256', $file->getRealPath());
 
         $existingFile = File::withTrashed()
-        ->with('folder.parent')
-        ->where('file_hash', $fileHash)
-        ->where('user_id', $userId)
-        ->first();
+            ->with('folder.parent')
+            ->where('file_hash', $fileHash)
+            ->where('user_id', $userId)
+            ->first();
 
         if ($existingFile) {
             $fullPath = $this->buildFullPath($existingFile);
@@ -95,14 +105,42 @@ class FileUploadService {
             'size' => $fileSize
         ]);
 
+        // Вычисляем оставшееся место после загрузки
+        $newTotalSize = $totalSize + $fileSize;
+        $remainingSpace = $maxSize - $newTotalSize;
+        $percentUsed = round(($newTotalSize / $maxSize) * 100);
+
+        // Добавляем информацию о доступном месте в ответ
         return [
             'message' => '',
-            'totalSize' => $totalSize + $fileSize,
+            'totalSize' => $newTotalSize,
+            'remainingSpace' => $remainingSpace,
+            'percentUsed' => $percentUsed,
             'success' => true
         ];
     }
 
-    public function buildFullPath(File $file): string {
+    /**
+     * Форматирует размер файла в читаемый вид
+     *
+     * @param int $bytes Размер в байтах
+     * @return string Отформатированный размер
+     */
+    private function formatFileSize(int $bytes): string
+    {
+        $units = ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'];
+
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+
+        $bytes /= pow(1024, $pow);
+
+        return round($bytes, 2) . ' ' . $units[$pow];
+    }
+
+    public function buildFullPath(File $file): string
+    {
         $parts = [$file->name . '.' . $file->extension->extension];
 
         $folder = $file->folder;

@@ -20,15 +20,15 @@ import {
 import { Link, usePage } from '@inertiajs/react'
 import UserDropDownMenu from './UserDropDowrnMenu'
 import ThemeButton from './ThemeButton'
-import { Alert, AlertTitle } from '@/Components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
 import { Progress } from '@/Components/ui/progress'
 import { motion, AnimatePresence } from 'framer-motion'
 import NewFolder from '../Folder/NewFolder'
-import { Folder as FolderType } from '@/types'
+import type { Folder as FolderType } from '@/types'
 import UserDataLink from './data/UsersData'
 import AdminDataLink from './data/AdminData'
 import FileUploadButton from '@/Components/Sidebar/FileUploadButton'
-import { formatFileSize, AutoFormatFileSize } from '@/lib/utils'
+import { AutoFormatFileSize } from '@/lib/utils'
 
 export const iframeHeight = '800px'
 
@@ -41,6 +41,12 @@ export default function SideBarComponent({
 }) {
     const { open, isMobile } = useSidebar()
     const auth = usePage().props.auth
+
+    // Квота в байтах для расчета процента
+    const quotaInBytes = auth.user?.quota
+        ? auth.user.quota.size * 1024 * 1024
+        : 0
+    const percentUsed = quotaInBytes > 0 ? (totalSize / quotaInBytes) * 100 : 0
 
     return (
         <>
@@ -113,25 +119,27 @@ export default function SideBarComponent({
                                     exit={{ opacity: 0, x: -100 }}
                                     transition={{ duration: 0.1 }}>
                                     <Alert>
-                                        <Progress
-                                            value={
-                                                (totalSize /
-                                                    (5 * 1024 * 1024 * 1024)) *
-                                                100
-                                            }
-                                        />
                                         <AlertTitle className="pt-2 text-center">
                                             <p className="text-nowrap">
                                                 Занято{' '}
                                                 {AutoFormatFileSize(totalSize)}{' '}
                                                 из{' '}
-                                                {formatFileSize(
-                                                    auth.user.quota.size,
-                                                    'МБ',
-                                                    'ГБ'
-                                                )}
+                                                {/* Передаем квоту в МБ напрямую, без конвертации в байты */}
+                                                {auth.user.quota.size >= 1024
+                                                    ? `${(auth.user.quota.size / 1024).toFixed(1)} ГБ`
+                                                    : `${auth.user.quota.size} МБ`}
+                                            </p>
+                                            <p className="mt-1 text-xs text-muted-foreground">
+                                                {Math.round(percentUsed)}%
+                                                использовано
                                             </p>
                                         </AlertTitle>
+                                        <AlertDescription className="text-center">
+                                            <Progress
+                                                value={percentUsed}
+                                                className={`h-2 ${percentUsed > 90 ? 'bg-red-500' : percentUsed > 75 ? 'bg-yellow-500' : ''}`}
+                                            />
+                                        </AlertDescription>
                                     </Alert>
                                 </motion.div>
                             )}

@@ -1,12 +1,13 @@
-import { useState } from 'react'
+'use client'
+
+import type React from 'react'
 import {
     ContextMenu,
     ContextMenuContent,
-    ContextMenuItem,
     ContextMenuTrigger,
 } from '@/Components/ui/context-menu'
-import { File as FileType } from '@/types'
-import { PenLine } from 'lucide-react'
+import type { File as FileType } from '@/types'
+import { Share2 } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 import {
     imageExtensions,
@@ -70,10 +71,12 @@ export default function FileContext({
         videoExtensions.includes(file.extension.extension) ||
         file.mime_type.mime_type.startsWith('video/')
 
+    const hasSharedAccess = file.access_tokens && file.access_tokens.length > 0
+
     const truncateFileName = (
         name: string,
         extension: string,
-        maxLength: number = 20
+        maxLength = 20
     ) => {
         if (name.length + extension.length + 1 > maxLength) {
             const truncatedName =
@@ -99,11 +102,20 @@ export default function FileContext({
                     }}>
                     <Button
                         variant="ghost"
-                        className={`flex h-full w-full flex-col items-center justify-center ${
+                        className={`relative flex h-full w-full flex-col items-center justify-center ${
                             select?.type === 'file' && select?.id === file.id
                                 ? 'bg-muted'
                                 : ''
                         }`}>
+                        {hasSharedAccess && (
+                            <div className="absolute right-1 top-1 z-10">
+                                <Share2
+                                    size={16}
+                                    className="text-foreground drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
+                                    strokeWidth={2.5}
+                                />
+                            </div>
+                        )}
                         <div
                             className="flex flex-col items-center justify-center"
                             style={{
@@ -152,16 +164,31 @@ export default function FileContext({
                                 ? 'bg-muted'
                                 : ''
                         }`}>
-                        <div className="flex-shrink-0">
+                        <div className="relative flex-shrink-0">
                             <FilePreview file={file} iconSize={iconSize} />
+                            {hasSharedAccess && (
+                                <div className="absolute -right-1 -top-1 z-10">
+                                    <Share2
+                                        size={14}
+                                        className="text-foreground drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"
+                                        strokeWidth={2.5}
+                                    />
+                                </div>
+                            )}
                         </div>
                         <div className="min-w-0 flex-1">
-                            <p className="truncate font-medium">
-                                {`${file.name}.${file.extension.extension}`}
-                            </p>
+                            <div className="flex items-center gap-2">
+                                <p className="truncate font-medium">{`${file.name}.${file.extension.extension}`}</p>
+                            </div>
                             <p className="text-xs text-muted-foreground">
                                 {formatDate(file.created_at)} •{' '}
                                 {AutoFormatFileSize(file.size)}
+                                {hasSharedAccess && (
+                                    <span className="text-muted-foreground">
+                                        {' '}
+                                        • Общий доступ
+                                    </span>
+                                )}
                             </p>
                         </div>
                     </Button>

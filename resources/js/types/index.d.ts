@@ -212,6 +212,9 @@ export type PageProps<
 
 // Дополнительные типы для фильтрации и сортировки
 export type FilterType =
+    | 'name'
+    | 'created_at'
+    | 'updated_at'
     | 'all'
     | 'documents'
     | 'images'

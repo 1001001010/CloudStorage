@@ -10,11 +10,13 @@ use Illuminate\Http\{
     RedirectResponse
 };
 
-class QuotaController extends Controller {
+class QuotaController extends Controller
+{
 
-    public function __construct (
+    public function __construct(
         protected QuotaService $quotaService
-     ) {}
+    ) {
+    }
 
     /**
      * Обновление квоты пользователя
@@ -23,13 +25,19 @@ class QuotaController extends Controller {
      * @param QuotaUpdateRequest $request
      * @return RedirectResponse
      */
-    public function update(User $user, QuotaUpdateRequest $request) : RedirectResponse {
+    public function update(User $user, QuotaUpdateRequest $request): RedirectResponse
+    {
         $data = $request->validated();
 
-        $this->quotaService->updateUserQuota($user, $data['quota']);
+        // Получаем значение и единицу измерения
+        $quotaValue = $data['quota'];
+        $quotaUnit = $data['unit'] ?? 'GB'; // По умолчанию ГБ, если не указано
+
+        $this->quotaService->updateUserQuota($user, $quotaValue, $quotaUnit);
 
         return redirect()->back()->with('msg', [
             'title' => "Квота успешно обновлена"
         ]);
     }
+
 }
