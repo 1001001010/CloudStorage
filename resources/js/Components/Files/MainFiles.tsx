@@ -1,3 +1,7 @@
+'use client'
+
+import type React from 'react'
+
 import { useState, useEffect } from 'react'
 import { router, useForm } from '@inertiajs/react'
 import {
@@ -37,6 +41,7 @@ export default function MainFiles({
         sortDirection,
         setSortDirection,
     } = useSettingsStore() // Получаем настройки из хранилища
+
     const {
         currentPath,
         setCurrentPath,
@@ -44,7 +49,7 @@ export default function MainFiles({
         setBreadcrumbPath,
         currentFolderId,
         setCurrentFolderId,
-    } = useFilesStore() // Получаем действительный пусть из хранилища
+    } = useFilesStore() // Получаем действительный путь из хранилища
 
     const [fileExtension, setFileExtension] = useState<string | null>(null)
     const [drag, setDrag] = useState(false)
@@ -101,6 +106,30 @@ export default function MainFiles({
             setCurrentPath([FoldersFilesTree])
         }
     }, [FoldersFilesTree, currentPath.length])
+
+    // Слушаем событие создания папки для обновления списка
+    useEffect(() => {
+        const handleFolderCreated = async () => {
+            try {
+                const response = await fetch(
+                    `/api/folder/${currentFolderId}/contents`
+                )
+                const updatedData = await response.json()
+                setCurrentPath([updatedData])
+            } catch (error) {
+                console.error(
+                    'Ошибка при обновлении содержимого папки после создания:',
+                    error
+                )
+            }
+        }
+
+        window.addEventListener('folder-created', handleFolderCreated)
+
+        return () => {
+            window.removeEventListener('folder-created', handleFolderCreated)
+        }
+    }, [currentFolderId])
 
     // Поиск по названию
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

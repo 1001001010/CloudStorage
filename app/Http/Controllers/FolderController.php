@@ -14,7 +14,7 @@ class FolderController extends Controller
     {
         $userId = Auth::id();
 
-        if ((int)$id === 0) {
+        if ((int) $id === 0) {
             // Корневая папка
             $childFolders = Folder::whereNull('parent_id')
                 ->where('user_id', $userId)
@@ -40,8 +40,8 @@ class FolderController extends Controller
         }
 
         $combined = array_merge(
-            $childFolders->map(fn ($f) => array_merge($f->toArray(), ['is_file' => false]))->toArray(),
-            $files->map(fn ($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray()
+            $childFolders->map(fn($f) => array_merge($f->toArray(), ['is_file' => false]))->toArray(),
+            $files->map(fn($f) => array_merge($f->toArray(), ['is_file' => true]))->toArray()
         );
 
         return response()->json($combined);
@@ -64,7 +64,7 @@ class FolderController extends Controller
         }
 
         return response()->json(
-            $childFolders->map(fn ($folder) => array_merge($folder->toArray(), ['is_file' => false]))
+            $childFolders->map(fn($folder) => array_merge($folder->toArray(), ['is_file' => false]))
         );
     }
 
@@ -74,8 +74,9 @@ class FolderController extends Controller
      * @param FolderUploadRequest $request
      * @return RedirectResponse
      */
-    public function upload(FolderUploadRequest $request) : RedirectResponse {
-        $folder=null;
+    public function upload(FolderUploadRequest $request): RedirectResponse
+    {
+        $folder = null;
         if ($request->folder) {
             $folder = $request->folder;
         }
@@ -95,7 +96,8 @@ class FolderController extends Controller
      * @param Folder $folder
      * @return RedirectResponse
      */
-    public function delete(Folder $folder) : RedirectResponse {
+    public function delete(Folder $folder): RedirectResponse
+    {
         if (!$folder->belongsToUser(Auth::id())) {
             return redirect()->back()->with('msg', [
                 'title' => 'Папка не найдена или не принадлежит вам',
@@ -116,7 +118,7 @@ class FolderController extends Controller
      * @param Folder $folder
      * @return RedirectResponse
      */
-    public function rename(Folder $folder, FolderRenameRequest $request) : RedirectResponse
+    public function rename(Folder $folder, FolderRenameRequest $request): RedirectResponse
     {
         if (!$folder->belongsToUser(Auth::id())) {
             return redirect()->back()->with('msg', [
