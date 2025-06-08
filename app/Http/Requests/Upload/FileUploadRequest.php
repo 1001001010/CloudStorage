@@ -29,9 +29,6 @@ class FileUploadRequest extends FormRequest
             'files' => 'required|array|min:1',
             'files.*' => [
                 'file',
-                'max:2048000',
-                // 'regex:/^[^\\/:*?"<>|]*$/',
-                // 'regex:/^(?!.*(\.|\.\.|\bCON\b|\bPRN\b|\bAUX\b|\bNUL\b|\bCOM\d\b|\bLPT\d\b)).*$/i'
             ],
         ];
     }

@@ -38,7 +38,8 @@ class FileController extends Controller
         protected FileRenameService $fileRenameService,
         protected FileDownloadService $fileDownloadService,
         protected FileDeleteService $fileDeleteService
-    ) {}
+    ) {
+    }
 
     /**
      * Обработка загрузки файлов
@@ -46,7 +47,8 @@ class FileController extends Controller
      * @param FileUploadRequest $request
      * @return RedirectResponse
      */
-    public function upload(FileUploadRequest $request): RedirectResponse {
+    public function upload(FileUploadRequest $request): RedirectResponse
+    {
         $folder = $this->validateFolder($request->folder_id);
         if ($folder === false) {
             return $this->redirectWithError('Ошибка', 'Папка не найдена');
@@ -95,7 +97,8 @@ class FileController extends Controller
      * @param int|null $folderId
      * @return Folder|null
      */
-    protected function validateFolder($folderId): Folder|null {
+    protected function validateFolder($folderId): Folder|null
+    {
         if ($folderId === null || $folderId == 0) {
             return null;
         }
@@ -126,7 +129,8 @@ class FileController extends Controller
      * @param File $file
      * @return bool
      */
-    protected function checkUserFileAccess(File $file): bool {
+    protected function checkUserFileAccess(File $file): bool
+    {
         return $file->user_id == Auth::id() || $this->userHasAccessToFile($file->id, Auth::id());
     }
 
@@ -153,7 +157,8 @@ class FileController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function delete(File $file): RedirectResponse {
+    public function delete(File $file): RedirectResponse
+    {
         $file = File::where('user_id', Auth::id())->find($file->id);
 
         if (!$file) {
@@ -181,7 +186,8 @@ class FileController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function rename(File $file, FileRenameRequest $request): RedirectResponse {
+    public function rename(File $file, FileRenameRequest $request): RedirectResponse
+    {
         if ($file->user_id !== Auth::id()) {
             abort(404);
         }
@@ -204,7 +210,8 @@ class FileController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function restore(File $file): RedirectResponse {
+    public function restore(File $file): RedirectResponse
+    {
         $file = File::onlyTrashed()
             ->where('user_id', Auth::id())
             ->find($file->id);
@@ -232,7 +239,8 @@ class FileController extends Controller
      * @param File $file
      * @return RedirectResponse
      */
-    public function forceDelete(File $file): RedirectResponse {
+    public function forceDelete(File $file): RedirectResponse
+    {
         $file = File::onlyTrashed()
             ->where('user_id', Auth::id())
             ->find($file->id);
@@ -259,7 +267,8 @@ class FileController extends Controller
      * @param string $description
      * @return RedirectResponse
      */
-    protected function redirectWithError($title, $description): RedirectResponse {
+    protected function redirectWithError($title, $description): RedirectResponse
+    {
         return redirect()->back()->with('msg', [
             'title' => $title,
             'description' => $description,

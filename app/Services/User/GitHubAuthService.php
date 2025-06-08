@@ -17,7 +17,7 @@ class GitHubAuthService
      */
     public function handleGithubCallback()
     {
-        $user = Socialite::driver('github')->user();
+        $user = Socialite::driver('github')->scopes(['user:email'])->user();
         $existingUser = User::where('email', $user->email)->first();
 
         if (!$existingUser) {
