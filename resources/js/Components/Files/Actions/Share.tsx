@@ -18,6 +18,7 @@ import AccessFileLink from '@/Components/Files/AccessFileLink'
 import { RadioGroup, RadioGroupItem } from '@/Components/ui/radio-group'
 import { Label } from '@/Components/ui/label'
 import { Card, CardContent } from '@/Components/ui/card'
+import { useFilesStore } from '@/store/use-file-store'
 
 import * as React from 'react'
 import { format } from 'date-fns'
@@ -42,6 +43,7 @@ export default function FileShare({
     accessLink?: string
     variant: 'context' | 'button'
 }) {
+    const { currentFolderId, setCurrentPath } = useFilesStore()
     const [val, setVal] = useState(1)
     const [open, setIsOpen] = useState(false)
     const [date, setDate] = React.useState<Date>()
@@ -100,12 +102,24 @@ export default function FileShare({
         }
     }, [date])
 
-    const submit: FormEventHandler = (e) => {
+    const submit: FormEventHandler = async (e) => {
         e.preventDefault()
         post(route('access.upload'), {
-            onSuccess: () => {
+            onSuccess: async () => {
                 setIsOpen(false)
                 setIsOpenLink(true)
+                try {
+                    const response = await fetch(
+                        `/api/folder/${currentFolderId}/contents`
+                    )
+                    const updatedData = await response.json()
+                    setCurrentPath([updatedData])
+                } catch (error) {
+                    console.error(
+                        'Ошибка при обновлении содержимого папки после создания ссылки:',
+                        error
+                    )
+                }
             },
         })
     }

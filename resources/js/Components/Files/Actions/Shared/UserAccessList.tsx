@@ -1,6 +1,6 @@
 'use client'
 
-import { type FormEventHandler, useState } from 'react'
+import { type FormEventHandler, useState, useEffect } from 'react'
 import type {
     FileAccessToken,
     FileUsersAccess,
@@ -25,7 +25,7 @@ import {
 } from '@/Components/ui/table'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
-import { Check, Copy, Globe, Lock, X, BarChart3 } from 'lucide-react'
+import { Check, Copy, Globe, Lock, X, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/Components/ui/button'
@@ -33,7 +33,17 @@ import { useForm } from '@inertiajs/react'
 import { Badge } from '@/Components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
 
-export default function UserAccessList({ token }: { token: FileAccessToken }) {
+export default function UserAccessList({
+    token: initialToken,
+    onUpdate,
+}: {
+    token: FileAccessToken
+    onUpdate?: () => void
+}) {
+    const [token, setToken] = useState<FileAccessToken>(initialToken)
+    const [dialogOpen, setDialogOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+
     const {
         data,
         setData,
@@ -45,8 +55,48 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault()
-        destroy(route('access.delete', token.id))
+        destroy(route('access.delete', token.id), {
+            onSuccess: async () => {
+                await refreshTokenData()
+                if (onUpdate) {
+                    await onUpdate()
+                }
+            },
+        })
     }
+
+    // Функция для обновления данных токена
+    const refreshTokenData = async () => {
+        setLoading(true)
+        try {
+            const response = await fetch(`/api/token/${token.id}`, {
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            if (response.ok) {
+                const freshToken = await response.json()
+                setToken(freshToken)
+                console.log('Токен обновлен:', freshToken)
+            } else {
+                console.error('Ошибка при получении токена:', response.status)
+                toast('Ошибка при обновлении данных токена')
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении токена:', error)
+            toast('Ошибка при обновлении данных токена')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    // Обновляем данные при открытии диалога
+    useEffect(() => {
+        if (dialogOpen) {
+            refreshTokenData()
+        }
+    }, [dialogOpen, token.id]) // Добавляем token.id в зависимости
 
     const [selectedToken, setSelectedToken] = useState<FileAccessToken | null>(
         null
@@ -86,12 +136,15 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
         : null
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button
                     variant={'outline'}
                     key={token.id}
-                    onClick={() => handleTokenClick(token)}
+                    onClick={() => {
+                        handleTokenClick(token)
+                        setDialogOpen(true)
+                    }}
                     className="flex items-center gap-2">
                     {isPublic ? (
                         <Globe className="h-4 w-4 text-blue-500" />
@@ -119,15 +172,28 @@ export default function UserAccessList({ token }: { token: FileAccessToken }) {
                         )}
                         <DialogTitle>Информация о токене</DialogTitle>
                     </div>
-                    <DialogClose asChild>
+                    <div className="flex items-center gap-2">
                         <Button
                             variant="ghost"
                             size="icon"
+                            onClick={refreshTokenData}
+                            disabled={loading}
                             className="h-8 w-8 rounded-full">
-                            <X className="h-4 w-4" />
-                            <span className="sr-only">Закрыть</span>
+                            <RefreshCw
+                                className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`}
+                            />
+                            <span className="sr-only">Обновить</span>
                         </Button>
-                    </DialogClose>
+                        <DialogClose asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full">
+                                <X className="h-4 w-4" />
+                                <span className="sr-only">Закрыть</span>
+                            </Button>
+                        </DialogClose>
+                    </div>
                 </DialogHeader>
 
                 <DialogDescription>

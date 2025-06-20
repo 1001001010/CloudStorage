@@ -102,6 +102,13 @@ class FileAccessService
      */
     public function recordPublicAccess(FileAccessToken $accessToken, Request $request): void
     {
+        // Проверяем, есть ли уже запись с таким же IP и user agent
+        $existingAccess = FilePublicAccess::where('file_access_token_id', $accessToken->id)
+            ->where('ip_address', $request->ip())
+            ->where('user_agent', $request->userAgent())
+            ->first();
+
+        // Создаем запись в любом случае для статистики
         FilePublicAccess::create([
             'file_access_token_id' => $accessToken->id,
             'ip_address' => $request->ip(),
@@ -109,8 +116,10 @@ class FileAccessService
             'user_id' => Auth::id(), // null если не авторизован
         ]);
 
-        // Увеличиваем счетчик использований
-        $accessToken->increment('usage_count');
+        // Увеличиваем счетчик использований только если это новая комбинация IP + user agent
+        if (!$existingAccess) {
+            $accessToken->increment('usage_count');
+        }
     }
 
     /**

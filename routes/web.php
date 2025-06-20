@@ -24,7 +24,10 @@ Route::controller(FileAccessTokenController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/api/token/{token}', [FileAccessTokenController::class, 'apiGetToken'])
+        ->name('api.token.show');
     Route::get('/api/folders/tree', [FileController::class, 'getFoldersTree'])->name('api.folders.tree');
+    Route::get('/api/file/{file}', [FileController::class, 'getFileInfo'])->name('api.file.info')->whereNumber('file');
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::patch('/profile/edit', 'update')->name('profile.update');
@@ -63,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(FileAccessTokenController::class)->group(function () {
         Route::get('/shared', 'index')->name('shared.index');
         Route::post('/access', 'upload')->name('access.upload');
+        Route::get('/api/access/{token}', 'getTokenInfo')->name('api.access.info');
         Route::delete('/access/{token}', 'delete')->name('access.delete');
         Route::delete('/access/{token}/destroy', 'destroy')->name('access.destroy');
     });
