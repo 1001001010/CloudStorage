@@ -24,6 +24,7 @@ Route::controller(FileAccessTokenController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/api/folders/tree', [FileController::class, 'getFoldersTree'])->name('api.folders.tree');
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile.index');
         Route::patch('/profile/edit', 'update')->name('profile.update');
@@ -43,6 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/file/{file}', 'delete')->name('file.delete')->whereNumber('file');
         Route::put('/file/{file}', 'restore')->name('file.restore')->withTrashed()->whereNumber('file');
         Route::delete('/file/force/{file}', 'forceDelete')->withTrashed()->name('file.force.delete')->whereNumber('file');
+        Route::patch('/file/{file}/move', 'move')->name('file.move')->whereNumber('file');
+        Route::get('/api/folders/tree', 'getFoldersTree')->name('folders.tree');
     });
     Route::controller(PrivateFileController::class)->group(function () {
         Route::get('/api/file-url/{id}', 'getFileUrl');

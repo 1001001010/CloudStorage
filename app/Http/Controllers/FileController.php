@@ -28,6 +28,7 @@ use App\Models\{
     FileUserAccess
 };
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Services\File\FileMoveService;
 
 class FileController extends Controller
 {
@@ -37,11 +38,12 @@ class FileController extends Controller
         protected FileUploadService $fileUploadService,
         protected FileRenameService $fileRenameService,
         protected FileDownloadService $fileDownloadService,
-        protected FileDeleteService $fileDeleteService
+        protected FileDeleteService $fileDeleteService,
+        private FileMoveService $fileMoveService
     ) {
     }
 
-    /**
+    /**z
      * Обработка загрузки файлов
      *
      * @param FileUploadRequest $request
@@ -273,5 +275,33 @@ class FileController extends Controller
             'title' => $title,
             'description' => $description,
         ]);
+    }
+
+    public function getFoldersTree(Request $request)
+    {
+        try {
+            $currentFolderId = $request->query('current_folder_id');
+            $currentFolderId = $currentFolderId === '' ? null : (int) $currentFolderId;
+
+            $folders = $this->fileMoveService->getFoldersTree($currentFolderId);
+
+            return response()->json(['folders' => $folders]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    public function move(File $file, Request $request)
+    {
+        $request->validate([
+            'folder_id' => 'nullable|integer|exists:folders,id'
+        ]);
+
+        try {
+            $this->fileMoveService->moveFile($file, $request->folder_id);
+            return redirect()->back()->with('success', 'Файл успешно перемещен');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

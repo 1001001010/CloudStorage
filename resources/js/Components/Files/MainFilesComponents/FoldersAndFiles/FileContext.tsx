@@ -28,6 +28,7 @@ import {
     FileRename,
     FileInfo,
 } from '@/Components/Files/Actions/index'
+import FileMove from '@/Components/Files/Actions/Move'
 import { AutoFormatFileSize, formatDate } from '@/lib/utils'
 
 export default function FileContext({
@@ -238,6 +239,7 @@ export default function FileContext({
                             variant="context"
                         />
                     ) : null}
+                    <FileMove file={file} variant="context" />
                     <FileRename file={file} variant="context" />
                     <FileDelete file={file} variant="context" />
                 </>
