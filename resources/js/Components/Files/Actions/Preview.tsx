@@ -83,6 +83,7 @@ export default function FilePreview({
                 'application/x-tar',
                 'application/gzip',
                 'application/x-7z-compressed',
+                'application/vnd.rar',
             ],
             icon: <FolderArchive style={iconStyle} />,
         },
@@ -128,6 +129,7 @@ export default function FilePreview({
                 'php',
                 'html',
                 'css',
+                'go',
             ],
             mimeTypes: [
                 'text/javascript',

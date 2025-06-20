@@ -48,7 +48,7 @@ export default function Layout({
     msg?: ToastMessage
 }>) {
     const [defaultOpen, setDefaultOpen] = useState(getInitialSidebarState)
-    const hasShownMessage = useRef(false)
+    // const hasShownMessage = useRef(false)
 
     useEffect(() => {
         const cookieValue = document.cookie
@@ -58,16 +58,25 @@ export default function Layout({
         setDefaultOpen(cookieValue === 'true')
     }, [])
 
+    // useEffect(() => {
+    //     if (msg && !hasShownMessage.current) {
+    //         toast(msg.title, {
+    //             description: msg.description ? (
+    //                 <div className="whitespace-pre-line">{msg.description}</div>
+    //             ) : undefined,
+    //         })
+    //         hasShownMessage.current = true
+    //     }
+    // }, [msg])
     useEffect(() => {
-        if (msg && !hasShownMessage.current) {
+        if (msg) {
             toast(msg.title, {
                 description: msg.description ? (
                     <div className="whitespace-pre-line">{msg.description}</div>
                 ) : undefined,
             })
-            hasShownMessage.current = true
         }
-    }, [msg])
+    })
 
     return (
         <>

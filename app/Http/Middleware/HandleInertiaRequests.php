@@ -51,6 +51,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user,
             ],
             'totalSize' => $totalSize,
+            'msg' => fn() => session('msg')
         ];
     }
 }
