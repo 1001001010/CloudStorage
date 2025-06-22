@@ -234,4 +234,26 @@ class FileAccessTokenController extends Controller
             'statistics' => $token->getAccessStatistics(),
         ]);
     }
+
+    /**
+     * API: Получает актуальную информацию о токене
+     *
+     */
+    public function apiGetToken(FileAccessToken $token)
+    {
+        // Проверяем права доступа
+        if ($token->file->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Нет доступа'], 403);
+        }
+
+        // Загружаем свежие данные из базы
+        $freshToken = FileAccessToken::with([
+            'file',
+            'file.extension',
+            'usersWithAccess.user',
+            'publicAccesses.user'
+        ])->find($token->id);
+
+        return response()->json($freshToken);
+    }
 }

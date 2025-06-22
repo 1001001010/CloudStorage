@@ -133,7 +133,7 @@ class FileController extends Controller
      */
     protected function checkUserFileAccess(File $file): bool
     {
-        return $file->user_id == Auth::id() || $this->userHasAccessToFile($file->id, Auth::id());
+        return $file->user_id == Auth::id();
     }
 
     /**
@@ -302,6 +302,50 @@ class FileController extends Controller
             return redirect()->back()->with('success', 'Файл успешно перемещен');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Получение информации о файле через API
+     *
+     * @param File $file
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFileInfo(File $file)
+    {
+        try {
+            // Проверяем права доступа
+            if ($file->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Нет доступа к файлу'], 403);
+            }
+
+            // Загружаем файл со всеми связанными данными
+            $fileWithRelations = File::with([
+                'extension',
+                'user',
+                'folder',
+                'accessTokens' => function ($query) {
+                    $query->with([
+                        'usersWithAccess.user',
+                        'publicAccesses.user'
+                    ]);
+                }
+            ])->find($file->id);
+
+            if (!$fileWithRelations) {
+                return response()->json(['error' => 'Файл не найден'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'file' => $fileWithRelations
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ошибка при получении информации о файле',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }
